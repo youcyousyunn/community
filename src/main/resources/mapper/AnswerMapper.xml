@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.cmmbo.dao.AnswerDao">
+    <select id="qryAnswerByQuestionId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.AnswerPo">
+        SELECT
+            t.id id,
+            t.question_id questionId,
+            t.answer answer,
+            t.comment_count commentCount,
+            t.like_count likeCount,
+            t.answerer answerer,
+            t.create_time creTm,
+            t.update_time updTm,
+            t1.name userName,
+            t1.avatar_url avatarUrl
+        FROM t_cmm_answer t
+        LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.answerer
+        <where>
+            <if test="_parameter != null">
+                t.question_id = #{questionId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="answerQuestion" parameterType="com.ycs.community.cmmbo.domain.po.AnswerPo">
+        INSERT INTO t_cmm_answer (question_id,
+            answer,
+            comment_count,
+            like_count,
+            answerer,
+            create_time
+        )
+        values (
+            #{questionId,jdbcType=BIGINT},
+            #{answer,jdbcType=VARCHAR},
+            #{commentCount,jdbcType=INTEGER},
+            #{likeCount,jdbcType=INTEGER},
+            #{answerer,jdbcType=BIGINT},
+            #{creTm,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <update id="increaseAnswer" parameterType="java.util.Map">
+        UPDATE t_cmm_answer
+        <set>
+            <if test="commentCount != null">
+                comment_count = comment_count + #{commentCount},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="qryAnswer" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.AnswerPo">
+        SELECT
+        t.id id,
+        t.question_id questionId,
+        t.answer answer,
+        t.comment_count commentCount,
+        t.like_count likeCount,
+        t.answerer answerer,
+        t.create_time creTm,
+        t.update_time updTm,
+        t1.name userName,
+        t1.avatar_url avatarUrl
+        FROM t_cmm_answer t
+        LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.answerer
+        <where>
+            <if test="_parameter != null">
+                t.id = #{id}
+            </if>
+        </where>
+    </select>
+</mapper>

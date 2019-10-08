@@ -1,0 +1,33 @@
+package com.ycs.community.basebo.constants;
+
+public class HiMsgCdConstants {
+    public static final String SUCCESS = "0000";
+    public static final String FAIL = "9999";
+
+    /*** 接口请求报文异常 ****/
+    public static final String TX_REQUESTBODY_FAIL = "T0001";
+
+    /*** 提问失败 ****/
+    public static final String ASK_QUESTION_FAIL = "B0001";
+    /*** 问题浏览数累加失败 ****/
+    public static final String INCREASE_QUESTION_VIEW_COUNT_FAIL = "B0002";
+    /*** 问题已不存在 ****/
+    public static final String QUESTION_NOT_EXIST = "B0003";
+    /*** 答案已不存在 ****/
+    public static final String ANSWER_NOT_EXIST = "B0004";
+    /*** 评论问题失败 ****/
+    public static final String COMMENT_QUESTION_FAIL = "B0005";
+    /*** 评论答案失败 ****/
+    public static final String COMMENT_ANSWER_FAIL = "B0006";
+    /*** 问题评论数累加失败 ****/
+    public static final String INCREASE_QUESTION_COMMENT_COUNT_FAIL = "B0007";
+    /*** 答案评论数累加失败 ****/
+    public static final String INCREASE_ANSWER_COMMENT_COUNT_FAIL = "B0008";
+    /*** 回答问题失败 ****/
+    public static final String ANSWER_QUESTION_FAIL = "B0009";
+    /*** 添加用户失败 ****/
+    public static final String ADD_USER_FAIL = "B0010";
+    /*** 更新用户失败 ****/
+    public static final String UPD_USER_FAIL = "B0011";
+
+}

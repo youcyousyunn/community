@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.cmmbo.dao.UserDao">
+    <insert id="addUser" parameterType="com.ycs.community.cmmbo.domain.po.UserPo">
+        INSERT INTO t_sys_userinfo (account_id,
+            `name`,
+            token,
+            avatar_url,
+            create_time
+        )
+        values (
+            #{accountId,jdbcType=BIGINT},
+            #{name,jdbcType=VARCHAR},
+            #{token,jdbcType=VARCHAR},
+            #{avatarUrl,jdbcType=VARCHAR},
+            #{creTm,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <update id="updUser" parameterType="com.ycs.community.cmmbo.domain.po.UserPo">
+        UPDATE t_sys_userinfo
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="avatarUrl != null">
+                avatar_url = #{avatarUrl},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="accountId != null">
+                account_id = #{accountId}
+            </if>
+        </where>
+    </update>
+
+    <select id="qryUserByAccountId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.UserPo">
+        SELECT
+            id id,
+            account_id accountId,
+            `name` `name`,
+            token token,
+            avatar_url avatarUrl
+        FROM t_sys_userinfo
+        <where>
+            <if test="_parameter != null">
+                account_id = #{accountId}
+            </if>
+        </where>
+    </select>
+</mapper>

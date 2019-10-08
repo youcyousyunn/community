@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.cmmbo.dao.CommentDao">
+    <select id="qryComment" parameterType="java.util.Map" resultType="com.ycs.community.cmmbo.domain.po.CommentPo">
+        SELECT
+            t.id id,
+            t.parent_id parentId,
+            t.comment_type commentType,
+            t.commentator commentator,
+            t.like_count likeCount,
+            t.comment comment,
+            t.comment_count commentCount,
+            t.create_time creTm,
+            t.update_time updTm,
+            t1.name userName,
+            t1.avatar_url avatarUrl
+        FROM t_cmm_comment t
+        LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.commentator
+        <where>
+            <if test="parentId != null">
+                t.parent_id = #{parentId}
+            </if>
+            <if test="commentType != null">
+                AND t.comment_type = #{commentType}
+            </if>
+        </where>
+        ORDER BY t.create_time
+    </select>
+
+    <insert id="commentQuestionOrAnswer" parameterType="com.ycs.community.cmmbo.domain.po.CommentPo">
+        INSERT INTO t_cmm_comment (parent_id,
+            comment_type,
+            commentator,
+            like_count,
+            comment,
+            comment_count,
+            create_time
+        )
+        values (
+            #{parentId,jdbcType=BIGINT},
+            #{commentType,jdbcType=INTEGER},
+            #{commentator,jdbcType=INTEGER},
+            #{likeCount,jdbcType=INTEGER},
+            #{comment,jdbcType=VARCHAR},
+            #{commentCount,jdbcType=INTEGER},
+            #{creTm,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <update id="increaseComment" parameterType="java.util.Map">
+        UPDATE t_cmm_question
+        <set>
+            <if test="commentCount != null">
+                comment_count = comment_count + #{commentCount},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+</mapper>
