@@ -9,7 +9,7 @@ public class Constants {
             " |___/                  |___/                 |___/ ";
 
     /** 授权令牌 */
-    public static final String AUTH_TOKEN = "CMM_JSESSIONID";
+    public static final String AUTH_TOKEN = "Authorization";
 
     /** 默认当前页 */
     public static final int DEFAULT_CURRENT_PAGE = 1;
