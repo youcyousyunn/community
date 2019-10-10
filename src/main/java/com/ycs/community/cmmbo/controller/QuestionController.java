@@ -6,6 +6,8 @@ import com.ycs.community.cmmbo.domain.dto.QryQuestionPageResponseDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionRequestDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionResponseDto;
 import com.ycs.community.cmmbo.service.QuestionService;
+import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +73,7 @@ public class QuestionController {
 	 * @return
 	 */
 	@GetMapping("/question/{id}")
+    @CmmOperationLog(title = "根据id查询单个问题", action = OperationType.GET, isSave = true, channel = "web")
 	public QuestionResponseDto qryQuestion(@PathVariable("id") Long id) {
 		QuestionResponseDto responseDto = new QuestionResponseDto();
 		responseDto = questionService.qryQuestion(id);

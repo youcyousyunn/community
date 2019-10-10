@@ -4,7 +4,9 @@ import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.domain.dto.UserResponseDto;
 import com.ycs.community.cmmbo.service.UserService;
+import com.ycs.community.spring.annotation.CmmOperationLog;
 import com.ycs.community.spring.context.CmmSessionContext;
+import com.ycs.community.spring.enums.OperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/user/qryUserInfo")
+    @CmmOperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
     public UserResponseDto qryUserInfo(HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
         String sessionId = request.getHeader(Constants.AUTH_TOKEN);
