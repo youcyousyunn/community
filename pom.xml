@@ -21,6 +21,10 @@
         <java.version>1.8</java.version>
         <mybatis.version>2.0.1</mybatis.version>
 		<source.encoding>UTF-8</source.encoding>
+		<okhttp.version>3.14.1</okhttp.version>
+		<fastjson.version>1.2.57</fastjson.version>
+		<lombok.version>1.18.6</lombok.version>
+		<hutool.version>4.6.10</hutool.version>
         <start-class>com.ycs.community.StartupApplication</start-class>
 	</properties>
 
@@ -45,6 +49,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
 		
 		<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,13 +70,20 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>3.14.1</version>
+			<version>${okhttp.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.57</version>
+			<version>${fastjson.version}</version>
+		</dependency>
+
+		<!--工具包-->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>${hutool.version}</version>
 		</dependency>
 
 		<!--logback日志配置-->
@@ -75,6 +91,18 @@
 			<groupId>org.codehaus.janino</groupId>
 			<artifactId>janino</artifactId>
 			<version>2.7.8</version>
+		</dependency>
+
+		<!-- redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!--quartz定时任务-->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
 		</dependency>
 
 		<dependency>
@@ -90,7 +118,7 @@
 		<dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-			<version>1.18.6</version>
+			<version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 	</dependencies>
