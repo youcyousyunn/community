@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -26,7 +28,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping("/user/qryUserInfo")
+    @GetMapping("/qryUserInfo")
     @CmmOperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
     public UserResponseDto qryUserInfo(HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
@@ -37,21 +39,6 @@ public class UserController {
             responseDto = userService.qryUserByAccountId((Long) session.getAttribute(sessionId));
             responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         }
-        return responseDto;
-    }
-
-    /**
-     * 注销登录
-     * @param sessionId
-     * @return
-     */
-    @GetMapping("/user/logout/{sessionId}")
-    public UserResponseDto logout(@PathVariable("sessionId") String sessionId) {
-        UserResponseDto responseDto = new UserResponseDto();
-        CmmSessionContext instance = CmmSessionContext.getInstance();
-        HttpSession session = instance.getSession(sessionId);
-        instance.delSession(session);
-        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }
 }

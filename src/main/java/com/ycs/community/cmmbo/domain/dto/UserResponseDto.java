@@ -10,4 +10,5 @@ import java.util.List;
 @Data
 public class UserResponseDto extends BaseResponseDto {
     private UserPo data;
+    private String token;
 }

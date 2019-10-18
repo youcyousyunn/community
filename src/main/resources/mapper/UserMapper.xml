@@ -51,4 +51,20 @@
             </if>
         </where>
     </select>
+
+    <select id="qryUserInfoByName" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.UserPo">
+        SELECT
+        id id,
+        account_id accountId,
+        `name` `name`,
+        `password` `password`,
+        token token,
+        avatar_url avatarUrl
+        FROM t_sys_userinfo
+        <where>
+            <if test="_parameter != null">
+                name = #{name}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -13,4 +13,5 @@ public interface UserDao {
     UserPo qryUserByAccountId(Long accountId);
     int addUser(UserPo userPo);
     int updUser(UserPo userPo);
+    UserPo qryUserInfoByName(String name);
 }

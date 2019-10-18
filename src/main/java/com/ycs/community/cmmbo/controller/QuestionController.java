@@ -9,6 +9,8 @@ import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.annotation.CmmOperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.spring.exception.CustomizeRequestException;
+import com.ycs.community.spring.log4j.BizLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +28,8 @@ public class QuestionController {
 	public QuestionResponseDto askQuestion(@RequestBody QuestionRequestDto request) throws CustomizeBusinessException {
 		// 接口请求报文检查
 		if (!request.checkRequestDto()) {
-			throw new CustomizeBusinessException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+			BizLogger.info("接口请求报文异常" + request.toString());
+			throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
 		}
 		QuestionResponseDto responseDto = new QuestionResponseDto();
 		try {

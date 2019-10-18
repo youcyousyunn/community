@@ -2,6 +2,7 @@ package com.ycs.community.cmmbo.service.impl;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.dao.UserDao;
+import com.ycs.community.cmmbo.domain.dto.UserRequestDto;
 import com.ycs.community.cmmbo.domain.dto.UserResponseDto;
 import com.ycs.community.cmmbo.domain.po.UserPo;
 import com.ycs.community.cmmbo.service.UserService;
@@ -48,5 +49,19 @@ public class UserServiceImpl implements UserService {
             response.setData(userPo);
         }
         return response;
+    }
+
+    @Override
+    public UserResponseDto login(UserRequestDto request) throws CustomizeBusinessException {
+        UserResponseDto result = new UserResponseDto();
+        UserPo userPo = userDao.qryUserInfoByName(request.getName());
+        if (StringUtils.isEmpty(userPo)) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.USER_NOT_EXIST, "用户不存在");
+        }
+        if (!request.getPassword().equals(userPo.getPassword())) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.ERROR_PASSWORD, "密码错误");
+        }
+        result.setData(userPo);
+        return result;
     }
 }

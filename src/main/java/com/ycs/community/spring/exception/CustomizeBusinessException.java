@@ -1,6 +1,6 @@
 package com.ycs.community.spring.exception;
 
-public class CustomizeBusinessException  extends CustomizeRollbackException{
+public class CustomizeBusinessException  extends CustomizeException {
     public CustomizeBusinessException(String code, String message) {
         super(message);
         this.code = code;

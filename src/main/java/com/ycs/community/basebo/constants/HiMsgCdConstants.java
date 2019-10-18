@@ -29,5 +29,9 @@ public class HiMsgCdConstants {
     public static final String ADD_USER_FAIL = "B0010";
     /*** 更新用户失败 ****/
     public static final String UPD_USER_FAIL = "B0011";
+    /*** 用户不存在 ****/
+    public static final String USER_NOT_EXIST = "B0012";
+    /*** 密码错误 ****/
+    public static final String ERROR_PASSWORD = "B0013";
 
 }
