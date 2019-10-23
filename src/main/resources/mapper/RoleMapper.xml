@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.sysbo.dao.RoleDao">
+    <select id="qryRoleByUserId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.RolePo">
+        SELECT
+            t1.id id,
+            t1.`code` `code`,
+            t1.`name` `name`,
+            t1.`desc` `desc`
+        FROM t_sys_user_role t
+        INNER JOIN t_sys_role t1 on t1.id = t.role_id
+        <where>
+            <if test="_parameter != null">
+                t.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+</mapper>

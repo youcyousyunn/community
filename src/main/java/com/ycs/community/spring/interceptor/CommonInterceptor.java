@@ -2,6 +2,7 @@ package com.ycs.community.spring.interceptor;
 
 import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.spring.context.BaseRequestInfo;
+import com.ycs.community.spring.context.CmmSessionContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,8 +19,6 @@ public class CommonInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 //        this.initRequestInfo(request);
-        response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:80");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
         return true;
     }
 
@@ -32,33 +31,29 @@ public class CommonInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * 初始化请求
+     * 初始化请求信息
      * @param request
      * @return
      */
     private BaseRequestInfo initRequestInfo (HttpServletRequest request) {
         String reqUrl = request.getRequestURI();
         String reqUrlWithoutCtx = reqUrl.substring(reqUrl.indexOf(request.getContextPath()));
-        HttpSession session = request.getSession();
-        String token = (String) session.getAttribute(Constants.AUTH_TOKEN);
-        System.out.println(token);
-        Enumeration<String> enumeration = request.getHeaders(Constants.AUTH_TOKEN);
-        String authToken = null;
-        long accountId = 0;
-        while (enumeration.hasMoreElements()) {
-            authToken = enumeration.nextElement();
+        String sessionId = request.getHeader(Constants.AUTH_TOKEN);
+        Long accountId = 0l;
+        if (null != sessionId) {
+            CmmSessionContext instance = CmmSessionContext.getInstance();
+            HttpSession session = instance.getSession(sessionId);
+            accountId = (Long) session.getAttribute(sessionId);
         }
-        if (!StringUtils.isEmpty(authToken)) {
-            accountId = (long) session.getAttribute(authToken);
-        }
-        request.setAttribute("accountId", accountId);
+
         BaseRequestInfo requestInfo = new BaseRequestInfo();
-//        requestInfo.setRemoteIp(this.getClientIP(request));
-//        requestInfo.setRequestTm(System.currentTimeMillis());
-//        requestInfo.setUrl(reqUrl);
-//        requestInfo.setUrlWithOutContext(reqUrlWithoutCtx);
-//        requestInfo.setUserAgent(this.getUserAgent(request));
-//        requestInfo.setAccountId(accountId);
+        requestInfo.setAccountId(accountId);
+        requestInfo.setUrl(reqUrl);
+        requestInfo.setUrlWithOutContext(reqUrlWithoutCtx);
+        requestInfo.setUserAgent(this.getUserAgent(request));
+        requestInfo.setRemoteIp(this.getClientIP(request));
+        requestInfo.setRequestTm(System.currentTimeMillis());
+        request.getServletContext();
         return requestInfo;
     }
 

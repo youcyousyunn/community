@@ -28,9 +28,9 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping("/qryUserInfo")
+    @GetMapping("/info")
     @CmmOperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
-    public UserResponseDto qryUserInfo(HttpServletRequest request) {
+    public UserResponseDto qryUserInfo (HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
         String sessionId = request.getHeader(Constants.AUTH_TOKEN);
         CmmSessionContext instance = CmmSessionContext.getInstance();

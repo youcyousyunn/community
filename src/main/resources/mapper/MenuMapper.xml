@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.sysbo.dao.MenuDao">
+    <select id="qryMenuByRole" parameterType="java.util.List" resultType="com.ycs.community.sysbo.domain.po.MenuPo">
+        SELECT
+            DISTINCT t.id id,
+            t.pid pid,
+            t.`name` `name`,
+            t.path path,
+            t.component component,
+            t.icon icon,
+            t.sort sort,
+            t.i_frame iFrame
+        FROM t_sys_menu t
+        INNER JOIN t_sys_role_menu t1 on t1.menu_id = t.id
+        <where>
+            <if test="list != null">
+                t1.role_id IN
+                <foreach collection="list" open="(" separator="," close=")" index="index" item="rolePo">
+                    #{rolePo.id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY t.sort ASC
+    </select>
+</mapper>

@@ -3,6 +3,7 @@ package com.ycs.community.cmmbo.domain.dto;
 import com.ycs.community.basebo.domain.dto.BaseResponseDto;
 import com.ycs.community.cmmbo.domain.po.AnswerPo;
 import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.po.RolePo;
 import lombok.Data;
 
 import java.util.List;
