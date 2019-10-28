@@ -14,8 +14,8 @@ import java.util.Date;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 @Component
-public class QuartzUtil {
-    private Logger logger = LoggerFactory.getLogger(QuartzUtil.class);
+public class QuartzManage {
+    private Logger logger = LoggerFactory.getLogger(QuartzManage.class);
     private static final String JOB_IDENTITY = "CMM_TASK";
     @Resource(name = "scheduler")
     private Scheduler scheduler;
@@ -24,10 +24,10 @@ public class QuartzUtil {
      * 添加定时任务
      * @param quartzJobPo
      */
-    public void addJob(QuartzJobPo quartzJobPo){
+    public void addJob(QuartzJobPo quartzJobPo) {
         try {
             // 构建job信息
-            JobDetail jobDetail = JobBuilder.newJob(JobExecution.class).
+            JobDetail jobDetail = JobBuilder.newJob(ExecutionJob.class).
                     withIdentity(JOB_IDENTITY + quartzJobPo.getId()).build();
 
             //通过触发器名和cron 表达式创建 Trigger
@@ -59,7 +59,7 @@ public class QuartzUtil {
      * 删除定时任务
      * @param quartzJobPo
      */
-    public void deleteJob(QuartzJobPo quartzJobPo){
+    public void deleteJob(QuartzJobPo quartzJobPo) {
         try {
             JobKey jobKey = JobKey.jobKey(JOB_IDENTITY + quartzJobPo.getId());
             scheduler.pauseJob(jobKey);
@@ -74,7 +74,7 @@ public class QuartzUtil {
      * 更新定时任务
      * @param quartzJobPo
      */
-    public void updateJob(QuartzJobPo quartzJobPo){
+    public void updateJob(QuartzJobPo quartzJobPo) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_IDENTITY + quartzJobPo.getId());
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -104,7 +104,7 @@ public class QuartzUtil {
      * 执行定时任务
      * @param quartzJobPo
      */
-    public void executeJob(QuartzJobPo quartzJobPo){
+    public void executeJob(QuartzJobPo quartzJobPo) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_IDENTITY + quartzJobPo.getId());
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -126,7 +126,7 @@ public class QuartzUtil {
      * 暂停定时任务
      * @param quartzJobPo
      */
-    public void pauseJob(QuartzJobPo quartzJobPo){
+    public void pauseJob(QuartzJobPo quartzJobPo) {
         try {
             JobKey jobKey = JobKey.jobKey(JOB_IDENTITY + quartzJobPo.getId());
             scheduler.pauseJob(jobKey);
@@ -140,7 +140,7 @@ public class QuartzUtil {
      * 恢复定时任务
      * @param quartzJobPo
      */
-    public void resumeJob(QuartzJobPo quartzJobPo){
+    public void resumeJob(QuartzJobPo quartzJobPo) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_IDENTITY + quartzJobPo.getId());
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);

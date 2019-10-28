@@ -4,10 +4,12 @@ import com.ycs.community.spring.context.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
-public class QuartzRunnable implements Runnable {
+public class QuartzRunnable implements Callable {
     private Logger logger = LoggerFactory.getLogger(QuartzRunnable.class);
     private Object target;
     private Method method;
@@ -24,7 +26,7 @@ public class QuartzRunnable implements Runnable {
     public QuartzRunnable(String beanName, String methodName, String params) throws NoSuchMethodException, SecurityException {
         this.target = SpringContextHolder.getBean(beanName);
         this.params = params;
-        if (params != null) {
+        if (!StringUtils.isEmpty(params)) {
             this.method = target.getClass().getDeclaredMethod(methodName, String.class);
         } else {
             this.method = target.getClass().getDeclaredMethod(methodName);
@@ -32,16 +34,13 @@ public class QuartzRunnable implements Runnable {
     }
 
     @Override
-    public void run() {
-        try {
-            ReflectionUtils.makeAccessible(method);
-            if (params != null) {
-                method.invoke(target, params);
-            } else {
-                method.invoke(target);
-            }
-        } catch (Exception e) {
-            logger.error("定时任务执行失败", e);
+    public Object call() throws Exception {
+        ReflectionUtils.makeAccessible(method);
+        if (!StringUtils.isEmpty(params)) {
+            method.invoke(target, params);
+        } else {
+            method.invoke(target);
         }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.ycs.community.sysbo.quartz;
+package com.ycs.community.sysbo.quartz.config;
 
 import org.quartz.Scheduler;
 import org.quartz.spi.TriggerFiredBundle;

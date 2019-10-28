@@ -19,33 +19,9 @@
     </appender>
 
     <!-- 按照每天生成日志文件 info级别 -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--日志文件输出的文件名 -->
-            <fileNamePattern>${LOG_PATH}/%d/CMM_MNG.log</fileNamePattern>
-            <!--日志文件保留天数 -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--格式化输出：%d表示日期, %-5level：级别从左显示5个字符宽度, ${PID} : 进程ID, %thread表示线程名, %logger : 日志输出者的名字, %msg：日志消息, %n是换行符 -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level ${PID} --- [%thread] %logger : %msg%n</pattern>
-        </encoder>
-
-        <!--日志文件最大的大小 -->
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>10MB</maxFileSize>
-        </triggeringPolicy>
-    </appender>
-
-    <!-- 按照每天生成日志文件 error级别 -->
-<!--    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
-<!--            <level>ERROR</level>-->
-<!--            <onMatch>ACCEPT</onMatch>-->
-<!--            <onMismatch>DENY</onMismatch>-->
+<!--    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>INFO</level>-->
 <!--        </filter>-->
 <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
 <!--            &lt;!&ndash;日志文件输出的文件名 &ndash;&gt;-->
@@ -57,11 +33,35 @@
 <!--            &lt;!&ndash;格式化输出：%d表示日期, %-5level：级别从左显示5个字符宽度, ${PID} : 进程ID, %thread表示线程名, %logger : 日志输出者的名字, %msg：日志消息, %n是换行符 &ndash;&gt;-->
 <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level ${PID} -&#45;&#45; [%thread] %logger : %msg%n</pattern>-->
 <!--        </encoder>-->
+
 <!--        &lt;!&ndash;日志文件最大的大小 &ndash;&gt;-->
 <!--        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
-<!--            <MaxFileSize>10MB</MaxFileSize>-->
+<!--            <maxFileSize>10MB</maxFileSize>-->
 <!--        </triggeringPolicy>-->
 <!--    </appender>-->
+
+    <!-- 按照每天生成日志文件 error级别 -->
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名 -->
+            <fileNamePattern>${LOG_PATH}/%d/CMM_MNG.log</fileNamePattern>
+            <!--日志文件保留天数 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期, %-5level：级别从左显示5个字符宽度, ${PID} : 进程ID, %thread表示线程名, %logger : 日志输出者的名字, %msg：日志消息, %n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level ${PID} --- [%thread] %logger : %msg%n</pattern>
+        </encoder>
+        <!--日志文件最大的大小 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
 
     <!--Mybatis日志配置 -->
     <logger name="com.apache.ibatis" level="TRACE" />
@@ -72,7 +72,7 @@
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
-<!--        <appender-ref ref="FILE-ERROR" />-->
+<!--        <appender-ref ref="FILE" />-->
+        <appender-ref ref="FILE-ERROR" />
     </root>
 </configuration>
