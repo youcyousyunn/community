@@ -10,7 +10,8 @@ public class Constants {
 
     /** 授权令牌 */
     public static final String AUTH_TOKEN = "Authorization";
-
+    /** 登录验证码前缀 */
+    public static final String LOGIN_CAPTCHA_PREFIX = "loginVCode";
     /** 默认当前页 */
     public static final int DEFAULT_CURRENT_PAGE = 1;
     /** 页大小 */

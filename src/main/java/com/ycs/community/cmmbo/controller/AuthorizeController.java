@@ -1,6 +1,7 @@
 package com.ycs.community.cmmbo.controller;
 
 import cn.hutool.core.codec.Base64;
+import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.domain.dto.GithubAccessTokenRequestDto;
 import com.ycs.community.cmmbo.domain.dto.GithubUserResponseDto;
@@ -63,7 +64,7 @@ public class AuthorizeController {
             throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
         }
         // 校验验证码
-        String vCode = redisService.qryVCode(request.getUuid());
+        String vCode = redisService.qryVCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + request.getUuid());
         if (StringUtils.isEmpty(vCode)) {
             throw new BadRequestException("验证码已过期");
         }
@@ -101,7 +102,7 @@ public class AuthorizeController {
             String uuid = UUID.randomUUID().toString();
             VerifyCodePo data = new VerifyCodePo(uuid, Base64.encode(ops.toByteArray()));
             // 添加验证码到redis缓存
-            redisService.addVerifyCode(uuid, code);
+            redisService.addVerifyCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + uuid, code);
             responseDto.setData(data);
         } catch (IOException e) {
             e.printStackTrace();

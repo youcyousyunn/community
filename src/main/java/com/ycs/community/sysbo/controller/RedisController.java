@@ -10,6 +10,7 @@ import com.ycs.community.sysbo.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,10 +23,10 @@ public class RedisController {
      * @param request
      * @return
      */
-    @GetMapping("/redis")
+    @GetMapping("/redis/queryPage")
     public QryRedisPageResponseDto qryRedisPage(QryRedisPageRequestDto request) {
         QryRedisPageResponseDto responsePageDto = new QryRedisPageResponseDto();
-        redisService.qryRedisPage(request);
+        responsePageDto = redisService.qryRedisPage(request);
         responsePageDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responsePageDto;
     }
@@ -36,15 +37,14 @@ public class RedisController {
      * @return
      */
     @DeleteMapping("/redis")
-    public RedisResponseDto delRedis(RedisRequestDto request) {
+    public RedisResponseDto delRedis(@RequestBody RedisRequestDto request) {
         // 接口请求报文检查
         if (!request.checkRequestDto()) {
             throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
         }
         RedisResponseDto responseDto = new RedisResponseDto();
-        if (redisService.delRedis(request)) {
-            responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
-        }
+        redisService.delRedis(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }
 

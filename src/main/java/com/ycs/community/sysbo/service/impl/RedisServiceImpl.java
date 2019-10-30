@@ -26,19 +26,23 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public QryRedisPageResponseDto qryRedisPage(QryRedisPageRequestDto request) {
         List<RedisPo> data = new ArrayList<>();
-        for (Object key : redisTemplate.keys(request.getKey())) {
-            String k = String.valueOf(key);
+        String key = request.getKey();
+        if(!"*".equals(key)){
+            key = "*" + key + "*";
+        }
+        for (Object item : redisTemplate.keys(key)) {
+            String k = String.valueOf(item);
             RedisPo redisPo = new RedisPo(k, redisTemplate.opsForValue().get(k).toString());
             data.add(redisPo);
         }
         // 查询总条数
         int totalCount = data.size();
         // 计算分页信息
-        PageUtil.calculatePageInfo(totalCount, request.getCurrentPage(), request.getPageSize());
+        List<RedisPo> page = PageUtil.toPage(request.getCurrentPage(), request.getPageSize(), data);
         // 组装分页信息
         QryRedisPageResponseDto response = new QryRedisPageResponseDto();
-        if (!CollectionUtils.isEmpty(data)) {
-            response.setData(data);
+        if (!CollectionUtils.isEmpty(page)) {
+            response.setData(page);
             response.setTotal(totalCount);
             return response;
         }

@@ -1,6 +1,10 @@
 package com.ycs.community.basebo.utils;
 
 import com.ycs.community.basebo.constants.Constants;
+import com.ycs.community.sysbo.domain.po.RedisPo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PageUtil {
     private static Integer currentPage = Constants.DEFAULT_CURRENT_PAGE;
@@ -38,6 +42,25 @@ public class PageUtil {
         PageUtil.totalCount = Constants.DEFAULT_TOTAL_COUNT;
         PageUtil.totalPage = Constants.DEFAULT_TOTAL_PAGE;
         PageUtil.startRow = Constants.DEFAULT_START_ROW;
+    }
+
+    /**
+     * 截取所需分页数据
+     * @param currentPage
+     * @param pageSize
+     * @param data
+     * @return
+     */
+    public static List<RedisPo> toPage(int currentPage, int pageSize , List<RedisPo> data) {
+        int fromIndex = (currentPage-1) * pageSize;
+        int endIndex = currentPage * pageSize;
+        if (fromIndex > data.size()) {
+            return new ArrayList<RedisPo>();
+        } else if (endIndex >= data.size()) {
+            return data.subList(fromIndex, data.size());
+        } else {
+            return data.subList(fromIndex, endIndex);
+        }
     }
 
     public static int getCurrentPage() {
