@@ -34,6 +34,10 @@ public class HiMsgCdConstants {
     /*** 密码错误 ****/
     public static final String ERROR_PASSWORD = "B0013";
     /*** 定时任务不存在 ****/
-    public static final String JOB_NOT_EXIST = "B0013";
+    public static final String JOB_NOT_EXIST = "B0014";
+    /*** 邮件配置不存在 ****/
+    public static final String EMAIL_CONFIG_NOT_EXIST = "B0015";
+    /*** 更新邮件配置失败 ****/
+    public static final String UPD_EMAIL_CONFIG_FAIL = "B0016";
 
 }

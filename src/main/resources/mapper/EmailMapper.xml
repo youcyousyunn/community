@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.sysbo.dao.EmailDao">
+    <insert id="addEmailConfig" parameterType="com.ycs.community.sysbo.email.EmailConfig">
+        INSERT INTO t_sys_email (id,
+            host,
+            port,
+            `user`,
+            from_user,
+            password,
+            create_time
+        )
+        values (
+            #{id,jdbcType=BIGINT},
+            #{host,jdbcType=VARCHAR},
+            #{port,jdbcType=INTEGER},
+            #{user,jdbcType=VARCHAR},
+            #{fromUser,jdbcType=VARCHAR},
+            #{password, jdbcType=VARCHAR},
+            #{creTm,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <update id="updEmailConfig" parameterType="com.ycs.community.sysbo.email.EmailConfig">
+        UPDATE t_sys_email
+        <set>
+            <if test="host != null">
+                host = #{host},
+            </if>
+        </set>
+        <set>
+            <if test="port != null">
+                port = #{port},
+            </if>
+        </set>
+        <set>
+            <if test="user != null">
+                `user` = #{user},
+            </if>
+        </set>
+        <set>
+            <if test="fromUser != null">
+                from_user = #{fromUser},
+            </if>
+        </set>
+        <set>
+            <if test="password != null">
+                password = #{password},
+            </if>
+        </set>
+        <set>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="qryEmailConfig" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.email.EmailConfig">
+        SELECT
+        t.id id,
+        t.host host,
+        t.port port,
+        t.`user` `user`,
+        t.from_user fromUser,
+        t.password password
+        FROM t_sys_email t
+        <where>
+            1=1
+        </where>
+    </select>
+</mapper>

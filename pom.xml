@@ -25,6 +25,7 @@
 		<fastjson.version>1.2.57</fastjson.version>
 		<lombok.version>1.18.6</lombok.version>
 		<hutool.version>4.6.10</hutool.version>
+		<mail.version>1.4.7</mail.version>
         <start-class>com.ycs.community.StartupApplication</start-class>
 	</properties>
 
@@ -84,6 +85,13 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
+		</dependency>
+
+		<!--邮件依赖包-->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${mail.version}</version>
 		</dependency>
 
 		<!--logback日志配置-->
