@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 @Data
 public class EmailRequestDto extends BaseRequestDto {
     // 邮件配置信息
+    private Long id;
     private String host; // 邮件服务器SMTP地址
     private Integer port; // 邮件服务器SMTP端口
     private String user; // 发件人用户名, 默认为发件人邮箱前缀

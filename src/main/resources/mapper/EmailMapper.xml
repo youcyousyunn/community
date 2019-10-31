@@ -27,28 +27,18 @@
             <if test="host != null">
                 host = #{host},
             </if>
-        </set>
-        <set>
             <if test="port != null">
                 port = #{port},
             </if>
-        </set>
-        <set>
             <if test="user != null">
                 `user` = #{user},
             </if>
-        </set>
-        <set>
             <if test="fromUser != null">
                 from_user = #{fromUser},
             </if>
-        </set>
-        <set>
             <if test="password != null">
                 password = #{password},
             </if>
-        </set>
-        <set>
             <if test="updTm != null">
                 update_time = #{updTm}
             </if>
