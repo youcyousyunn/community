@@ -94,6 +94,13 @@
 			<version>${mail.version}</version>
 		</dependency>
 
+		<!--poi依赖包-->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
+
 		<!--logback日志配置-->
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.coobo.dao.AttachDao">
+    <insert id="addAttach" parameterType="com.ycs.community.coobo.domain.po.AttachPo">
+        INSERT INTO t_coo_attach (id,
+            `name`,
+            real_name,
+            path,
+            suffix,
+            `type`,
+            `size`,
+            operator,
+            create_time
+        )
+        values (
+            #{id,jdbcType=BIGINT},
+            #{name,jdbcType=VARCHAR},
+            #{realNm,jdbcType=VARCHAR},
+            #{path,jdbcType=VARCHAR},
+            #{suffix,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{size, jdbcType=VARCHAR},
+            #{operator, jdbcType=VARCHAR},
+            #{creTm,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <delete id="delAttachById" parameterType="java.lang.String">
+        DELETE FROM t_coo_attach
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updAttach" parameterType="com.ycs.community.coobo.domain.po.AttachPo">
+        UPDATE t_coo_attach
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="qryAttachById" parameterType="java.lang.String" resultType="com.ycs.community.coobo.domain.po.AttachPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.real_name realNm,
+        t.path path,
+        t.suffix suffix,
+        t.type type,
+        t.`size` `size`,
+        t.operator operator,
+        t.create_time creTm,
+        t.update_time updTm
+        FROM t_coo_attach t
+        <where>
+            <if test="_parameter != null">
+                t.id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryAttach" parameterType="java.util.Map" resultType="com.ycs.community.coobo.domain.po.AttachPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.real_name realNm,
+        t.path path,
+        t.suffix suffix,
+        t.type type,
+        t.`size` `size`,
+        t.operator operator,
+        t.create_time creTm,
+        t.update_time updTm
+        FROM t_coo_attach t
+        <where>
+            <if test="name != null">
+                t.name = #{name}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryAttachCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_coo_attach t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+        </where>
+    </select>
+
+    <select id="qryAttachPage" parameterType="java.util.Map" resultType="com.ycs.community.coobo.domain.po.AttachPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.real_name realNm,
+        t.path path,
+        t.suffix suffix,
+        t.type type,
+        t.`size` `size`,
+        t.operator operator,
+        t.create_time creTm,
+        t.update_time updTm
+        FROM t_coo_attach t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+</mapper>

@@ -79,7 +79,6 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public QryQuestionPageResponseDto qryQuestionPage(QryQuestionPageRequestDto request) {
 		Map<String, Object> paramMap = new HashMap<>();
 		// 查询总条数
