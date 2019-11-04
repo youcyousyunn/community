@@ -104,6 +104,12 @@ public class AttachServiceImpl implements AttachService {
     @Override
     public boolean downAttach(AttachRequestDto request, HttpServletResponse response) {
         Map<String, Object> paramMap = new HashMap<>();
+        if (!StringUtils.isEmpty(request.getStartTime())) {
+            paramMap.put("startTime", request.getStartTime().getTime());
+        }
+        if (!StringUtils.isEmpty(request.getEndTime())) {
+            paramMap.put("endTime", request.getEndTime().getTime());
+        }
         paramMap.put("name", request.getName());
         List<AttachPo> attachPoList = attachDao.qryAttach(paramMap);
         List<Map<String, Object>> list = new ArrayList<>();
@@ -152,6 +158,12 @@ public class AttachServiceImpl implements AttachService {
     public QryAttachPageResponseDto qryAttachPage(QryAttachPageRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", request.getName());
+        if (!StringUtils.isEmpty(request.getStartTime())) {
+            paramMap.put("startTime", request.getStartTime().getTime());
+        }
+        if (!StringUtils.isEmpty(request.getEndTime())) {
+            paramMap.put("endTime", request.getEndTime().getTime());
+        }
         // 查询总条数
         int totalCount = attachDao.qryAttachCount(paramMap);
         // 计算分页信息

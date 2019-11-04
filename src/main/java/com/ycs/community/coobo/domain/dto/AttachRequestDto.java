@@ -5,12 +5,19 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import com.ycs.community.basebo.domain.dto.BaseRequestDto;
 import com.ycs.community.coobo.domain.po.AttachPo;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;
+
+import java.util.Date;
 
 @Data
 public class AttachRequestDto extends BaseRequestDto {
     private Long id;
     private String name;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
 
     /**
      * 接口请求报文检查

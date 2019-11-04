@@ -89,7 +89,13 @@
         FROM t_coo_attach t
         <where>
             <if test="name != null">
-                t.name = #{name}
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
             </if>
         </where>
     </select>
@@ -100,6 +106,12 @@
         <where>
             <if test="name != null">
                 t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
             </if>
         </where>
     </select>
@@ -120,6 +132,12 @@
         <where>
             <if test="name != null">
                 t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
             </if>
         </where>
         ORDER BY t.create_time DESC
