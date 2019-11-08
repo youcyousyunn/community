@@ -43,7 +43,7 @@ public class AttachServiceImpl implements AttachService {
         String type = FileUtil.getFileType(suffix);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         File file = FileUtil.upload(multipartFile, uploadPath + dateStr + File.separator + type +  File.separator);
-        try {
+        if (!StringUtils.isEmpty(file)) {
             name = StringUtils.isEmpty(name) ? FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename()) : name;
             AttachPo attachPo = new AttachPo();
             attachPo.setName(name);
@@ -55,11 +55,11 @@ public class AttachServiceImpl implements AttachService {
             attachPo.setOperator(null); /// todo
             attachPo.setCreTm(new Date().getTime());
             if (1 != attachDao.addAttach(attachPo)) {
-                throw new CustomizeBusinessException(HiMsgCdConstants.UPLOAD_FILE_FAIL, "上传文件失败");
+                FileUtil.deleteFile(file); // 删除已上传文件
+                throw new CustomizeBusinessException(HiMsgCdConstants.UPLOAD_ATTACH_FAIL, "上传附件失败");
             }
-        } catch (Exception e) {
-            FileUtil.deleteFile(file);
-            throw e;
+        } else {
+            throw new BadRequestException("上传文件失败");
         }
 
         return true;

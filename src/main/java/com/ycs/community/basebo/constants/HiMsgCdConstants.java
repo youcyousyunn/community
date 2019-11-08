@@ -39,12 +39,14 @@ public class HiMsgCdConstants {
     public static final String EMAIL_CONFIG_NOT_EXIST = "B0015";
     /*** 更新邮件配置失败 ****/
     public static final String UPD_EMAIL_CONFIG_FAIL = "B0016";
-    /*** 上传文件失败 ****/
-    public static final String UPLOAD_FILE_FAIL = "B0017";
+    /*** 上传附件失败 ****/
+    public static final String UPLOAD_ATTACH_FAIL = "B0017";
     /*** 附件不存在 ****/
     public static final String ATTACH_NOT_EXIST = "B0018";
     /*** 更新附件失败 ****/
     public static final String UPD_ATTACH_FAIL = "B0019";
     /*** 删除附件失败 ****/
     public static final String DEL_ATTACH_FAIL = "B0020";
+    /*** 添加日志失败 ****/
+    public static final String ADD_LOG_FAIL = "B0021";
 }

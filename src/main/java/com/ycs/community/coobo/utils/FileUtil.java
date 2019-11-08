@@ -176,7 +176,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         try {
             String fileName = name + timestamp + "." + suffix;
             String path = filePath + fileName;
-            File dest = new File(path);
+            File dest = new File(path).getCanonicalFile();
             // 检测目录是否存在
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs(); // 新建目录
@@ -184,7 +184,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             multipartFile.transferTo(dest); // 文件写入
             return dest;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("上传文件失败{}", e);
         }
         return null;
     }

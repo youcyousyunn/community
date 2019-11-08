@@ -1,6 +1,8 @@
 package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
+import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
@@ -22,6 +24,7 @@ public class EmailController {
      * @return
      */
     @PutMapping("/email")
+    @CmmOperationLog(title = "更新邮件配置", action = OperationType.PUT, isSave = true, channel = "web")
     public EmailResponseDto updEmailConfig(@RequestBody EmailRequestDto request) {
         // 接口请求报文检查
         if (!request.checkMailConfigRequestDto()) {
@@ -42,6 +45,7 @@ public class EmailController {
      * @return
      */
     @GetMapping("/email")
+    @CmmOperationLog(title = "发送邮件", action = OperationType.POST, isSave = false, channel = "web")
     public EmailResponseDto qryEmailConfig() {
         EmailResponseDto responseDto = new EmailResponseDto();
         responseDto = emailService.qryEmailConfig();
@@ -57,6 +61,7 @@ public class EmailController {
      * @return
      */
     @PostMapping("/email")
+    @CmmOperationLog(title = "发送邮件", action = OperationType.POST, isSave = true, channel = "web")
     public EmailResponseDto sendEmail(@RequestBody EmailRequestDto request) {
         // 接口请求报文检查
         if (!request.checkSendMailRequestDto()) {

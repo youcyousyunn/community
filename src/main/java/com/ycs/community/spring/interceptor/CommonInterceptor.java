@@ -5,14 +5,14 @@ import com.ycs.community.spring.context.BaseRequestInfo;
 import com.ycs.community.spring.context.CmmSessionContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Component
 public class CommonInterceptor implements HandlerInterceptor {
@@ -51,43 +51,40 @@ public class CommonInterceptor implements HandlerInterceptor {
         requestInfo.setUrl(reqUrl);
         requestInfo.setUrlWithOutContext(reqUrlWithoutCtx);
         requestInfo.setUserAgent(this.getUserAgent(request));
-        requestInfo.setRemoteIp(this.getClientIP(request));
+        requestInfo.setRemoteIp(this.getIP(request));
         requestInfo.setRequestTm(System.currentTimeMillis());
         request.getServletContext();
         return requestInfo;
     }
 
     /**
-     * 获取客户端IP
+     * 获取IP
      * @param request
      * @return
      */
-    private String getClientIP(HttpServletRequest request) {
-        String clientIP = request.getHeader("X-Real-IP");
-        if (clientIP == null || clientIP.length() == 0 || "unknown".equalsIgnoreCase(clientIP)) {
-            clientIP = request.getHeader("Proxy-Client-IP");
+    private String getIP(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
         }
-
-        if (clientIP == null || clientIP.length() == 0 || "unknown".equalsIgnoreCase(clientIP)) {
-            clientIP = request.getHeader("x-forwarded-for");
-            if (!StringUtils.isEmpty(clientIP) && !"unKnown".equalsIgnoreCase(clientIP)) {
-                // 多次反向代理后会有多个IP值，第一个IP才是真实IP
-                int index = clientIP.indexOf(",");
-                if (index != -1){
-                    clientIP = clientIP.substring(0, index);
-                }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip.contains(",")) {
+            ip = ip.split(",")[0];
+        }
+        if  ("127.0.0.1".equals(ip))  {
+            // 获取本机真正的ip地址
+            try {
+                ip = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
         }
-
-        if (clientIP == null || clientIP.length() == 0 || "unknown".equalsIgnoreCase(clientIP)) {
-            clientIP = request.getHeader("WL-Proxy-Client-IP");
-        }
-
-        if (clientIP == null || clientIP.length() == 0 || "unknown".equalsIgnoreCase(clientIP)) {
-            clientIP = request.getRemoteAddr();
-        }
-
-        return clientIP;
+        return ip;
     }
 
     /**

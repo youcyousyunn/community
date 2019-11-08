@@ -1,6 +1,8 @@
 package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
+import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.sysbo.domain.dto.QryRedisPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryRedisPageResponseDto;
@@ -24,6 +26,7 @@ public class RedisController {
      * @return
      */
     @GetMapping("/redis/queryPage")
+    @CmmOperationLog(title = "分页查询Redis缓存列表", action = OperationType.GET, isSave = false, channel = "web")
     public QryRedisPageResponseDto qryRedisPage(QryRedisPageRequestDto request) {
         QryRedisPageResponseDto responsePageDto = new QryRedisPageResponseDto();
         responsePageDto = redisService.qryRedisPage(request);
@@ -37,6 +40,7 @@ public class RedisController {
      * @return
      */
     @DeleteMapping("/redis")
+    @CmmOperationLog(title = "根据key删除单个Redis缓存", action = OperationType.DELETE, isSave = true, channel = "web")
     public RedisResponseDto delRedis(@RequestBody RedisRequestDto request) {
         // 接口请求报文检查
         if (!request.checkRequestDto()) {
@@ -53,6 +57,7 @@ public class RedisController {
      * @return
      */
     @DeleteMapping("/redis/all")
+    @CmmOperationLog(title = "清空Redis缓存", action = OperationType.DELETE, isSave = true, channel = "web")
     public RedisResponseDto clearRedis() {
         RedisResponseDto responseDto = new RedisResponseDto();
         if(redisService.clearRedis()) {

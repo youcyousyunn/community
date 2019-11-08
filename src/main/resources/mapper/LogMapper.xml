@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.sysbo.dao.LogDao">
+    <insert id="addLog" parameterType="com.ycs.community.sysbo.domain.po.LogJnlPo">
+        INSERT INTO t_pub_logjnl (id,
+            user_name,
+            method,
+            params,
+            description,
+            `type`,
+            cost_time,
+            request_ip,
+            address,
+            browser,
+            create_time
+        )
+        values (
+            #{id,jdbcType=BIGINT},
+            #{userNm,jdbcType=VARCHAR},
+            #{method,jdbcType=VARCHAR},
+            #{params,jdbcType=VARCHAR},
+            #{description,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{costTime, jdbcType=BIGINT},
+            #{requestIp, jdbcType=VARCHAR},
+            #{address, jdbcType=VARCHAR},
+            #{browser, jdbcType=VARCHAR},
+            #{creTm,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <select id="qryLogCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_pub_logjnl t
+        <where>
+            <if test="type != null">
+                t.type = #{type}
+            </if>
+            <if test="userNm != null">
+                AND t.user_name like <![CDATA['%${userNm}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryLogPage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.LogJnlPo">
+        SELECT
+        t.id id,
+        t.user_name userNm,
+        t.method method,
+        t.params params,
+        t.description description,
+        t.type type,
+        t.cost_time costTime,
+        t.request_ip requestIp,
+        t.address address,
+        t.browser browser,
+        t.create_time creTm
+        FROM t_pub_logjnl t
+        <where>
+            <if test="type != null">
+                t.type = #{type}
+            </if>
+            <if test="userNm != null">
+                AND t.user_name like <![CDATA['%${userNm}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+</mapper>

@@ -1,11 +1,14 @@
 package com.ycs.community.spring.context;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CmmSessionContext {
     private static CmmSessionContext instance;
     private Map<String, Object> sessionMap = new ConcurrentHashMap<>();
