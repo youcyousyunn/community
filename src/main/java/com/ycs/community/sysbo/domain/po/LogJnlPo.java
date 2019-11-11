@@ -10,6 +10,7 @@ public class LogJnlPo extends BasePo {
     private String method;
     private String params;
     private String description;
+    private String exception;
     private String type;
     private Long costTime;
     private String requestIp;

@@ -13,4 +13,5 @@ public interface LogDao {
     int addLog(LogJnlPo logJnlPo);
     int qryLogCount(Map<String, Object> paramMap);
     List<LogJnlPo> qryLogPage(Map<String, Object> paramMap);
+    LogJnlPo qryLogById(Long id);
 }

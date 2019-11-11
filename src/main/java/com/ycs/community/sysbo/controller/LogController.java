@@ -1,11 +1,14 @@
 package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
+import com.ycs.community.sysbo.domain.dto.LogRequestDto;
+import com.ycs.community.sysbo.domain.dto.LogResponseDto;
 import com.ycs.community.sysbo.domain.dto.QryLogPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryLogPageResponseDto;
 import com.ycs.community.sysbo.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,5 +27,18 @@ public class LogController {
         responsePageDto = logService.qryLogPage(request);
         responsePageDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responsePageDto;
+    }
+
+    /**
+     * 根据id查询单个日志
+     * @param id
+     * @return
+     */
+    @GetMapping("/log/{id}")
+    public LogResponseDto qryLog(@PathVariable("id") Long id) {
+        LogResponseDto responseDto = new LogResponseDto();
+        responseDto = logService.qryLogById(id);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
     }
 }

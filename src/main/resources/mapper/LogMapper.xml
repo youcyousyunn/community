@@ -7,6 +7,7 @@
             method,
             params,
             description,
+            `exception`,
             `type`,
             cost_time,
             request_ip,
@@ -20,6 +21,7 @@
             #{method,jdbcType=VARCHAR},
             #{params,jdbcType=VARCHAR},
             #{description,jdbcType=VARCHAR},
+            #{exception,jdbcType=VARCHAR},
             #{type,jdbcType=VARCHAR},
             #{costTime, jdbcType=BIGINT},
             #{requestIp, jdbcType=VARCHAR},
@@ -78,5 +80,27 @@
         </where>
         ORDER BY t.create_time DESC
         LIMIT ${startRow}, ${offset}
+    </select>
+
+    <select id="qryLogById" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.LogJnlPo">
+        SELECT
+        t.id id,
+        t.user_name userNm,
+        t.method method,
+        t.params params,
+        t.description description,
+        t.`exception` `exception`,
+        t.type type,
+        t.cost_time costTime,
+        t.request_ip requestIp,
+        t.address address,
+        t.browser browser,
+        t.create_time creTm
+        FROM t_pub_logjnl t
+        <where>
+            <if test="_parameter != null">
+                t.id = #{id}
+            </if>
+        </where>
     </select>
 </mapper>

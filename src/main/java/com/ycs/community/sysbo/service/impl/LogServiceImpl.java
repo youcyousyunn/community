@@ -2,10 +2,9 @@ package com.ycs.community.sysbo.service.impl;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.PageUtil;
-import com.ycs.community.coobo.domain.dto.QryAttachPageResponseDto;
-import com.ycs.community.coobo.domain.po.AttachPo;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.LogDao;
+import com.ycs.community.sysbo.domain.dto.LogResponseDto;
 import com.ycs.community.sysbo.domain.dto.QryLogPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryLogPageResponseDto;
 import com.ycs.community.sysbo.domain.po.LogJnlPo;
@@ -61,6 +60,18 @@ public class LogServiceImpl implements LogService {
             response.setData(data);
             response.setTotal(totalCount);
             return response;
+        }
+        return response;
+    }
+
+    @Override
+    public LogResponseDto qryLogById(Long id) {
+        LogResponseDto response = new LogResponseDto();
+        LogJnlPo logJnlPo = logDao.qryLogById(id);
+        if (!StringUtils.isEmpty(logJnlPo)) {
+            response.setData(logJnlPo);
+        } else {
+            throw new CustomizeBusinessException(HiMsgCdConstants.LOG_NOT_EXIST, "日志不存在");
         }
         return response;
     }

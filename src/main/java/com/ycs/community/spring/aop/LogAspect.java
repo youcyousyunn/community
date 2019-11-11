@@ -3,6 +3,7 @@ package com.ycs.community.spring.aop;
 import cn.hutool.core.io.resource.ClassPathResource;
 import com.ycs.community.coobo.utils.FileUtil;
 import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.sysbo.utils.ThrowableUtil;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 import com.ycs.community.sysbo.domain.po.LogJnlPo;
@@ -55,9 +56,73 @@ public class LogAspect {
         // 开始时间
         long startTime = System.currentTimeMillis();
         result =  joinPoint.proceed();
-
-        // 添加日志
+        // 结束时间
         long endTime = System.currentTimeMillis();
+        LogJnlPo logJnlPo = this.buildLogJnlPo(joinPoint);
+        logJnlPo.setType("INFO");
+        logJnlPo.setCostTime(endTime - startTime);
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method reflectMethod = methodSignature.getMethod();
+        CmmOperationLog cmmOperationLog = reflectMethod.getAnnotation(com.ycs.community.spring.annotation.CmmOperationLog.class);
+        if (cmmOperationLog.isSave()) {
+            logService.addLog(logJnlPo);
+        }
+        return result;
+    }
+
+    /**
+     * 前置通知
+     * @param joinPoint
+     */
+    @Before("operationLog()")
+    public void doBeforeAdvice(JoinPoint joinPoint){
+        System.out.println("方法执行前执行");
+    }
+
+    /**
+     * 后置通知
+     * @param joinPoint
+     */
+    @After("operationLog()")
+    public void doAfter(JoinPoint joinPoint){
+        System.out.println("方法执行后执行");
+    }
+
+    /**
+     * 处理完请求，返回内容
+     * @param result
+     */
+    @AfterReturning(returning = "result", pointcut = "operationLog()")
+    public void doAfterReturning(Object result) {
+        logger.info("请求响应： {}", result); // 加入花括号{} 解决第二个参数不能打印
+    }
+
+    /**
+     * 异常通知
+     * @param joinPoint
+     */
+    @AfterThrowing(value = "operationLog()", throwing = "throwable")
+    public void doAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
+        // 开始时间
+        long startTime = System.currentTimeMillis();
+        LogJnlPo logJnlPo = this.buildLogJnlPo((ProceedingJoinPoint) joinPoint);
+        logJnlPo.setException(ThrowableUtil.getStackTrace(throwable));
+        logJnlPo.setType("ERROR");
+        logJnlPo.setCostTime(System.currentTimeMillis() - startTime);
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method reflectMethod = methodSignature.getMethod();
+        CmmOperationLog cmmOperationLog = reflectMethod.getAnnotation(com.ycs.community.spring.annotation.CmmOperationLog.class);
+        if (cmmOperationLog.isSave()) {
+            logService.addLog(logJnlPo);
+        }
+    }
+
+    /**
+     * 组装日志实体
+     * @param joinPoint
+     * @return
+     */
+    private LogJnlPo buildLogJnlPo(ProceedingJoinPoint joinPoint) {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         // 组装日志对象
         LogJnlPo logJnlPo = new LogJnlPo();
@@ -79,51 +144,11 @@ public class LogAspect {
         Method reflectMethod = methodSignature.getMethod();
         CmmOperationLog cmmOperationLog = reflectMethod.getAnnotation(com.ycs.community.spring.annotation.CmmOperationLog.class);
         logJnlPo.setDescription(cmmOperationLog.title());
-        logJnlPo.setType("INFO");
-        logJnlPo.setCostTime(endTime - startTime);
         logJnlPo.setRequestIp(getIP(request));
         logJnlPo.setAddress(getAddressByIp(getIP(request)));
         logJnlPo.setBrowser(getBrowser(request));
         logJnlPo.setCreTm(new Date().getTime());
-        if (cmmOperationLog.isSave()) {
-            logService.addLog(logJnlPo);
-        }
-        return result;
-    }
-
-    /**
-     * 前置通知
-     * @param joinPoint
-     */
-    @Before("operationLog()")
-    public void doBeforeAdvice(JoinPoint joinPoint){
-        System.out.println("方法执行前执行");
-    }
-
-    /**
-     * 后置通知
-     * @param joinPoint
-     */
-    @After("operationLog()")
-    public void after(JoinPoint joinPoint){
-        System.out.println("方法执行后执行");
-    }
-
-    /**
-     * 处理完请求，返回内容
-     * @param result
-     */
-    @AfterReturning(returning = "result", pointcut = "operationLog()")
-    public void doAfterReturning(Object result) {
-        logger.info("请求响应： {}", result); // 加入花括号{} 解决第二个参数不能打印
-    }
-
-    /**
-     * 异常通知
-     * @param joinPoint
-     */
-    @AfterThrowing("operationLog()")
-    public void throwing(JoinPoint joinPoint){
+        return logJnlPo;
     }
 
     /**

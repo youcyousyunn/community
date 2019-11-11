@@ -49,4 +49,6 @@ public class HiMsgCdConstants {
     public static final String DEL_ATTACH_FAIL = "B0020";
     /*** 添加日志失败 ****/
     public static final String ADD_LOG_FAIL = "B0021";
+    /*** 日志不存在 ****/
+    public static final String LOG_NOT_EXIST = "B0022";
 }

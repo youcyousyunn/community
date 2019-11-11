@@ -26,7 +26,7 @@ public class RedisController {
      * @return
      */
     @GetMapping("/redis/queryPage")
-    @CmmOperationLog(title = "分页查询Redis缓存列表", action = OperationType.GET, isSave = false, channel = "web")
+    @CmmOperationLog(title = "分页查询Redis缓存列表", action = OperationType.GET, isSave = true, channel = "web")
     public QryRedisPageResponseDto qryRedisPage(QryRedisPageRequestDto request) {
         QryRedisPageResponseDto responsePageDto = new QryRedisPageResponseDto();
         responsePageDto = redisService.qryRedisPage(request);

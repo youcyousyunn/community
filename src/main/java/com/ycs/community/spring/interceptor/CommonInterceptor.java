@@ -1,10 +1,12 @@
 package com.ycs.community.spring.interceptor;
 
 import com.ycs.community.basebo.constants.Constants;
-import com.ycs.community.spring.context.BaseRequestInfo;
+import com.ycs.community.basebo.domain.dto.BaseRequestDto;
+import com.ycs.community.spring.context.BaseRequestContextHolder;
 import com.ycs.community.spring.context.CmmSessionContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,7 +20,10 @@ import java.net.UnknownHostException;
 public class CommonInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-//        this.initRequestInfo(request);
+        if(handler instanceof HandlerMethod) {
+            BaseRequestDto baseRequestDto = initRequestInfo(request);
+            BaseRequestContextHolder.setBaseRequest(baseRequestDto);
+        }
         return true;
     }
 
@@ -35,7 +40,7 @@ public class CommonInterceptor implements HandlerInterceptor {
      * @param request
      * @return
      */
-    private BaseRequestInfo initRequestInfo (HttpServletRequest request) {
+    private BaseRequestDto initRequestInfo (HttpServletRequest request) {
         String reqUrl = request.getRequestURI();
         String reqUrlWithoutCtx = reqUrl.substring(reqUrl.indexOf(request.getContextPath()));
         String sessionId = request.getHeader(Constants.AUTH_TOKEN);
@@ -46,7 +51,7 @@ public class CommonInterceptor implements HandlerInterceptor {
             accountId = (Long) session.getAttribute(sessionId);
         }
 
-        BaseRequestInfo requestInfo = new BaseRequestInfo();
+        BaseRequestDto requestInfo = new BaseRequestDto();
         requestInfo.setAccountId(accountId);
         requestInfo.setUrl(reqUrl);
         requestInfo.setUrlWithOutContext(reqUrlWithoutCtx);
