@@ -1,6 +1,7 @@
 package com.ycs.community.cmmbo.controller;
 
 import cn.hutool.core.codec.Base64;
+import com.wf.captcha.ArithmeticCaptcha;
 import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.domain.dto.GithubAccessTokenRequestDto;
@@ -10,18 +11,22 @@ import com.ycs.community.cmmbo.domain.dto.UserResponseDto;
 import com.ycs.community.cmmbo.domain.po.UserPo;
 import com.ycs.community.cmmbo.provider.GithubProvider;
 import com.ycs.community.cmmbo.service.UserService;
-import com.ycs.community.spring.context.CmmSessionContext;
+import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.exception.BadRequestException;
-import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
+import com.ycs.community.spring.security.service.OnlineUserService;
+import com.ycs.community.spring.security.utils.JwtTokenUtil;
 import com.ycs.community.sysbo.domain.dto.VerifyCodeRequestDto;
 import com.ycs.community.sysbo.domain.dto.VerifyCodeResponseDto;
 import com.ycs.community.sysbo.domain.po.VerifyCodePo;
 import com.ycs.community.sysbo.service.RedisService;
+import com.ycs.community.sysbo.utils.EncryptUtil;
 import com.ycs.community.sysbo.utils.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,6 +55,13 @@ public class AuthorizeController {
     private UserService userService;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    @Qualifier("jwtUserDetailsService")
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private OnlineUserService onlineUserService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
 
     /**
@@ -56,8 +69,9 @@ public class AuthorizeController {
      * @param request
      * @return
      */
+    @AnonymousAccess
     @PostMapping("/login")
-    public UserResponseDto login (@RequestBody UserRequestDto request, HttpSession session) throws CustomizeBusinessException {
+    public UserResponseDto login(@RequestBody UserRequestDto request, HttpServletRequest httpServletRequest) {
         // 接口请求报文检查
         if (!request.checkRequestDto()) {
             BizLogger.info("接口请求报文异常" + request.toString());
@@ -72,19 +86,32 @@ public class AuthorizeController {
             throw new BadRequestException("验证码错误");
         }
 
-        UserResponseDto responseDto = new UserResponseDto();
         // 校验密码
-        responseDto = userService.login(request);
-        CmmSessionContext instance = CmmSessionContext.getInstance();
-        session.setAttribute(session.getId().toString(), responseDto.getData().getAccountId());
-        instance.addSession(session);
-        responseDto.setToken(session.getId().toString());
+        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(request.getName());
+        if (!userPo.getPassword().equals(EncryptUtil.encryptPassword(request.getPassword()))) {
+            throw new BadRequestException("密码错误");
+        }
+        if (!userPo.isEnabled()) {
+            throw new BadRequestException("账号已被停用, 请联系管理员");
+        }
+
+        UserResponseDto responseDto = new UserResponseDto();
+        List<String> roles = userService.qryRolesByUserId(userPo.getId());
+        userPo.setRoles(roles);
+        responseDto.setData(userPo);
+
+        // 生成令牌
+        final String token = jwtTokenUtil.generateToken(userPo);
+        // 保存在线用户信息
+        onlineUserService.saveOnlineUserInfo(userPo, token, httpServletRequest);
+
+        responseDto.setToken(token);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }
 
     /**
-     * 获取登录验证码
+     * 获取图形登录验证码
      * @param request
      * @return
      */
@@ -109,6 +136,33 @@ public class AuthorizeController {
         } finally {
             ops.close();
         }
+        return  responseDto;
+    }
+
+    /**
+     * 获取算术登录验证码
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    @AnonymousAccess
+    @PostMapping("/arithmetic/vCode")
+    public VerifyCodeResponseDto getArithmeticVerifyCode (@RequestBody VerifyCodeRequestDto request) {
+        int width = request.getWidth();
+        int height = request.getHeight();
+        int size = request.getSize();
+        // 算术验证码
+        ArithmeticCaptcha captcha = new ArithmeticCaptcha(width, height);
+        // 几位数运算，默认是两位
+        captcha.setLen(size);
+        // 获取运算的结果
+        String result = captcha.text();
+        String uuid = UUID.randomUUID().toString();
+        // 添加算术验证码到redis缓存
+        redisService.addVerifyCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + uuid, result);
+        VerifyCodeResponseDto responseDto = new VerifyCodeResponseDto();
+        VerifyCodePo data = new VerifyCodePo(uuid, captcha.toBase64());
+        responseDto.setData(data);
         return  responseDto;
     }
 
@@ -139,9 +193,10 @@ public class AuthorizeController {
             userPo.setAvatarUrl(githubUserResponseDto.getAvatarUrl());
             boolean result = userService.addOrUpdateUser(userPo);
             if(result) {
-                CmmSessionContext instance = CmmSessionContext.getInstance();
-                session.setAttribute(session.getId().toString(), githubUserResponseDto.getId());
-                instance.addSession(session);
+                // 生成令牌
+                final String token = jwtTokenUtil.generateToken(userPo);
+                // 保存在线用户信息
+                onlineUserService.saveOnlineUserInfo(userPo, token, request);
             }
         }
 
@@ -150,15 +205,13 @@ public class AuthorizeController {
 
     /**
      * 注销登录
-     * @param sessionId
+     * @param request
      * @return
      */
-    @GetMapping("/logout/{sessionId}")
-    public UserResponseDto logout(@PathVariable("sessionId") String sessionId) {
+    @GetMapping("/logout")
+    public UserResponseDto logout(HttpServletRequest request) {
+        onlineUserService.logout(jwtTokenUtil.getToken(request));
         UserResponseDto responseDto = new UserResponseDto();
-        CmmSessionContext instance = CmmSessionContext.getInstance();
-        HttpSession session = instance.getSession(sessionId);
-        instance.delSession(session);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }

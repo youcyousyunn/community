@@ -1,6 +1,6 @@
 package com.ycs.community.sysbo.service.impl;
 
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.spring.security.utils.SecurityUtil;
 import com.ycs.community.sysbo.dao.MenuDao;
 import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.domain.dto.MenuRequestDto;
@@ -9,12 +9,13 @@ import com.ycs.community.sysbo.domain.po.MenuMetaPo;
 import com.ycs.community.sysbo.domain.po.MenuPo;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.MenuService;
-import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -25,9 +26,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuResponseDto qryMenu(MenuRequestDto request) {
-        UserPo userPo = new UserPo();
-        userPo.setId(1l);
-        List<RolePo> rolePoList = roleDao.qryRoleByUserId(userPo.getId());
+        Long accountId = SecurityUtil.getUserId();
+        List<RolePo> rolePoList = roleDao.qryRolesByUserId(accountId);
         List<MenuPo> menuPoList = menuDao.qryMenuByRole(rolePoList);
         // 构建菜单树
         List<MenuPo> menuTree = new ArrayList<>();

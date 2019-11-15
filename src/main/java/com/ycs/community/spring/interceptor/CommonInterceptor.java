@@ -1,38 +1,39 @@
 package com.ycs.community.spring.interceptor;
 
-import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.domain.dto.BaseRequestDto;
-import com.ycs.community.spring.context.BaseRequestContextHolder;
-import com.ycs.community.spring.context.CmmSessionContext;
+import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.spring.security.utils.SecurityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Component
 public class CommonInterceptor implements HandlerInterceptor {
+    @Autowired
+    @Qualifier("jwtUserDetailsService")
+    private UserDetailsService userDetailsService;
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        if(handler instanceof HandlerMethod) {
-            BaseRequestDto baseRequestDto = initRequestInfo(request);
-            BaseRequestContextHolder.setBaseRequest(baseRequestDto);
-        }
+//        initRequestInfo(request);
         return true;
     }
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-                            @Nullable ModelAndView modelAndView) throws Exception {
+                           @Nullable ModelAndView modelAndView) throws Exception {
     }
 
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-                                 @Nullable Exception ex) throws Exception {
+                                @Nullable Exception ex) throws Exception {
     }
 
     /**
@@ -43,16 +44,9 @@ public class CommonInterceptor implements HandlerInterceptor {
     private BaseRequestDto initRequestInfo (HttpServletRequest request) {
         String reqUrl = request.getRequestURI();
         String reqUrlWithoutCtx = reqUrl.substring(reqUrl.indexOf(request.getContextPath()));
-        String sessionId = request.getHeader(Constants.AUTH_TOKEN);
-        Long accountId = 0l;
-        if (null != sessionId) {
-            CmmSessionContext instance = CmmSessionContext.getInstance();
-            HttpSession session = instance.getSession(sessionId);
-            accountId = (Long) session.getAttribute(sessionId);
-        }
-
+        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(SecurityUtil.getUsername());
         BaseRequestDto requestInfo = new BaseRequestDto();
-        requestInfo.setAccountId(accountId);
+        requestInfo.setAccountId(userPo.getAccountId());
         requestInfo.setUrl(reqUrl);
         requestInfo.setUrlWithOutContext(reqUrlWithoutCtx);
         requestInfo.setUserAgent(this.getUserAgent(request));

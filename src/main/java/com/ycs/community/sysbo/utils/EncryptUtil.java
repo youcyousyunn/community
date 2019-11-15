@@ -1,43 +1,43 @@
 package com.ycs.community.sysbo.utils;
 
 import org.springframework.util.DigestUtils;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
 
 public class EncryptUtil {
-    private static String strKey = "Passw0rd", strParam = "Passw0rd";
-
+    private final static String DES_KEY = "PASS_KEY";
+    private final static String IV_PARAM = "IV_PARAM";
+    
     /**
      * 对称加密
-     * @param source
-     * @return
-     * @throws Exception
      */
     public static String desEncrypt(String source) throws Exception {
-        if (source == null || source.length() == 0){
+        if (source == null || source.length() == 0) {
             return null;
         }
         Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        DESKeySpec desKeySpec = new DESKeySpec(strKey.getBytes("UTF-8"));
+        DESKeySpec desKeySpec = new DESKeySpec(DES_KEY.getBytes(StandardCharsets.UTF_8));
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
         SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        IvParameterSpec iv = new IvParameterSpec(strParam.getBytes("UTF-8"));
+        IvParameterSpec iv = new IvParameterSpec(IV_PARAM.getBytes(StandardCharsets.UTF_8));
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         return byte2hex(
-                cipher.doFinal(source.getBytes("UTF-8"))).toUpperCase();
+                cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
     }
 
-    public static String byte2hex(byte[] inStr) {
+    private static String byte2hex(byte[] inStr) {
         String stmp;
-        StringBuffer out = new StringBuffer(inStr.length * 2);
-        for (int n = 0; n < inStr.length; n++) {
-            stmp = Integer.toHexString(inStr[n] & 0xFF);
+        StringBuilder out = new StringBuilder(inStr.length * 2);
+        for (byte b : inStr) {
+            stmp = Integer.toHexString(b & 0xFF);
             if (stmp.length() == 1) {
                 // 如果是0至F的单位字符串，则添加0
-                out.append("0" + stmp);
+                out.append("0").append(stmp);
             } else {
                 out.append(stmp);
             }
@@ -45,8 +45,7 @@ public class EncryptUtil {
         return out.toString();
     }
 
-
-    public static byte[] hex2byte(byte[] b) {
+    private static byte[] hex2byte(byte[] b) {
         if ((b.length % 2) != 0){
             throw new IllegalArgumentException("长度不是偶数");
         }
@@ -60,9 +59,6 @@ public class EncryptUtil {
 
     /**
      * 对称解密
-     * @param source
-     * @return
-     * @throws Exception
      */
     public static String desDecrypt(String source) throws Exception {
         if (source == null || source.length() == 0){
@@ -70,10 +66,10 @@ public class EncryptUtil {
         }
         byte[] src = hex2byte(source.getBytes());
         Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        DESKeySpec desKeySpec = new DESKeySpec(strKey.getBytes("UTF-8"));
+        DESKeySpec desKeySpec = new DESKeySpec(DES_KEY.getBytes(StandardCharsets.UTF_8));
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
         SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        IvParameterSpec iv = new IvParameterSpec(strParam.getBytes("UTF-8"));
+        IvParameterSpec iv = new IvParameterSpec(IV_PARAM.getBytes(StandardCharsets.UTF_8));
         cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         byte[] retByte = cipher.doFinal(src);
         return new String(retByte);
@@ -86,5 +82,13 @@ public class EncryptUtil {
      */
     public static String encryptPassword(String password){
         return  DigestUtils.md5DigestAsHex(password.getBytes());
+    }
+
+    public static void main(String[] args) throws Exception {
+        String pwd = "123456";
+        String encryptPwd = desEncrypt(pwd);
+        System.out.println("加密后密码: " + encryptPwd);
+        String decryptPwd = desDecrypt(encryptPwd);
+        System.out.println("解密后密码: " + decryptPwd);
     }
 }

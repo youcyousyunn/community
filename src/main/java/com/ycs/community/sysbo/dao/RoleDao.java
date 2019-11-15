@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 @Repository
 public interface RoleDao {
-    List<RolePo> qryRoleByUserId(Long userId);
+    List<RolePo> qryRolesByUserId(Long userId);
 }

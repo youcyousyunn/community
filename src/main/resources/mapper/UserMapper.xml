@@ -6,6 +6,7 @@
             `name`,
             token,
             avatar_url,
+            isPause,
             create_time
         )
         values (
@@ -13,6 +14,7 @@
             #{name,jdbcType=VARCHAR},
             #{token,jdbcType=VARCHAR},
             #{avatarUrl,jdbcType=VARCHAR},
+            #{isPause,jdbcType=BIT},
             #{creTm,jdbcType=BIGINT}
         )
     </insert>
@@ -25,6 +27,9 @@
             </if>
             <if test="avatarUrl != null">
                 avatar_url = #{avatarUrl},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled},
             </if>
             <if test="updTm != null">
                 update_time = #{updTm}
@@ -39,11 +44,13 @@
 
     <select id="qryUserByAccountId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.UserPo">
         SELECT
-            id id,
-            account_id accountId,
-            `name` `name`,
-            token token,
-            avatar_url avatarUrl
+        id id,
+        account_id accountId,
+        `name` `name`,
+        token token,
+        avatar_url avatarUrl,
+        enabled enabled,
+        last_password_reset_time lastPasswordResetTime
         FROM t_sys_userinfo
         <where>
             <if test="_parameter != null">
@@ -59,7 +66,9 @@
         `name` `name`,
         `password` `password`,
         token token,
-        avatar_url avatarUrl
+        avatar_url avatarUrl,
+        enabled enabled,
+        last_password_reset_time lastPasswordResetTime
         FROM t_sys_userinfo
         <where>
             <if test="_parameter != null">

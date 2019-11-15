@@ -1,12 +1,12 @@
 package com.ycs.community.cmmbo.service;
 
-import com.ycs.community.cmmbo.domain.dto.UserRequestDto;
-import com.ycs.community.cmmbo.domain.dto.UserResponseDto;
 import com.ycs.community.cmmbo.domain.po.UserPo;
-import com.ycs.community.spring.exception.CustomizeBusinessException;
+
+import java.util.List;
 
 public interface UserService {
     boolean addOrUpdateUser(UserPo userPo);
-    UserResponseDto qryUserByAccountId(long accountId);
-    UserResponseDto login(UserRequestDto request) throws CustomizeBusinessException;
+    UserPo qryUserByAccountId(long accountId);
+    UserPo qryUserInfoByName(String userNm);
+    List<String> qryRolesByUserId(Long userId);
 }
