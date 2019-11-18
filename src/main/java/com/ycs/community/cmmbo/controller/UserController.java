@@ -4,7 +4,7 @@ import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.domain.dto.UserResponseDto;
 import com.ycs.community.cmmbo.domain.po.UserPo;
 import com.ycs.community.cmmbo.service.UserService;
-import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.security.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/info")
-    @CmmOperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
+    @OperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
     public UserResponseDto qryUserInfo (HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
         UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(SecurityUtil.getUsername());

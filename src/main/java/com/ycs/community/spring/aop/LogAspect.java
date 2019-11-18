@@ -2,7 +2,7 @@ package com.ycs.community.spring.aop;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 import com.ycs.community.coobo.utils.FileUtil;
-import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.sysbo.utils.ThrowableUtil;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -40,8 +40,8 @@ public class LogAspect {
     /**
      * 切入点
      */
-    @Pointcut("@annotation(com.ycs.community.spring.annotation.CmmOperationLog)")
-    public void operationLog(){
+    @Pointcut("@annotation(com.ycs.community.spring.annotation.OperationLog)")
+    public void pointcut(){
     }
 
     /**
@@ -50,7 +50,7 @@ public class LogAspect {
      * @return
      * @throws Throwable
      */
-    @Around("operationLog()")
+    @Around("pointcut()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
         // 开始时间
@@ -63,8 +63,8 @@ public class LogAspect {
         logJnlPo.setCostTime(endTime - startTime);
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method reflectMethod = methodSignature.getMethod();
-        CmmOperationLog cmmOperationLog = reflectMethod.getAnnotation(com.ycs.community.spring.annotation.CmmOperationLog.class);
-        if (cmmOperationLog.isSave()) {
+        OperationLog operationLog = reflectMethod.getAnnotation(OperationLog.class);
+        if (operationLog.isSave()) {
             logService.addLog(logJnlPo);
         }
         return result;
@@ -74,7 +74,7 @@ public class LogAspect {
      * 前置通知
      * @param joinPoint
      */
-    @Before("operationLog()")
+    @Before("pointcut()")
     public void doBeforeAdvice(JoinPoint joinPoint){
         System.out.println("方法执行前执行");
     }
@@ -83,7 +83,7 @@ public class LogAspect {
      * 后置通知
      * @param joinPoint
      */
-    @After("operationLog()")
+    @After("pointcut()")
     public void doAfter(JoinPoint joinPoint){
         System.out.println("方法执行后执行");
     }
@@ -92,7 +92,7 @@ public class LogAspect {
      * 处理完请求，返回内容
      * @param result
      */
-    @AfterReturning(returning = "result", pointcut = "operationLog()")
+    @AfterReturning(returning = "result", pointcut = "pointcut()")
     public void doAfterReturning(Object result) {
         logger.info("请求响应： {}", result); // 加入花括号{} 解决第二个参数不能打印
     }
@@ -101,7 +101,7 @@ public class LogAspect {
      * 异常通知
      * @param joinPoint
      */
-    @AfterThrowing(value = "operationLog()", throwing = "throwable")
+    @AfterThrowing(value = "pointcut()", throwing = "throwable")
     public void doAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
         // 开始时间
         long startTime = System.currentTimeMillis();
@@ -111,8 +111,8 @@ public class LogAspect {
         logJnlPo.setCostTime(System.currentTimeMillis() - startTime);
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method reflectMethod = methodSignature.getMethod();
-        CmmOperationLog cmmOperationLog = reflectMethod.getAnnotation(com.ycs.community.spring.annotation.CmmOperationLog.class);
-        if (cmmOperationLog.isSave()) {
+        OperationLog operationLog = reflectMethod.getAnnotation(OperationLog.class);
+        if (operationLog.isSave()) {
             logService.addLog(logJnlPo);
         }
     }
@@ -142,8 +142,8 @@ public class LogAspect {
         }
         logJnlPo.setParams(params.toString() + " }");
         Method reflectMethod = methodSignature.getMethod();
-        CmmOperationLog cmmOperationLog = reflectMethod.getAnnotation(com.ycs.community.spring.annotation.CmmOperationLog.class);
-        logJnlPo.setDescription(cmmOperationLog.title());
+        OperationLog operationLog = reflectMethod.getAnnotation(OperationLog.class);
+        logJnlPo.setDescription(operationLog.title());
         logJnlPo.setRequestIp(getIP(request));
         logJnlPo.setAddress(getAddressByIp(getIP(request)));
         logJnlPo.setBrowser(getBrowser(request));

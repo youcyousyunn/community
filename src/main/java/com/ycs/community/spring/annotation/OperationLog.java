@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface CmmOperationLog {
+public @interface OperationLog {
     String title() default "";
     OperationType action() default OperationType.UNKNOWN;
     boolean isSave() default false;

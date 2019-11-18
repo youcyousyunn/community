@@ -1,7 +1,7 @@
 package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
-import com.ycs.community.spring.annotation.CmmOperationLog;
+import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.sysbo.domain.dto.QryQuartzJobPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryQuartzJobPageResponseDto;
@@ -22,7 +22,7 @@ public class QuartzJobController {
      * @return
      */
     @PostMapping("/job")
-    @CmmOperationLog(title = "新增定时任务", action = OperationType.POST, isSave = true, channel = "web")
+    @OperationLog(title = "新增定时任务", action = OperationType.POST, isSave = true, channel = "web")
     public QuartzJobResponseDto addJob(QuartzJobRequestDto request) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
         boolean result = quartzJobService.addJob(request);
@@ -38,7 +38,7 @@ public class QuartzJobController {
      * @return
      */
     @PutMapping("/job/execute/{id}")
-    @CmmOperationLog(title = "执行定时任务", action = OperationType.PUT, isSave = true, channel = "web")
+    @OperationLog(title = "执行定时任务", action = OperationType.PUT, isSave = true, channel = "web")
     public QuartzJobResponseDto executeJob(@PathVariable("id") Long id) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
         boolean result = quartzJobService.executeJob(id);
@@ -54,7 +54,7 @@ public class QuartzJobController {
      * @return
      */
     @PutMapping("/job/status/{id}")
-    @CmmOperationLog(title = "更新定时任务状态", action = OperationType.PUT, isSave = true, channel = "web")
+    @OperationLog(title = "更新定时任务状态", action = OperationType.PUT, isSave = true, channel = "web")
     public QuartzJobResponseDto updJobStatus(@PathVariable("id") Long id) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
         boolean result = quartzJobService.updJobStatus(quartzJobService.qryJobById(id));
@@ -70,7 +70,7 @@ public class QuartzJobController {
      * @return
      */
     @GetMapping("/job/queryPage")
-    @CmmOperationLog(title = "分页查询定时任务列表", action = OperationType.GET, isSave = false, channel = "web")
+    @OperationLog(title = "分页查询定时任务列表", action = OperationType.GET, isSave = false, channel = "web")
     public QryQuartzJobPageResponseDto qryQuartzPage(QryQuartzJobPageRequestDto request) {
         QryQuartzJobPageResponseDto responseDto = new QryQuartzJobPageResponseDto();
         responseDto = quartzJobService.qryQuartzPage(request);
