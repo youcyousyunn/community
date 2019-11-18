@@ -6,6 +6,7 @@ import com.ycs.community.coobo.domain.dto.AttachResponseDto;
 import com.ycs.community.coobo.domain.dto.QryAttachPageRequestDto;
 import com.ycs.community.coobo.domain.dto.QryAttachPageResponseDto;
 import com.ycs.community.coobo.service.AttachService;
+import com.ycs.community.spring.annotation.LimitFlow;
 import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeRequestException;
@@ -27,6 +28,7 @@ public class AttachController {
      */
     @GetMapping("/attach/queryPage")
     @OperationLog(title = "分页查询附件列表", action = OperationType.GET, isSave = false, channel = "web")
+    @LimitFlow(name = "分页查询附件列表", period = 60, count = 10)
     public QryAttachPageResponseDto qryAttachPage(QryAttachPageRequestDto request) {
         QryAttachPageResponseDto responsePageDto = new QryAttachPageResponseDto();
         responsePageDto = attachService.qryAttachPage(request);

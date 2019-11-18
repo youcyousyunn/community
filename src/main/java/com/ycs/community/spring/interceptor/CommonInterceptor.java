@@ -44,7 +44,7 @@ public class CommonInterceptor implements HandlerInterceptor {
     private BaseRequestDto initRequestInfo (HttpServletRequest request) {
         String reqUrl = request.getRequestURI();
         String reqUrlWithoutCtx = reqUrl.substring(reqUrl.indexOf(request.getContextPath()));
-        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(SecurityUtil.getUsername());
+        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(SecurityUtil.getUserName());
         BaseRequestDto requestInfo = new BaseRequestDto();
         requestInfo.setAccountId(userPo.getAccountId());
         requestInfo.setUrl(reqUrl);

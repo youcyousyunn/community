@@ -11,6 +11,7 @@ import com.ycs.community.coobo.service.AttachService;
 import com.ycs.community.coobo.utils.FileUtil;
 import com.ycs.community.spring.exception.BadRequestException;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.spring.security.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class AttachServiceImpl implements AttachService {
             attachPo.setSuffix(suffix);
             attachPo.setType(type);
             attachPo.setSize(FileUtil.getSize(multipartFile.getSize()));
-            attachPo.setOperator(null); /// todo
+            attachPo.setOperator(SecurityUtil.getUserName());
             attachPo.setCreTm(new Date().getTime());
             if (1 != attachDao.addAttach(attachPo)) {
                 FileUtil.deleteFile(file); // 删除已上传文件

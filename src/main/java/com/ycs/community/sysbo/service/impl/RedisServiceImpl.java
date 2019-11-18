@@ -1,7 +1,6 @@
 package com.ycs.community.sysbo.service.impl;
 
 import com.ycs.community.basebo.utils.PageUtil;
-import com.ycs.community.spring.exception.BadRequestException;
 import com.ycs.community.sysbo.domain.dto.QryRedisPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryRedisPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.RedisRequestDto;
@@ -15,7 +14,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -72,10 +70,6 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public String qryVCode(String key) {
-        try {
-            return Objects.requireNonNull(redisTemplate.opsForValue().get(key)).toString();
-        }catch (Exception e){
-            throw new BadRequestException("验证码已过期");
-        }
+        return String.valueOf(redisTemplate.opsForValue().get(key));
     }
 }

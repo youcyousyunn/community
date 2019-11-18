@@ -3,11 +3,12 @@ package com.ycs.community.spring.aop;
 import cn.hutool.core.io.resource.ClassPathResource;
 import com.ycs.community.coobo.utils.FileUtil;
 import com.ycs.community.spring.annotation.OperationLog;
+import com.ycs.community.spring.security.utils.SecurityUtil;
+import com.ycs.community.sysbo.domain.po.LogJnlPo;
+import com.ycs.community.sysbo.service.LogService;
 import com.ycs.community.sysbo.utils.ThrowableUtil;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
-import com.ycs.community.sysbo.domain.po.LogJnlPo;
-import com.ycs.community.sysbo.service.LogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -126,7 +127,7 @@ public class LogAspect {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         // 组装日志对象
         LogJnlPo logJnlPo = new LogJnlPo();
-        logJnlPo.setUserNm("admin"); ///todo
+        logJnlPo.setUserNm(SecurityUtil.getUserName());
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String method = joinPoint.getTarget().getClass().getName() + "." + methodSignature.getName() + "()";
         logJnlPo.setMethod(method);

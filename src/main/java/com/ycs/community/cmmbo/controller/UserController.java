@@ -36,7 +36,7 @@ public class UserController {
     @OperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
     public UserResponseDto qryUserInfo (HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
-        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(SecurityUtil.getUsername());
+        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(SecurityUtil.getUserName());
         if (!StringUtils.isEmpty(userPo)) {
             userPo = userService.qryUserByAccountId(userPo.getAccountId());
             responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
