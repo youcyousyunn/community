@@ -51,4 +51,12 @@ public class HiMsgCdConstants {
     public static final String ADD_LOG_FAIL = "B0021";
     /*** 日志不存在 ****/
     public static final String LOG_NOT_EXIST = "B0022";
+    /*** 添加角色菜单失败 ****/
+    public static final String ADD_ROLE_MENU_FAIL = "B0023";
+    /*** 删除角色菜单失败 ****/
+    public static final String DEL_ROLE_MENU_FAIL = "B0024";
+    /*** 添加角色失败 ****/
+    public static final String ADD_ROLE_FAIL = "B0025";
+    /*** 更新角色失败 ****/
+    public static final String UPD_ROLE_FAIL = "B0026";
 }

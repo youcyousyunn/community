@@ -12,4 +12,5 @@ public class RolePo extends BasePo {
     private String code;
     private String name;
     private String desc;
+    private List<MenuPo> menus;
 }

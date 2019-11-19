@@ -18,6 +18,8 @@ public class MenuPo extends BasePo {
     private boolean alwaysShow;
     private boolean iFrame;
     private String icon;
+    private String permission;
+    private int type;
     private List<MenuPo> children;
     private MenuMetaPo meta;
     private int sort;

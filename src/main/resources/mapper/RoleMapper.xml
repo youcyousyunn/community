@@ -15,4 +15,105 @@
             </if>
         </where>
     </select>
+
+    <select id="qryRoleCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_sys_role t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryRolePage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.RolePo">
+        SELECT
+        t.id id,
+        t.code code,
+        t.name name,
+        t.`desc` `desc`,
+        t.create_time creTm
+        FROM t_sys_role t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+
+    <insert id="addRole" parameterType="com.ycs.community.sysbo.domain.po.RolePo">
+        INSERT INTO t_sys_role(code,
+			`name`,
+			`desc`,
+			create_time
+		)
+		VALUES (
+			#{code,jdbcType=VARCHAR},
+	  		#{name,jdbcType=VARCHAR},
+	  		#{desc,jdbcType=VARCHAR},
+	  		#{creTm,jdbcType=BIGINT}
+		)
+    </insert>
+
+    <update id="updRole" parameterType="com.ycs.community.sysbo.domain.po.RolePo">
+        UPDATE t_sys_role
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="desc != null">
+                `desc` = #{desc},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <insert id="addRoleMenus" parameterType="java.util.Map">
+        INSERT INTO t_sys_role_menu (
+            role_id, menu_id
+        )
+        VALUES
+        <foreach collection="menus" item="menuId" index="index" separator=",">
+            (#{roleId, jdbcType=BIGINT}, #{menuId, jdbcType=BIGINT})
+        </foreach>
+    </insert>
+
+    <delete id="delRoleMenus" parameterType="java.util.Map">
+        DELETE FROM t_sys_role_menu
+        <where>
+            <if	test="menus != null">
+                menu_id IN
+                <foreach collection="menus" item="menuId" index="index" open="(" close=")" separator=",">
+                    #{menuId}
+                </foreach>
+            </if>
+            <if test="roleId != null">
+                AND role_id = #{roleId}
+            </if>
+        </where>
+    </delete>
 </mapper>

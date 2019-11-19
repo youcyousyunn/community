@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -26,9 +24,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuResponseDto qryMenu(MenuRequestDto request) {
-        Long accountId = SecurityUtil.getUserId();
-        List<RolePo> rolePoList = roleDao.qryRolesByUserId(accountId);
-        List<MenuPo> menuPoList = menuDao.qryMenuByRole(rolePoList);
+        Long userId = SecurityUtil.getUserId();
+        List<RolePo> rolePoList = roleDao.qryRolesByUserId(userId);
+        List<MenuPo> menuPoList = menuDao.qryMenusByRole(rolePoList);
         // 构建菜单树
         List<MenuPo> menuTree = new ArrayList<>();
         for (MenuPo menuPo : menuPoList) {
@@ -51,6 +49,28 @@ public class MenuServiceImpl implements MenuService {
             response.setData(menuTree);
         }
         return response;
+    }
+
+    @Override
+    public List<Map<String, Object>> qryAllMenu(List<MenuPo> menus) {
+        List<Map<String, Object>> list = new LinkedList<>();
+        menus.forEach(menu -> {
+            List<MenuPo> menuList = menuDao.qryMenusByPid(menu.getId());
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",menu.getId());
+            map.put("label",menu.getName());
+            if (!StringUtils.isEmpty(menuList)) {
+                map.put("children",qryAllMenu(menuList));
+            }
+            list.add(map);
+        });
+        return list;
+    }
+
+    @Override
+    public List<MenuPo> qryMenusByPid(Long pid) {
+        List<MenuPo> menus = menuDao.qryMenusByPid(pid);
+        return menus;
     }
 
     /**

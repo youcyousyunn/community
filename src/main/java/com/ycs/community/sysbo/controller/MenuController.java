@@ -3,12 +3,21 @@ package com.ycs.community.sysbo.controller;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.exception.CustomizeRequestException;
+import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.sysbo.domain.dto.MenuRequestDto;
 import com.ycs.community.sysbo.domain.dto.MenuResponseDto;
 import com.ycs.community.sysbo.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MenuController {
@@ -27,5 +36,22 @@ public class MenuController {
         responseDto = menuService.qryMenu(request);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
+    }
+
+    /**
+     * 查询全部菜单
+     * @param pid
+     * @return
+     */
+    @GetMapping("/menu/tree/{pid}")
+    @OperationLog(title = "查询全部菜单", action = OperationType.GET, isSave = false, channel = "web")
+    public ResponseEntity qryAllMenu(@PathVariable("pid") Long pid) {
+        // 接口请求报文检查
+        if (null == pid || StringUtils.isEmpty(pid)) {
+            BizLogger.info("接口请求报文异常" + pid);
+            throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+        }
+        List<Map<String, Object>> response = menuService.qryAllMenu(menuService.qryMenusByPid(pid));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

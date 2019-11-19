@@ -10,5 +10,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface MenuDao {
-    List<MenuPo> qryMenuByRole(List<RolePo> rolePoList);
+    List<MenuPo> qryMenusByRole(List<RolePo> rolePoList);
+    List<MenuPo> qryMenusByRoleId(Long roleId);
+    List<MenuPo> qryMenusByPid(Long pid);
 }
