@@ -17,4 +17,6 @@ public interface RoleDao {
     int addRoleMenus(Map<String, Object> paramMap);
     int addRole(RolePo rolePo);
     int updRole(RolePo rolePo);
+    int delRole(Long id);
+    RolePo qryRoleById(Long id);
 }

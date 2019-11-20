@@ -9,6 +9,7 @@ import com.ycs.community.sysbo.domain.dto.RoleRequestDto;
 import com.ycs.community.sysbo.domain.dto.RoleResponseDto;
 import com.ycs.community.sysbo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,11 +50,25 @@ public class RoleController {
     }
 
     /**
+     * 删除角色
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/role/{id}")
+    public RoleResponseDto delRole(@PathVariable("id") Long id) {
+        RoleResponseDto responseDto = new RoleResponseDto();
+        roleService.delRole(id);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+   /**
      * 更新角色
      * @param request
      * @return
      */
     @PutMapping("/role")
+    @PreAuthorize("hasPermission('role:upd')")
     public RoleResponseDto updRole(@RequestBody RoleRequestDto request) {
         // 接口请求报文检查
         if (!request.checkRequestDto()) {
@@ -80,6 +95,19 @@ public class RoleController {
         }
         RoleResponseDto responseDto = new RoleResponseDto();
         roleService.updRoleMenu(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 查询单个角色菜单
+     * @param id
+     * @return
+     */
+    @GetMapping("/role/menu/{id}")
+    public RoleResponseDto qryRoleMenu(@PathVariable("id") Long id) {
+        RoleResponseDto responseDto = new RoleResponseDto();
+        responseDto = roleService.qryRoleMenuById(id);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }

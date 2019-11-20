@@ -3,7 +3,7 @@ package com.ycs.community.cmmbo.service.impl;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.dao.UserDao;
 import com.ycs.community.cmmbo.domain.po.UserPo;
-import com.ycs.community.cmmbo.service.UserService;
+import com.ycs.community.sysbo.service.UserService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.domain.po.RolePo;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addOrUpdateUser(UserPo userPo) {
         // 查询数据库用户是否存在
-        UserPo user = userDao.qryUserByAccountId(userPo.getAccountId());
+        UserPo user = userDao.qryUserById(userPo.getId());
         if(StringUtils.isEmpty(user)) {
             userPo.setEnabled(true);
             userPo.setCreTm(new Date().getTime());
@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserPo qryUserByAccountId(long accountId) {
-        UserPo userPo = userDao.qryUserByAccountId(accountId);
+    public UserPo qryUserById(long id) {
+        UserPo userPo = userDao.qryUserById(id);
         if (!StringUtils.isEmpty(userPo)) {
             // 根据用户ID获取角色
             List<RolePo> roleList = roleDao.qryRolesByUserId(userPo.getId());

@@ -42,7 +42,7 @@
         </where>
     </update>
 
-    <select id="qryUserByAccountId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.UserPo">
+    <select id="qryUserById" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.UserPo">
         SELECT
         id id,
         account_id accountId,
@@ -54,7 +54,7 @@
         FROM t_sys_userinfo
         <where>
             <if test="_parameter != null">
-                account_id = #{accountId}
+                id = #{id}
             </if>
         </where>
     </select>

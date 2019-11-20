@@ -5,4 +5,5 @@ import lombok.Data;
 
 @Data
 public class MenuRequestDto extends BaseRequestDto {
+    private int type;
 }

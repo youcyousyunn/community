@@ -1,4 +1,4 @@
-package com.ycs.community.cmmbo.service;
+package com.ycs.community.sysbo.service;
 
 import com.ycs.community.cmmbo.domain.po.UserPo;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
     boolean addOrUpdateUser(UserPo userPo);
-    UserPo qryUserByAccountId(long accountId);
+    UserPo qryUserById(long id);
     UserPo qryUserInfoByName(String userNm);
     List<String> qryRolesByUserId(Long userId);
 }

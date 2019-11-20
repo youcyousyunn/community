@@ -1,6 +1,5 @@
 package com.ycs.community.sysbo.service.impl;
 
-import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.basebo.utils.PageUtil;
@@ -10,6 +9,7 @@ import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.domain.dto.QryRolePageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryRolePageResponseDto;
 import com.ycs.community.sysbo.domain.dto.RoleRequestDto;
+import com.ycs.community.sysbo.domain.dto.RoleResponseDto;
 import com.ycs.community.sysbo.domain.po.MenuPo;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.RoleService;
@@ -75,6 +75,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean delRole(Long id) {
+        // 删除角色前先取消角色所拥有的菜单
+        if (menuDao.delMenusByRoleId(id) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_MENU_FAIL, "删除角色菜单失败");
+        } else {
+            if (roleDao.delRole(id) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_FAIL, "删除角色失败");
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean updRole(RoleRequestDto request) {
         RolePo rolePo = BeanUtil.trans2Entity(request, RolePo.class);
         rolePo.setUpdTm(new Date().getTime());
@@ -118,5 +132,23 @@ public class RoleServiceImpl implements RoleService {
             }
         }
         return true;
+    }
+
+    @Override
+    public RoleResponseDto qryRoleMenuById(Long id) {
+        RolePo rolePo = roleDao.qryRoleById(id);
+        if (!StringUtils.isEmpty(rolePo)) {
+            List<MenuPo> menuPoList = menuDao.qryMenusByRoleId(rolePo.getId());
+            if (!CollectionUtils.isEmpty(menuPoList)) {
+                rolePo.setMenus(menuPoList);
+            } else {
+                throw new CustomizeBusinessException(HiMsgCdConstants.QRY_ROLE_MENU_FAIL, "查询角色菜单失败");
+            }
+        } else {
+            throw new CustomizeBusinessException(HiMsgCdConstants.QRY_ROLE_FAIL, "查询角色失败");
+        }
+        RoleResponseDto response = new RoleResponseDto();
+        response.setData(rolePo);
+        return response;
     }
 }

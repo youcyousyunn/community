@@ -59,4 +59,14 @@ public class HiMsgCdConstants {
     public static final String ADD_ROLE_FAIL = "B0025";
     /*** 更新角色失败 ****/
     public static final String UPD_ROLE_FAIL = "B0026";
+    /*** 删除角色失败 ****/
+    public static final String DEL_ROLE_FAIL = "B0027";
+    /*** 查询角色失败 ****/
+    public static final String QRY_ROLE_FAIL = "B0028";
+    /*** 查询角色菜单失败 ****/
+    public static final String QRY_ROLE_MENU_FAIL = "B0029";
+    /*** 查询用户角色失败 ****/
+    public static final String QRY_USER_ROLE_FAIL = "B0030";
+    /*** 查询角色权限失败 ****/
+    public static final String QRY_ROLE_PERMISSION_FAIL = "B0031";
 }
