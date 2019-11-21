@@ -209,6 +209,7 @@ public class AuthorizeController {
      * @return
      */
     @GetMapping("/logout")
+    @AnonymousAccess
     public UserResponseDto logout(HttpServletRequest request) {
         onlineUserService.logout(jwtTokenUtil.getToken(request));
         UserResponseDto responseDto = new UserResponseDto();
