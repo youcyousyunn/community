@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.sysbo.dao.DictDao">
+    <select id="qryDictCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_sys_dict t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]> OR t.remark like <![CDATA['%${name}%']]>
+            </if>
+        </where>
+    </select>
+
+    <select id="qryDictPage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.DictPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.remark remark,
+        t.create_time creTm
+        FROM t_sys_dict t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]> OR t.remark like <![CDATA['%${name}%']]>
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+
+    <select id="qryDictDetailsByDictId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.DictPo">
+        SELECT
+        t.id id,
+        t.label label,
+        t.`value` `value`,
+        t.sort sort,
+        t.create_time creTm
+        FROM t_sys_dictdetail t
+        <where>
+            <if test="_parameter != null">
+                t.dict_id = #{dictId}
+            </if>
+        </where>
+        ORDER BY t.sort ASC
+    </select>
+
+    <select id="qryDictDetailCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_sys_dictdetail t
+        <where>
+            <if test="dictId != null">
+                t.dict_id = #{dictId}
+            </if>
+            <if test="label != null">
+                AND t.label like <![CDATA['%${label}%']]>
+            </if>
+        </where>
+    </select>
+
+    <select id="qryDictDetailPage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.DictPo">
+        SELECT
+        t.id id,
+        t.label label,
+        t.`value` `value`,
+        t.sort sort,
+        t.create_time creTm
+        FROM t_sys_dictdetail t
+        <where>
+            <if test="dictId != null">
+                t.dict_id = #{dictId}
+            </if>
+            <if test="label != null">
+                AND t.label like <![CDATA['%${label}%']]>
+            </if>
+        </where>
+        ORDER BY t.sort ASC
+        LIMIT ${startRow}, ${offset}
+    </select>
+
+    <select id="qryDictDetailsByName" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.DictPo">
+        SELECT
+        t.id id,
+        t.label label,
+        t.`value` `value`,
+        t.sort sort,
+        t.create_time creTm
+        FROM t_sys_dictdetail t
+        INNER JOIN t_sys_dict t1 ON t1.id = t.dict_id
+        <where>
+            <if test="_parameter != null">
+                t1.name = #{name}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addDict" parameterType="com.ycs.community.sysbo.domain.po.DictPo">
+        INSERT INTO t_sys_dict(`name`,
+			remark,
+			create_time
+		)
+		VALUES (
+	  		#{name,jdbcType=VARCHAR},
+	  		#{remark,jdbcType=VARCHAR},
+	  		#{creTm,jdbcType=BIGINT}
+		)
+    </insert>
+
+    <delete id="delDictDetailsByDictId" parameterType="java.lang.String">
+        DELETE FROM t_sys_dictdetail
+        <where>
+            <if test="_parameter != null">
+                dict_id = #{dictId}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="delDictById" parameterType="java.lang.String">
+        DELETE FROM t_sys_dict
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updDict" parameterType="com.ycs.community.sysbo.domain.po.DictPo">
+        UPDATE t_sys_dict
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+
+
+    <insert id="addDictDetail" parameterType="com.ycs.community.sysbo.domain.po.DictPo">
+        INSERT INTO t_sys_dictdetail(label,
+			`value`,
+			dict_id,
+			sort,
+			create_time
+		)
+		VALUES (
+		    #{label,jdbcType=VARCHAR},
+	  		#{value,jdbcType=VARCHAR},
+	  		#{dictId,jdbcType=BIGINT},
+	  		#{sort,jdbcType=INTEGER},
+	  		#{creTm,jdbcType=BIGINT}
+		)
+    </insert>
+
+    <delete id="delDictDetailById" parameterType="java.lang.String">
+        DELETE FROM t_sys_dictdetail
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updDictDetail" parameterType="com.ycs.community.sysbo.domain.po.DictPo">
+        UPDATE t_sys_dictdetail
+        <set>
+            <if test="label != null">
+                label = #{label},
+            </if>
+            <if test="value != null">
+                `value` = #{value},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+</mapper>

@@ -3,12 +3,13 @@ package com.ycs.community.cmmbo.service.impl;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.dao.UserDao;
 import com.ycs.community.cmmbo.domain.po.UserPo;
-import com.ycs.community.sysbo.service.UserService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.domain.po.RolePo;
+import com.ycs.community.sysbo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<String> qryRolesByUserId(Long userId) {
         List<RolePo> roleList = roleDao.qryRolesByUserId(userId);
-        if (!StringUtils.isEmpty(roleList)) {
+        if (!CollectionUtils.isEmpty(roleList)) {
             List<String> roles = new ArrayList<>();
             for (RolePo rolePo : roleList) {
                 roles.add(rolePo.getCode());

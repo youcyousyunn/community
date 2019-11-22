@@ -11,6 +11,7 @@ import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -31,15 +32,15 @@ public class MenuServiceImpl implements MenuService {
         paramMap.put("rolePoList", rolePoList);
         List<MenuPo> menuPoList = menuDao.qryMenusByRole(paramMap);
         // 构建菜单树
-        List<MenuPo> menuTree = new ArrayList<>();
+        List<MenuPo> menuTree = new LinkedList<>();
         for (MenuPo menuPo : menuPoList) {
-            if ("0".equals(String.valueOf(menuPo.getPid()))) {
+            if (0 == menuPo.getPid()) {
                 menuTree.add(menuPo);
             }
 
             for (MenuPo item : menuPoList) {
                 if (item.getPid().equals(menuPo.getId())) {
-                    if (StringUtils.isEmpty(menuPo.getChildren())) {
+                    if (CollectionUtils.isEmpty(menuPo.getChildren())) {
                         menuPo.setChildren(new ArrayList<MenuPo>());
                     }
                     menuPo.getChildren().add(item);
@@ -47,7 +48,7 @@ public class MenuServiceImpl implements MenuService {
             }
         }
         MenuResponseDto response = new MenuResponseDto();
-        if (!StringUtils.isEmpty(menuTree)) {
+        if (!CollectionUtils.isEmpty(menuTree)) {
             menuTree = buildMenu(menuTree);
             response.setData(menuTree);
         }
@@ -62,7 +63,7 @@ public class MenuServiceImpl implements MenuService {
             Map<String,Object> map = new HashMap<>();
             map.put("id",menu.getId());
             map.put("label",menu.getName());
-            if (!StringUtils.isEmpty(menuList)) {
+            if (!CollectionUtils.isEmpty(menuList)) {
                 map.put("children",qryAllMenu(menuList));
             }
             list.add(map);
@@ -104,7 +105,7 @@ public class MenuServiceImpl implements MenuService {
             menuPo.setMeta(new MenuMetaPo(item.getName(), item.getIcon(), !item.isCache()));
 
             // 有子菜单的情况
-            if (!StringUtils.isEmpty(children)) {
+            if (!CollectionUtils.isEmpty(children)) {
                 menuPo.setAlwaysShow(true);
                 menuPo.setRedirect("noRedirect");
                 menuPo.setChildren(buildMenu(children));

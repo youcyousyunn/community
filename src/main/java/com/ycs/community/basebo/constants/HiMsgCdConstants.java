@@ -69,4 +69,16 @@ public class HiMsgCdConstants {
     public static final String QRY_USER_ROLE_FAIL = "B0030";
     /*** 查询角色权限失败 ****/
     public static final String QRY_ROLE_PERMISSION_FAIL = "B0031";
+    /*** 修改字典失败 ****/
+    public static final String UPD_DICT_FAIL = "B0032";
+    /*** 删除字典详情失败 ****/
+    public static final String DEL_DICT_DETAIL_FAIL = "B0033";
+    /*** 删除字典失败 ****/
+    public static final String DEL_DICT_FAIL = "B0034";
+    /*** 添加字典失败 ****/
+    public static final String ADD_DICT_FAIL = "B0035";
+    /*** 添加字典详情失败 ****/
+    public static final String ADD_DICT_DETAIL_FAIL = "B0036";
+    /*** 修改字典详情失败 ****/
+    public static final String UPD_DICT_DETAIL_FAIL = "B0037";
 }

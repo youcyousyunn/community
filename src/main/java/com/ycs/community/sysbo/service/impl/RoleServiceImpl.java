@@ -77,7 +77,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean delRole(Long id) {
         // 删除角色前先取消角色所拥有的菜单
-        if (menuDao.delMenusByRoleId(id) < 1) {
+        if (menuDao.delMenusByRoleId(id) < 0) { // 角色可能没有关联任何菜单
             throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_MENU_FAIL, "删除角色菜单失败");
         } else {
             if (roleDao.delRole(id) < 1) {
