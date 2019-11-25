@@ -14,4 +14,7 @@ public interface DeptDao {
     int updDept(DeptPo deptPo);
     List<DeptPo> qryDeptsByRoleId(Long roleId);
     int delDeptsByRoleId(Long roleId);
+    List<DeptPo> qryDeptsByPid(Long pid);
+    int delDept(Long id);
+    int addDept(DeptPo deptPo);
 }

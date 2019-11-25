@@ -5,9 +5,11 @@ import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.spring.exception.BadRequestException;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.DeptDao;
+import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.domain.dto.DeptRequestDto;
 import com.ycs.community.sysbo.domain.dto.DeptResponseDto;
 import com.ycs.community.sysbo.domain.po.DeptPo;
+import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.*;
 public class DeptServiceImpl implements DeptService {
     @Autowired
     private DeptDao deptDao;
+    @Autowired
+    private RoleDao roleDao;
 
     @Override
     public DeptResponseDto qryDeptTree(DeptRequestDto request) {
@@ -58,18 +62,42 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
-    public boolean delDept(DeptRequestDto request) {
+    public boolean addDept(DeptRequestDto request) {
+        DeptPo deptPo = BeanUtil.trans2Entity(request, DeptPo.class);
+        deptPo.setCreTm(new Date().getTime());
+        if (deptDao.addDept(deptPo) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.ADD_DEPT_FAIL, "添加部门失败");
+        }
+        return true;
+    }
 
-        return false;
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean delDept(Long id) {
+        // 删除部门前判断有没有子部门
+        List<DeptPo> children = deptDao.qryDeptsByPid(id);
+        if (!CollectionUtils.isEmpty(children)) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.HAS_CHILDREN_CAN_NOT_DEL_DEPT, "存在子部门, 不能删除");
+        }
+        // 删除部门前判断有没有关联的角色
+        List<RolePo> rolePoList = roleDao.qryRolesByDeptId(id);
+        if (!CollectionUtils.isEmpty(rolePoList)) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.RELATED_ROLE_CAN_NOT_DEL_DEPT, "存在角色关联, 请取消关联后再试");
+        }
+        if (deptDao.delDept(id) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.DEL_DEPT_FAIL, "删除部门失败");
+        }
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = {BadRequestException.class, CustomizeBusinessException.class})
     public boolean updDept(DeptRequestDto request) {
         if(request.getId().equals(request.getPid())) {
-            throw new BadRequestException("上级不能为自己");
+            throw new BadRequestException("上级部门不能为自己");
         }
         DeptPo deptPo = BeanUtil.trans2Entity(request, DeptPo.class);
+        deptPo.setUpdTm(new Date().getTime());
         if (deptDao.updDept(deptPo) < 1) {
             throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DEPT_FAIL, "修改部门失败");
         }

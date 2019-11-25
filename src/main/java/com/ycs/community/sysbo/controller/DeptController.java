@@ -8,10 +8,7 @@ import com.ycs.community.sysbo.domain.dto.DeptResponseDto;
 import com.ycs.community.sysbo.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DeptController {
@@ -32,19 +29,37 @@ public class DeptController {
     }
 
     /**
-     * 删除部门
+     * 添加部门
      * @param request
      * @return
      */
-    @DeleteMapping("/dept")
-    public DeptResponseDto delDept(DeptRequestDto request) {
+    @PostMapping("/dept")
+    public DeptResponseDto addDept(@RequestBody DeptRequestDto request) {
         // 接口请求报文检查
-        if (StringUtils.isEmpty(request.getId())) {
+        if (!request.checkRequestDto()) {
             BizLogger.info("接口请求报文异常" + request.toString());
             throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
         }
         DeptResponseDto responseDto = new DeptResponseDto();
-        deptService.delDept(request);
+        deptService.addDept(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 删除部门
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/dept/{id}")
+    public DeptResponseDto delDept(@PathVariable("id") Long id) {
+        // 接口请求报文检查
+        if (StringUtils.isEmpty(id)) {
+            BizLogger.info("接口请求报文异常" + id);
+            throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+        }
+        DeptResponseDto responseDto = new DeptResponseDto();
+        deptService.delDept(id);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }
@@ -55,7 +70,7 @@ public class DeptController {
      * @return
      */
     @PutMapping("/dept")
-    public DeptResponseDto updDept(DeptRequestDto request) {
+    public DeptResponseDto updDept(@RequestBody DeptRequestDto request) {
         // 接口请求报文检查
         if (!request.checkRequestDto()) {
             BizLogger.info("接口请求报文异常" + request.toString());

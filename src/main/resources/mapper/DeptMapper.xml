@@ -35,7 +35,10 @@
                 `name` = #{name},
             </if>
             <if test="pid != null">
-                pid = #{pid}
+                pid = #{pid},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
             </if>
         </set>
         <where>
@@ -66,6 +69,44 @@
         <where>
             <if test="_parameter != null">
                 role_id = #{roleId}
+            </if>
+        </where>
+    </delete>
+
+    <select id="qryDeptsByPid" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.DeptPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.pid pid,
+        t.enabled enabled,
+        t.create_time creTm
+        FROM t_sys_dept t
+        <where>
+            <if test="_parameter != null">
+                t.pid = #{pid}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addDept" parameterType="com.ycs.community.sysbo.domain.po.DeptPo">
+        INSERT INTO t_sys_dept(`name`,
+			pid,
+			enabled,
+			create_time
+		)
+		VALUES (
+	  		#{name,jdbcType=VARCHAR},
+	  		#{pid,jdbcType=BIGINT},
+	  		#{enabled,jdbcType=BIT},
+	  		#{creTm,jdbcType=BIGINT}
+		)
+    </insert>
+
+    <delete id="delDept" parameterType="java.lang.String">
+        DELETE FROM t_sys_dept
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
             </if>
         </where>
     </delete>

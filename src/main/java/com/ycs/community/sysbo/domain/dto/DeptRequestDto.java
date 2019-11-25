@@ -25,9 +25,6 @@ public class DeptRequestDto extends BaseRequestDto {
      * @return
      */
     public boolean checkRequestDto() {
-        if (StringUtils.isEmpty(String.valueOf(id))) {
-            return false;
-        }
         if (StringUtils.isEmpty(String.valueOf(pid))) {
             return false;
         }

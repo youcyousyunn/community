@@ -87,4 +87,12 @@ public class HiMsgCdConstants {
     public static final String ADD_ROLE_DEPT_FAIL = "B0039";
     /*** 删除角色部门失败 ****/
     public static final String DEL_ROLE_DEPT_FAIL = "B0040";
+    /*** 存在子部门, 不能删除 ****/
+    public static final String HAS_CHILDREN_CAN_NOT_DEL_DEPT = "B0041";
+    /*** 存在角色关联, 请取消关联后再试 ****/
+    public static final String RELATED_ROLE_CAN_NOT_DEL_DEPT = "B0042";
+    /*** 删除部门失败 ****/
+    public static final String DEL_DEPT_FAIL = "B0043";
+    /*** 添加部门失败 ****/
+    public static final String ADD_DEPT_FAIL = "B0044";
 }

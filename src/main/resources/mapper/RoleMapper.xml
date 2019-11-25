@@ -180,4 +180,21 @@
             </if>
         </where>
     </delete>
+
+    <select id="qryRolesByDeptId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.RolePo">
+        SELECT
+        t.id id,
+        t.`code` `code`,
+        t.`name` `name`,
+        t.data_scope dataScope,
+        t.level level,
+        t.`desc` `desc`
+        FROM t_sys_role t
+        INNER JOIN t_sys_role_dept t1 ON t1.role_id = t.id
+        <where>
+            <if test="_parameter != null">
+                t1.dept_id = #{deptId}
+            </if>
+        </where>
+    </select>
 </mapper>
