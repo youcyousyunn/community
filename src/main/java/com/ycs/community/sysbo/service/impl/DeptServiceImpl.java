@@ -56,6 +56,8 @@ public class DeptServiceImpl implements DeptService {
         DeptResponseDto response = new DeptResponseDto();
         if (!CollectionUtils.isEmpty(deptTree)) {
             response.setData(deptTree);
+        } else {
+            response.setData(deptPoList);
         }
         return response;
     }
