@@ -1,6 +1,7 @@
 package com.ycs.community.sysbo.domain.dto;
 
 import com.ycs.community.basebo.domain.dto.BaseRequestDto;
+import com.ycs.community.sysbo.domain.po.DeptPo;
 import com.ycs.community.sysbo.domain.po.MenuPo;
 import lombok.Data;
 import org.springframework.util.StringUtils;
@@ -13,11 +14,10 @@ public class RoleRequestDto extends BaseRequestDto {
     private String code;
     private String name;
     private String desc;
-    private List<MenuPo> menus;
-    // temp variables
-    private String dataScope;
     private int level;
-    private List<Long> depts;
+    private String dataScope;
+    private List<DeptPo> depts;
+    private List<MenuPo> menus;
 
     /**
      * 接口请求报文检查

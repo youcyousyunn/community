@@ -25,4 +25,48 @@
         </where>
     </select>
 
+    <update id="updDept" parameterType="com.ycs.community.sysbo.domain.po.DeptPo">
+        UPDATE t_sys_dept
+        <set>
+            <if test="enabled != null">
+                enabled = #{enabled},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="pid != null">
+                pid = #{pid}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="qryDeptsByRoleId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.DeptPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.pid pid,
+        t.enabled enabled,
+        t.create_time creTm
+        FROM t_sys_dept t
+        INNER JOIN t_sys_role_dept t1 ON t1.dept_id = t.id
+        <where>
+            <if test="_parameter != null">
+                t1.role_id = #{roleId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="delDeptsByRoleId" parameterType="java.lang.String">
+        DELETE FROM t_sys_role_dept
+        <where>
+            <if test="_parameter != null">
+                role_id = #{roleId}
+            </if>
+        </where>
+    </delete>
 </mapper>

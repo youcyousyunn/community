@@ -4,12 +4,14 @@ import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.sysbo.dao.DeptDao;
 import com.ycs.community.sysbo.dao.MenuDao;
 import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.domain.dto.QryRolePageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryRolePageResponseDto;
 import com.ycs.community.sysbo.domain.dto.RoleRequestDto;
 import com.ycs.community.sysbo.domain.dto.RoleResponseDto;
+import com.ycs.community.sysbo.domain.po.DeptPo;
 import com.ycs.community.sysbo.domain.po.MenuPo;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.RoleService;
@@ -28,6 +30,8 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
     @Autowired
     private MenuDao menuDao;
+    @Autowired
+    private DeptDao deptDao;
 
     @Override
     public QryRolePageResponseDto qryRolePage(QryRolePageRequestDto request) {
@@ -47,6 +51,11 @@ public class RoleServiceImpl implements RoleService {
         paramMap.put("startRow", PageUtil.getStartRow());
         paramMap.put("offset", PageUtil.getPageSize());
         List<RolePo> data = roleDao.qryRolePage(paramMap);
+        // 查询角色对应部门
+        data.forEach(rolePo -> {
+            List<DeptPo> deptPoList = deptDao.qryDeptsByRoleId(rolePo.getId());
+            rolePo.setDepts(deptPoList);
+        });
         // 查询角色对应菜单
         data.forEach(rolePo -> {
             List<MenuPo> menuPoList = menuDao.qryMenusByRoleId(rolePo.getId());
@@ -67,8 +76,18 @@ public class RoleServiceImpl implements RoleService {
     public boolean addRole(RoleRequestDto request) {
         RolePo rolePo = BeanUtil.trans2Entity(request, RolePo.class);
         rolePo.setCreTm(new Date().getTime());
-        if (roleDao.addRole(rolePo) < 1) {
+        if (roleDao.addRole(rolePo) < 0) { // 获取返回自增主键-到实体
             throw new CustomizeBusinessException(HiMsgCdConstants.ADD_ROLE_FAIL, "添加角色失败");
+        } else {
+            if (!CollectionUtils.isEmpty(rolePo.getDepts())) {
+                Map<String, Object> paramMap = new HashMap<>();
+                paramMap.put("roleId", rolePo.getId());
+                List<Long> depts = rolePo.getDepts().stream().map(DeptPo :: getId).collect(Collectors.toList());
+                paramMap.put("depts", depts);
+                if (roleDao.addRoleDepts(paramMap) < 1) {
+                    throw new CustomizeBusinessException(HiMsgCdConstants.ADD_ROLE_DEPT_FAIL, "添加角色部门失败");
+                }
+            }
         }
         return true;
     }
@@ -76,12 +95,17 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean delRole(Long id) {
-        // 删除角色前先取消角色所拥有的菜单
-        if (menuDao.delMenusByRoleId(id) < 0) { // 角色可能没有关联任何菜单
-            throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_MENU_FAIL, "删除角色菜单失败");
+        // 删除角色前先取消角色所拥有的部门
+        if (deptDao.delDeptsByRoleId(id) < 0) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_DEPT_FAIL, "删除角色部门失败");
         } else {
-            if (roleDao.delRole(id) < 1) {
-                throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_FAIL, "删除角色失败");
+            // 删除角色前先取消角色所拥有的菜单
+            if (menuDao.delMenusByRoleId(id) < 0) { // 角色可能没有关联任何菜单
+                throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_MENU_FAIL, "删除角色菜单失败");
+            } else {
+                if (roleDao.delRole(id) < 1) {
+                    throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_FAIL, "删除角色失败");
+                }
             }
         }
         return true;
@@ -90,6 +114,37 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean updRole(RoleRequestDto request) {
+        // 查询当前角色对应的部门
+        List<DeptPo> deptPoList = deptDao.qryDeptsByRoleId(request.getId());
+        List<DeptPo> depts = request.getDepts();
+        List<Long> addList = new ArrayList<>(); // 新增部门列表
+        List<Long> delList = new ArrayList<>(); // 删除部门列表
+        addList = depts.stream().map(DeptPo :: getId).collect(Collectors.toList());
+        List<Long> deptList = depts.stream().map(DeptPo :: getId).collect(Collectors.toList());
+        for (DeptPo deptPo : deptPoList) {
+            Long id = deptPo.getId();
+            if (addList.contains(id)) {
+                addList.remove(id);
+            }
+            if (!deptList.contains(id)) {
+                delList.add(id);
+            }
+        }
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("roleId", request.getId());
+        paramMap.put("depts", delList);
+        if (!CollectionUtils.isEmpty(delList)) {
+            if (roleDao.delRoleDepts(paramMap) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ROLE_DEPT_FAIL, "删除角色部门失败");
+            }
+        }
+        if (!CollectionUtils.isEmpty(addList)) {
+            paramMap.put("depts", addList);
+            if (roleDao.addRoleDepts(paramMap) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.ADD_ROLE_DEPT_FAIL, "添加角色部门失败");
+            }
+        }
+
         RolePo rolePo = BeanUtil.trans2Entity(request, RolePo.class);
         rolePo.setUpdTm(new Date().getTime());
         if (roleDao.updRole(rolePo) < 1) {

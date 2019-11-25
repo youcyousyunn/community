@@ -1,7 +1,9 @@
 package com.ycs.community.sysbo.utils;
 
+import org.apache.poi.util.StringUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,5 @@ public class Test {
         TestBean testBean2 = (TestBean) applicationContext.getBean("testBean");
         testBean2.say();
         System.out.println(testBean2);
-
-        List<String> list = new ArrayList<>();
-        list.forEach(item -> {
-            boolean result = item.equals("1");
-            System.out.println(result);
-        });
-        System.out.println("---");
     }
 }

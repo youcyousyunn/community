@@ -1,5 +1,9 @@
 package com.ycs.community.sysbo.service.impl;
 
+import com.ycs.community.basebo.constants.HiMsgCdConstants;
+import com.ycs.community.basebo.utils.BeanUtil;
+import com.ycs.community.spring.exception.BadRequestException;
+import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.DeptDao;
 import com.ycs.community.sysbo.domain.dto.DeptRequestDto;
 import com.ycs.community.sysbo.domain.dto.DeptResponseDto;
@@ -7,6 +11,7 @@ import com.ycs.community.sysbo.domain.po.DeptPo;
 import com.ycs.community.sysbo.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -49,5 +54,25 @@ public class DeptServiceImpl implements DeptService {
             response.setData(deptTree);
         }
         return response;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean delDept(DeptRequestDto request) {
+
+        return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {BadRequestException.class, CustomizeBusinessException.class})
+    public boolean updDept(DeptRequestDto request) {
+        if(request.getId().equals(request.getPid())) {
+            throw new BadRequestException("上级不能为自己");
+        }
+        DeptPo deptPo = BeanUtil.trans2Entity(request, DeptPo.class);
+        if (deptDao.updDept(deptPo) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DEPT_FAIL, "修改部门失败");
+        }
+        return true;
     }
 }

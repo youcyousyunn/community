@@ -11,4 +11,7 @@ import java.util.Map;
 @Repository
 public interface DeptDao {
     List<DeptPo> qryDeptTree(Map<String, Object> paramMap);
+    int updDept(DeptPo deptPo);
+    List<DeptPo> qryDeptsByRoleId(Long roleId);
+    int delDeptsByRoleId(Long roleId);
 }

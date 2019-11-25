@@ -81,4 +81,10 @@ public class HiMsgCdConstants {
     public static final String ADD_DICT_DETAIL_FAIL = "B0036";
     /*** 修改字典详情失败 ****/
     public static final String UPD_DICT_DETAIL_FAIL = "B0037";
+    /*** 修改部门失败 ****/
+    public static final String UPD_DEPT_FAIL = "B0038";
+    /*** 添加角色部门失败 ****/
+    public static final String ADD_ROLE_DEPT_FAIL = "B0039";
+    /*** 删除角色部门失败 ****/
+    public static final String DEL_ROLE_DEPT_FAIL = "B0040";
 }
