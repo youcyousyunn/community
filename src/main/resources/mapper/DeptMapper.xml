@@ -110,4 +110,19 @@
             </if>
         </where>
     </delete>
+
+    <select id="qryDeptById" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.DeptPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.pid pid,
+        t.enabled enabled,
+        t.create_time creTm
+        FROM t_sys_dept t
+        <where>
+            <if test="_parameter != null">
+                t.id = #{id}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.sysbo.dao.JobDao">
+    <select id="qryJobCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_sys_job t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+            <if test="enabled != null">
+                AND t.enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryJobPage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.JobPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.dept_id deptId,
+        t.sort sort,
+        t.enabled enabled,
+        t.create_time creTm,
+        t1.name deptName,
+        t1.pid deptPid
+        FROM t_sys_job t
+        LEFT JOIN t_sys_dept t1 ON t1.id = t.dept_id
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+            <if test="enabled != null">
+                AND t.enabled = #{enabled}
+            </if>
+        </where>
+        ORDER BY t.sort ASC
+        LIMIT ${startRow}, ${offset}
+    </select>
+
+    <insert id="addJob" parameterType="com.ycs.community.sysbo.domain.po.JobPo">
+        INSERT INTO t_sys_job(`name`,
+			dept_id,
+			sort,
+			enabled,
+			create_time
+		)
+		VALUES (
+	  		#{name,jdbcType=VARCHAR},
+	  		#{deptId,jdbcType=BIGINT},
+	  		#{sort,jdbcType=INTEGER},
+	  		#{enabled,jdbcType=BIT},
+	  		#{creTm,jdbcType=BIGINT}
+		)
+    </insert>
+
+    <delete id="delJob" parameterType="java.lang.String">
+        DELETE FROM t_sys_job
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updJob" parameterType="com.ycs.community.sysbo.domain.po.JobPo">
+        UPDATE t_sys_job
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="qryJobsByDeptId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.JobPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.dept_id deptId,
+        t.sort sort,
+        t.enabled enabled,
+        t.create_time creTm
+        FROM t_sys_job t
+        <where>
+            <if test="_parameter != null">
+                t.dept_id = #{deptId}
+            </if>
+        </where>
+        ORDER BY t.sort ASC
+    </select>
+</mapper>

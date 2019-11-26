@@ -17,11 +17,25 @@ public class QuartzJobController {
     private QuartzJobService quartzJobService;
 
     /**
+     * 分页查询定时任务列表
+     * @param request
+     * @return
+     */
+    @GetMapping("/quartz/job/queryPage")
+    @OperationLog(title = "分页查询定时任务列表", action = OperationType.GET, isSave = false, channel = "web")
+    public QryQuartzJobPageResponseDto qryQuartzPage(QryQuartzJobPageRequestDto request) {
+        QryQuartzJobPageResponseDto responseDto = new QryQuartzJobPageResponseDto();
+        responseDto = quartzJobService.qryQuartzPage(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
      * 新增定时任务
      * @param request
      * @return
      */
-    @PostMapping("/job")
+    @PostMapping("/quartz/job")
     @OperationLog(title = "新增定时任务", action = OperationType.POST, isSave = true, channel = "web")
     public QuartzJobResponseDto addJob(QuartzJobRequestDto request) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
@@ -37,7 +51,7 @@ public class QuartzJobController {
      * @param id
      * @return
      */
-    @PutMapping("/job/execute/{id}")
+    @PutMapping("/quartz/job/execute/{id}")
     @OperationLog(title = "执行定时任务", action = OperationType.PUT, isSave = true, channel = "web")
     public QuartzJobResponseDto executeJob(@PathVariable("id") Long id) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
@@ -53,7 +67,7 @@ public class QuartzJobController {
      * @param id
      * @return
      */
-    @PutMapping("/job/status/{id}")
+    @PutMapping("/quartz/job/status/{id}")
     @OperationLog(title = "更新定时任务状态", action = OperationType.PUT, isSave = true, channel = "web")
     public QuartzJobResponseDto updJobStatus(@PathVariable("id") Long id) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
@@ -61,20 +75,6 @@ public class QuartzJobController {
         if (result) {
             responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         }
-        return responseDto;
-    }
-
-    /**
-     * 分页查询定时任务列表
-     * @param request
-     * @return
-     */
-    @GetMapping("/job/queryPage")
-    @OperationLog(title = "分页查询定时任务列表", action = OperationType.GET, isSave = false, channel = "web")
-    public QryQuartzJobPageResponseDto qryQuartzPage(QryQuartzJobPageRequestDto request) {
-        QryQuartzJobPageResponseDto responseDto = new QryQuartzJobPageResponseDto();
-        responseDto = quartzJobService.qryQuartzPage(request);
-        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }
 }

@@ -95,4 +95,12 @@ public class HiMsgCdConstants {
     public static final String DEL_DEPT_FAIL = "B0043";
     /*** 添加部门失败 ****/
     public static final String ADD_DEPT_FAIL = "B0044";
+    /*** 添加岗位失败 ****/
+    public static final String ADD_JOB_FAIL = "B0045";
+    /*** 删除岗位失败 ****/
+    public static final String DEL_JOB_FAIL = "B0046";
+    /*** 更新岗位失败 ****/
+    public static final String UPD_JOB_FAIL = "B0047";
+    /*** 查询部门下所有岗位失败 ****/
+    public static final String QRY_DEPT_JOB_FAIL = "B0048";
 }

@@ -1,5 +1,6 @@
 package com.ycs.community.sysbo.controller;
 
+import cn.hutool.core.lang.Dict;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
@@ -7,11 +8,18 @@ import com.ycs.community.sysbo.domain.dto.QryRolePageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryRolePageResponseDto;
 import com.ycs.community.sysbo.domain.dto.RoleRequestDto;
 import com.ycs.community.sysbo.domain.dto.RoleResponseDto;
+import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class RoleController {
@@ -110,5 +118,28 @@ public class RoleController {
         responseDto = roleService.qryRoleMenuById(id);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
+    }
+
+    /**
+     * 查询所有角色
+     * @param request
+     * @return
+     */
+    @GetMapping("/role/all")
+    public ResponseEntity qryAllRole(RoleRequestDto request) {
+        List<RolePo> rolePoList = roleService.qryAllRole(request);
+        return new ResponseEntity<>(rolePoList, HttpStatus.OK);
+    }
+
+    /**
+     * 查询用户角色最低等级
+     * @param request
+     * @return
+     */
+    @GetMapping("/role")
+    public ResponseEntity qryRolesByUserId(RoleRequestDto request) {
+        List<RolePo> roles = roleService.qryRolesByUserId();
+        List<Integer> levels = roles.stream().map(RolePo :: getLevel).collect(Collectors.toList());
+        return new ResponseEntity<>(Dict.create().set("level", Collections.min(levels)), HttpStatus.OK);
     }
 }

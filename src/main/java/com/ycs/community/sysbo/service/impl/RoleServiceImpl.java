@@ -4,6 +4,7 @@ import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.spring.security.utils.SecurityUtil;
 import com.ycs.community.sysbo.dao.DeptDao;
 import com.ycs.community.sysbo.dao.MenuDao;
 import com.ycs.community.sysbo.dao.RoleDao;
@@ -205,5 +206,22 @@ public class RoleServiceImpl implements RoleService {
         RoleResponseDto response = new RoleResponseDto();
         response.setData(rolePo);
         return response;
+    }
+
+    @Override
+    public List<RolePo> qryAllRole(RoleRequestDto request) {
+        Map<String, Object> paramMap = new HashMap<>();
+        List<RolePo> result = roleDao.qryAllRole(paramMap);
+        return result;
+    }
+
+    @Override
+    public List<RolePo> qryRolesByUserId() {
+        Long userId = SecurityUtil.getUserId();
+        List<RolePo> roles = roleDao.qryRolesByUserId(userId);
+        if (CollectionUtils.isEmpty(roles)) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.QRY_USER_ROLE_FAIL, "查询用户角色失败");
+        }
+        return roles;
     }
 }

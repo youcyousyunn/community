@@ -6,6 +6,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Test {
@@ -20,5 +21,10 @@ public class Test {
         TestBean testBean2 = (TestBean) applicationContext.getBean("testBean");
         testBean2.say();
         System.out.println(testBean2);
+        List<Integer> levels = new ArrayList<>();
+        levels.add(1);
+        levels.add(2);
+        levels.add(3);
+        System.out.println(Collections.min(levels));
     }
 }
