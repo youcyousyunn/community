@@ -16,4 +16,5 @@ public interface JobDao {
     int delJob(Long id);
     int updJob(JobPo jobPo);
     List<JobPo> qryJobsByDeptId(Long deptId);
+    JobPo qryJobByUserId(Long userId);
 }

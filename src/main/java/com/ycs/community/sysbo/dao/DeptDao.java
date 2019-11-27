@@ -18,4 +18,5 @@ public interface DeptDao {
     int delDept(Long id);
     int addDept(DeptPo deptPo);
     DeptPo qryDeptById(Long id);
+    DeptPo qryDeptByUserId(Long userId);
 }
