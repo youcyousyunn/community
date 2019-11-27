@@ -125,4 +125,20 @@
             </if>
         </where>
     </select>
+
+    <select id="qryDeptByUserId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.DeptPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.pid pid,
+        t.enabled enabled,
+        t.create_time creTm
+        FROM t_sys_dept t
+        INNER JOIN t_sys_userinfo t1 ON t1.dept_id = t.id
+        <where>
+            <if test="_parameter != null">
+                t1.id = #{userId}
+            </if>
+        </where>
+    </select>
 </mapper>
