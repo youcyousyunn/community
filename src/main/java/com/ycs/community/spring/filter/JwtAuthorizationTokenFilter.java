@@ -1,7 +1,7 @@
 package com.ycs.community.spring.filter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.spring.security.domain.po.OnlineUserPo;
 import com.ycs.community.spring.security.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;

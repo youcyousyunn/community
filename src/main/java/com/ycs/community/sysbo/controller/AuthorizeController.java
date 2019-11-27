@@ -6,9 +6,10 @@ import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.domain.dto.GithubAccessTokenRequestDto;
 import com.ycs.community.cmmbo.domain.dto.GithubUserResponseDto;
-import com.ycs.community.cmmbo.domain.dto.UserRequestDto;
-import com.ycs.community.cmmbo.domain.dto.UserResponseDto;
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.dto.UserRequestDto;
+import com.ycs.community.sysbo.domain.dto.UserResponseDto;
+import com.ycs.community.sysbo.domain.po.RolePo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.cmmbo.provider.GithubProvider;
 import com.ycs.community.sysbo.service.UserService;
 import com.ycs.community.spring.annotation.AnonymousAccess;
@@ -96,7 +97,7 @@ public class AuthorizeController {
         }
 
         UserResponseDto responseDto = new UserResponseDto();
-        List<String> roles = userService.qryRolesByUserId(userPo.getId());
+        List<RolePo> roles = userService.qryRolesByUserId(userPo.getId());
         userPo.setRoles(roles);
         responseDto.setData(userPo);
 

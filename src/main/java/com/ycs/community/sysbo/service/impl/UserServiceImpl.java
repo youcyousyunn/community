@@ -7,17 +7,22 @@ import com.ycs.community.sysbo.dao.DeptDao;
 import com.ycs.community.sysbo.dao.JobDao;
 import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.dao.UserDao;
-import com.ycs.community.sysbo.domain.dto.QryRolePageResponseDto;
 import com.ycs.community.sysbo.domain.dto.QryUserPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryUserPageResponseDto;
-import com.ycs.community.sysbo.domain.po.*;
+import com.ycs.community.sysbo.domain.po.DeptPo;
+import com.ycs.community.sysbo.domain.po.JobPo;
+import com.ycs.community.sysbo.domain.po.RolePo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -77,14 +82,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> qryRolesByUserId(Long userId) {
+    public List<RolePo> qryRolesByUserId(Long userId) {
         List<RolePo> roleList = roleDao.qryRolesByUserId(userId);
         if (!CollectionUtils.isEmpty(roleList)) {
-            List<String> roles = new ArrayList<>();
-            for (RolePo rolePo : roleList) {
-                roles.add(rolePo.getCode());
-            }
-            return roles;
+            return roleList;
         }
         return null;
     }
@@ -128,7 +129,6 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(data)) {
             response.setData(data);
             response.setTotal(totalCount);
-            return response;
         }
         return response;
     }

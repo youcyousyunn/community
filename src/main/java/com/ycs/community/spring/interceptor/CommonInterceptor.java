@@ -1,7 +1,7 @@
 package com.ycs.community.spring.interceptor;
 
 import com.ycs.community.basebo.domain.dto.BaseRequestDto;
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.spring.security.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,7 +1,7 @@
 package com.ycs.community.spring.security.service;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import org.springframework.beans.factory.annotation.Autowired;

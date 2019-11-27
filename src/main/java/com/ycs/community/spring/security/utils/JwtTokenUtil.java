@@ -1,6 +1,6 @@
 package com.ycs.community.spring.security.utils;
 
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;

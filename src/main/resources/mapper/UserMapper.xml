@@ -76,4 +76,52 @@
             </if>
         </where>
     </select>
+
+    <select id="qryUserCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_sys_userinfo t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]> OR t.email like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+            <if test="enabled != null">
+                AND t.enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryUserPage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.UserPo">
+        SELECT
+        id id,
+        account_id accountId,
+        `name` `name`,
+        phone phone,
+        email email,
+        `password` `password`,
+        token token,
+        avatar_url avatarUrl,
+        enabled enabled,
+        last_password_reset_time lastPasswordResetTime
+        FROM t_sys_userinfo
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]> OR t.email like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+            <if test="enabled != null">
+                AND t.enabled = #{enabled}
+            </if>
+        </where>
+    </select>
 </mapper>

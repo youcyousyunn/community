@@ -1,7 +1,7 @@
 package com.ycs.community.spring.security.utils;
 
 import cn.hutool.json.JSONObject;
-import com.ycs.community.cmmbo.domain.po.UserPo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.spring.exception.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;

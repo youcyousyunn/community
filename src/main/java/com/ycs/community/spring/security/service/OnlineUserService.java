@@ -2,9 +2,9 @@ package com.ycs.community.spring.security.service;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 import com.alibaba.fastjson.JSONObject;
-import com.ycs.community.cmmbo.domain.po.UserPo;
 import com.ycs.community.coobo.utils.FileUtil;
 import com.ycs.community.spring.security.domain.po.OnlineUserPo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.lionsoul.ip2region.DataBlock;
