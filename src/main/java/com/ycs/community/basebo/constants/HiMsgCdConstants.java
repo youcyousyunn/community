@@ -69,7 +69,7 @@ public class HiMsgCdConstants {
     public static final String QRY_USER_ROLE_FAIL = "B0030";
     /*** 查询角色权限失败 ****/
     public static final String QRY_ROLE_PERMISSION_FAIL = "B0031";
-    /*** 修改字典失败 ****/
+    /*** 更新字典失败 ****/
     public static final String UPD_DICT_FAIL = "B0032";
     /*** 删除字典详情失败 ****/
     public static final String DEL_DICT_DETAIL_FAIL = "B0033";
@@ -79,9 +79,9 @@ public class HiMsgCdConstants {
     public static final String ADD_DICT_FAIL = "B0035";
     /*** 添加字典详情失败 ****/
     public static final String ADD_DICT_DETAIL_FAIL = "B0036";
-    /*** 修改字典详情失败 ****/
+    /*** 更新字典详情失败 ****/
     public static final String UPD_DICT_DETAIL_FAIL = "B0037";
-    /*** 修改部门失败 ****/
+    /*** 更新部门失败 ****/
     public static final String UPD_DEPT_FAIL = "B0038";
     /*** 添加角色部门失败 ****/
     public static final String ADD_ROLE_DEPT_FAIL = "B0039";
@@ -103,4 +103,14 @@ public class HiMsgCdConstants {
     public static final String UPD_JOB_FAIL = "B0047";
     /*** 查询部门下所有岗位失败 ****/
     public static final String QRY_DEPT_JOB_FAIL = "B0048";
+    /*** 删除用户角色失败 ****/
+    public static final String DEL_USER_ROLE_FAIL = "B0049";
+    /*** 添加用户角色失败 ****/
+    public static final String ADD_USER_ROLE_FAIL = "B0050";
+    /*** 删除用户失败 ****/
+    public static final String DEL_USER_FAIL = "B0052";
+    /*** 存在用户关联, 请取消关联后再试 ****/
+    public static final String RELATED_USER_CAN_NOT_DEL_JOB = "B0053";
+    /*** 存在岗位关联, 请取消关联后再试 ****/
+    public static final String RELATED_JOB_CAN_NOT_DEL_DEPT = "B0054";
 }

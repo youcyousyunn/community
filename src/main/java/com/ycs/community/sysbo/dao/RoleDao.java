@@ -23,4 +23,5 @@ public interface RoleDao {
     int addRoleDepts(Map<String, Object> paramMap);
     List<RolePo> qryRolesByDeptId(Long deptId);
     List<RolePo> qryAllRole(Map<String, Object> paramMap);
+    int delRolesByUserId(Long userId);
 }

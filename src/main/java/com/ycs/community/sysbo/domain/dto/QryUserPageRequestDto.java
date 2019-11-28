@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 public class QryUserPageRequestDto extends BaseRequestDto {
+    private Long deptId;
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;

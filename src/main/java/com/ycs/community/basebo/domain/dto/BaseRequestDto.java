@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 @Data
 public class BaseRequestDto implements Serializable {
-    protected long accountId;
     protected String url;
     protected String urlWithOutContext;
     protected String userAgent;

@@ -193,7 +193,10 @@
         INNER JOIN t_sys_role_dept t1 ON t1.role_id = t.id
         <where>
             <if test="_parameter != null">
-                t1.dept_id = #{deptId}
+                t1.dept_id = #{deptId} OR t1.dept_id IN (
+                    SELECT t2.pid FROM t_sys_dept t2
+                    WHERE t2.id = #{deptId}
+                )
             </if>
         </where>
     </select>
@@ -212,4 +215,13 @@
             1=1
         </where>
     </select>
+
+    <delete id="delRolesByUserId" parameterType="java.lang.String">
+        DELETE FROM t_sys_user_role
+        <where>
+            <if test="_parameter != null">
+                user_id = #{userId}
+            </if>
+        </where>
+    </delete>
 </mapper>

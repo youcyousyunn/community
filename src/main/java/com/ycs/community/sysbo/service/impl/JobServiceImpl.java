@@ -6,11 +6,14 @@ import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.DeptDao;
 import com.ycs.community.sysbo.dao.JobDao;
+import com.ycs.community.sysbo.dao.UserDao;
 import com.ycs.community.sysbo.domain.dto.JobRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryJobPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryJobPageResponseDto;
 import com.ycs.community.sysbo.domain.po.DeptPo;
 import com.ycs.community.sysbo.domain.po.JobPo;
+import com.ycs.community.sysbo.domain.po.RolePo;
+import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,8 @@ public class JobServiceImpl implements JobService {
     private JobDao jobDao;
     @Autowired
     private DeptDao deptDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public QryJobPageResponseDto qryJobPage(QryJobPageRequestDto request) {
@@ -52,9 +57,14 @@ public class JobServiceImpl implements JobService {
         // 查询岗位对应部门
         data.forEach(jobPo -> {
             DeptPo deptPo = deptDao.qryDeptById(jobPo.getDeptPid());
-            jobPo.setDeptSuperiorName(deptPo.getName());
-            deptPo.setName(jobPo.getDeptName());
-            jobPo.setDept(deptPo);
+            if (StringUtils.isEmpty(deptPo)) { // 为空代表是部门树根节点
+                deptPo = deptDao.qryDeptById(jobPo.getDeptId());
+                jobPo.setDept(deptPo);
+            } else {
+                jobPo.setDeptSuperiorName(deptPo.getName());
+                deptPo.setName(jobPo.getDeptName());
+                jobPo.setDept(deptPo);
+            }
         });
         // 组装分页信息
         QryJobPageResponseDto response = new QryJobPageResponseDto();
@@ -79,7 +89,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean delJob(Long id) {
+        // 删除岗位前判断有没有关联的用户
+        List<UserPo> userPoList = userDao.qryUsersByJobId(id);
+        if (!CollectionUtils.isEmpty(userPoList)) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.RELATED_USER_CAN_NOT_DEL_JOB, "存在用户关联, 请取消关联后再试");
+        }
         if (jobDao.delJob(id) < 1) {
             throw new CustomizeBusinessException(HiMsgCdConstants.DEL_JOB_FAIL, "删除岗位失败");
         }
@@ -87,6 +103,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean updJob(JobRequestDto request) {
         JobPo jobPo = BeanUtil.trans2Entity(request, JobPo.class);
         jobPo.setDeptId(jobPo.getDept().getId());

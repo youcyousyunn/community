@@ -117,7 +117,7 @@ public class DictServiceImpl implements DictService {
         if (dictDao.updDict(dictPo) > 0) {
             return true;
         } else {
-            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DICT_FAIL, "修改字典失败");
+            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DICT_FAIL, "更新字典失败");
         }
     }
 
@@ -150,7 +150,7 @@ public class DictServiceImpl implements DictService {
         if (dictDao.updDictDetail(dictPo) > 0) {
             return true;
         } else {
-            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DICT_DETAIL_FAIL, "修改字典详情失败");
+            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DICT_DETAIL_FAIL, "更新字典详情失败");
         }
     }
 }

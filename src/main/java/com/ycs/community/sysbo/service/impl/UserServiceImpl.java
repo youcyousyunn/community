@@ -1,6 +1,7 @@
 package com.ycs.community.sysbo.service.impl;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
+import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.DeptDao;
@@ -9,20 +10,21 @@ import com.ycs.community.sysbo.dao.RoleDao;
 import com.ycs.community.sysbo.dao.UserDao;
 import com.ycs.community.sysbo.domain.dto.QryUserPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryUserPageResponseDto;
+import com.ycs.community.sysbo.domain.dto.UserRequestDto;
 import com.ycs.community.sysbo.domain.po.DeptPo;
 import com.ycs.community.sysbo.domain.po.JobPo;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
+import com.ycs.community.sysbo.utils.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,6 +42,9 @@ public class UserServiceImpl implements UserService {
         // 查询数据库用户是否存在
         UserPo user = userDao.qryUserById(userPo.getId());
         if(StringUtils.isEmpty(user)) {
+            // 设置默认密码
+            String encryptDefaultPassword = EncryptUtil.encryptDefaultPassword();
+            userPo.setPassword(encryptDefaultPassword);
             userPo.setEnabled(true);
             userPo.setCreTm(new Date().getTime());
             int result = userDao.addUser(userPo);
@@ -101,6 +106,12 @@ public class UserServiceImpl implements UserService {
             paramMap.put("endTime", request.getEndTime().getTime());
         }
         paramMap.put("enabled", request.getEnabled());
+        // 递归获取部门下的所有子部门
+        if (!StringUtils.isEmpty(request.getDeptId())) {
+            List<Long> deptIds = new ArrayList<>();
+            this.buildDeptIds(request.getDeptId(), deptIds);
+            paramMap.put("deptIds", deptIds);
+        }
         // 查询总条数
         int totalCount = userDao.qryUserCount(paramMap);
         // 计算分页信息
@@ -131,5 +142,117 @@ public class UserServiceImpl implements UserService {
             response.setTotal(totalCount);
         }
         return response;
+    }
+
+    /**
+     * 递归获取所有子部门ID
+     * @param pid
+     * @param deptIds
+     * @return
+     */
+    private List<Long> buildDeptIds(Long pid, List<Long> deptIds) {
+        deptIds.add(pid);
+        List<DeptPo> deptPoList = deptDao.qryDeptsByPid(pid);
+        deptPoList.forEach(deptPo -> {
+            List<DeptPo> children = deptDao.qryDeptsByPid(deptPo.getId());
+            if (!CollectionUtils.isEmpty(children)) {
+                children.forEach(deptPo1 -> {
+                    buildDeptIds(deptPo1.getId(), deptIds);
+                });
+            } else {
+                deptIds.add(deptPo.getId());
+            }
+        });
+        return deptIds;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean addUser(UserRequestDto request) {
+        // 添加用户基本信息
+        UserPo userPo = BeanUtil.trans2Entity(request, UserPo.class);
+        // 设置默认密码
+        String encryptDefaultPassword = EncryptUtil.encryptDefaultPassword();
+        userPo.setPassword(encryptDefaultPassword);
+        userPo.setDeptId(userPo.getDept().getId());
+        userPo.setJobId(userPo.getJob().getId());
+        userPo.setCreTm(new Date().getTime());
+        if (userDao.addUser(userPo) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.ADD_USER_FAIL, "添加用户失败");
+        } else {
+            // 添加用户基本信息前先添加用户角色
+            List<RolePo> roles = request.getRoles();
+            List<Long> addList = new ArrayList<>(); // 新增角色列表
+            addList = roles.stream().map(RolePo :: getId).collect(Collectors.toList());
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("userId", userPo.getId()); // 获取添加用户ID
+            paramMap.put("roles", addList);
+            if (!CollectionUtils.isEmpty(addList)) {
+                paramMap.put("roles", addList);
+                if (userDao.addUserRoles(paramMap) < 1) {
+                    throw new CustomizeBusinessException(HiMsgCdConstants.ADD_USER_ROLE_FAIL, "添加用户角色失败");
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean delUser(Long id) {
+        // 删除用户前先删除用户的角色
+        if (roleDao.delRolesByUserId(id) < 0) { // 用户角色可能为空
+            throw new CustomizeBusinessException(HiMsgCdConstants.DEL_USER_ROLE_FAIL, "删除用户角色失败");
+        } else {
+            if (userDao.delUser(id) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.DEL_USER_FAIL, "删除用户失败");
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean updUser(UserRequestDto request) {
+        // 更新用户基本信息前先更新用户角色
+        List<RolePo> rolePoList = roleDao.qryRolesByUserId(request.getId());
+        List<RolePo> roles = request.getRoles();
+        List<Long> addList = new ArrayList<>(); // 新增角色列表
+        List<Long> delList = new ArrayList<>(); // 删除角色列表
+        addList = roles.stream().map(RolePo :: getId).collect(Collectors.toList());
+        List<Long> roleList = roles.stream().map(RolePo :: getId).collect(Collectors.toList());
+        for (RolePo rolePo : rolePoList) {
+            Long id = rolePo.getId();
+            if (addList.contains(id)) {
+                addList.remove(id);
+            }
+            if (!roleList.contains(id)) {
+                delList.add(id);
+            }
+        }
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userId", request.getId());
+        paramMap.put("roles", delList);
+        if (!CollectionUtils.isEmpty(delList)) {
+            if (userDao.delUserRoles(paramMap) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.DEL_USER_ROLE_FAIL, "删除用户角色失败");
+            }
+        }
+        if (!CollectionUtils.isEmpty(addList)) {
+            paramMap.put("roles", addList);
+            if (userDao.addUserRoles(paramMap) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.ADD_USER_ROLE_FAIL, "添加用户角色失败");
+            }
+        }
+
+        // 更新用户基本信息
+        UserPo userPo = BeanUtil.trans2Entity(request, UserPo.class);
+        userPo.setDeptId(userPo.getDept().getId());
+        userPo.setJobId(userPo.getJob().getId());
+        userPo.setUpdTm(new Date().getTime());
+        if (userDao.updUser(userPo) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_USER_FAIL, "更新用户失败");
+        }
+        return true;
     }
 }

@@ -16,4 +16,8 @@ public interface UserDao {
     UserPo qryUserInfoByName(String name);
     int qryUserCount(Map<String, Object> paramMap);
     List<UserPo> qryUserPage(Map<String, Object> paramMap);
+    int delUserRoles(Map<String, Object> paramMap);
+    int addUserRoles(Map<String, Object> paramMap);
+    int delUser(Long id);
+    List<UserPo> qryUsersByJobId(Long deptId);
 }

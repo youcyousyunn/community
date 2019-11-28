@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class EncryptUtil {
     private final static String DES_KEY = "PASS_KEY";
     private final static String IV_PARAM = "IV_PARAM";
+    private final static String DEFAULT_PWD = "123456";
     
     /**
      * 对称加密
@@ -73,6 +74,14 @@ public class EncryptUtil {
         cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         byte[] retByte = cipher.doFinal(src);
         return new String(retByte);
+    }
+
+    /**
+     * 加密默认密码
+     * @return
+     */
+    public static String encryptDefaultPassword(){
+        return  DigestUtils.md5DigestAsHex(DEFAULT_PWD.getBytes());
     }
 
     /**

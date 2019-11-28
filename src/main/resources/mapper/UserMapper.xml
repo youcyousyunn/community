@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ycs.community.sysbo.dao.UserDao">
-    <insert id="addUser" parameterType="com.ycs.community.sysbo.domain.po.UserPo">
+    <insert id="addUser" parameterType="com.ycs.community.sysbo.domain.po.UserPo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_sys_userinfo (account_id,
             `name`,
+            password,
+            phone,
+            email,
+            dept_id,
+            job_id,
             token,
             avatar_url,
-            isPause,
+            enabled,
             create_time
         )
         values (
             #{accountId,jdbcType=BIGINT},
             #{name,jdbcType=VARCHAR},
+            #{password,jdbcType=VARCHAR},
+            #{phone,jdbcType=VARCHAR},
+            #{email,jdbcType=VARCHAR},
+            #{deptId,jdbcType=BIGINT},
+            #{jobId,jdbcType=BIGINT},
             #{token,jdbcType=VARCHAR},
             #{avatarUrl,jdbcType=VARCHAR},
-            #{isPause,jdbcType=BIT},
+            #{enabled,jdbcType=BIT},
             #{creTm,jdbcType=BIGINT}
         )
     </insert>
@@ -24,6 +34,18 @@
         <set>
             <if test="name != null">
                 `name` = #{name},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="jobId != null">
+                job_id = #{jobId},
             </if>
             <if test="avatarUrl != null">
                 avatar_url = #{avatarUrl},
@@ -39,6 +61,9 @@
             <if test="accountId != null">
                 account_id = #{accountId}
             </if>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
         </where>
     </update>
 
@@ -47,6 +72,10 @@
         id id,
         account_id accountId,
         `name` `name`,
+        phone phone,
+        email email,
+        dept_id deptId,
+        job_id jobId,
         token token,
         avatar_url avatarUrl,
         enabled enabled,
@@ -64,6 +93,10 @@
         id id,
         account_id accountId,
         `name` `name`,
+        phone phone,
+        email email,
+        dept_id deptId,
+        job_id jobId,
         `password` `password`,
         token token,
         avatar_url avatarUrl,
@@ -81,8 +114,14 @@
         SELECT COUNT(*)
         FROM t_sys_userinfo t
         <where>
+            <if test="deptIds != null">
+                t.dept_id IN
+                <foreach collection="deptIds" item="deptId" index="index" open="(" close=")" separator=",">
+                    #{deptId}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]> OR t.email like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]> OR t.email like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
@@ -98,20 +137,29 @@
 
     <select id="qryUserPage" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.UserPo">
         SELECT
-        id id,
-        account_id accountId,
-        `name` `name`,
-        phone phone,
-        email email,
-        `password` `password`,
-        token token,
-        avatar_url avatarUrl,
-        enabled enabled,
-        last_password_reset_time lastPasswordResetTime
-        FROM t_sys_userinfo
+        t.id id,
+        t.account_id accountId,
+        t.`name` `name`,
+        t.phone phone,
+        t.email email,
+        t.dept_id deptId,
+        t.job_id jobId,
+        t.`password` `password`,
+        t.token token,
+        t.avatar_url avatarUrl,
+        t.enabled enabled,
+        t.last_password_reset_time lastPasswordResetTime,
+        t.create_time creTm
+        FROM t_sys_userinfo t
         <where>
+            <if test="deptIds != null">
+                t.dept_id IN
+                <foreach collection="deptIds" item="deptId" index="index" open="(" close=")" separator=",">
+                    #{deptId}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]> OR t.email like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]> OR t.email like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
@@ -121,6 +169,62 @@
             </if>
             <if test="enabled != null">
                 AND t.enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+    <delete id="delUserRoles" parameterType="java.util.Map">
+        DELETE FROM t_sys_user_role
+        <where>
+            <if	test="roles != null">
+                role_id IN
+                <foreach collection="roles" item="roleId" index="index" open="(" close=")" separator=",">
+                    #{roleId}
+                </foreach>
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </delete>
+
+    <insert id="addUserRoles" parameterType="java.util.Map">
+        INSERT INTO t_sys_user_role (
+        user_id, role_id
+        )
+        VALUES
+        <foreach collection="roles" item="roleId" index="index" separator=",">
+            (#{userId, jdbcType=BIGINT}, #{roleId, jdbcType=BIGINT})
+        </foreach>
+    </insert>
+
+    <delete id="delUser" parameterType="java.lang.String">
+        DELETE FROM t_sys_userinfo
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <select id="qryUsersByJobId" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.UserPo">
+        SELECT
+        id id,
+        account_id accountId,
+        `name` `name`,
+        phone phone,
+        email email,
+        dept_id deptId,
+        job_id jobId,
+        `password` `password`,
+        token token,
+        avatar_url avatarUrl,
+        enabled enabled,
+        last_password_reset_time lastPasswordResetTime
+        FROM t_sys_userinfo
+        <where>
+            <if test="_parameter != null">
+                job_id = #{jobId}
             </if>
         </where>
     </select>

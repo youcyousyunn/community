@@ -24,6 +24,8 @@ public class UserPo extends BasePo implements UserDetails {
     private List<RolePo> roles;
     private DeptPo dept;
     private JobPo job;
+    private Long deptId;
+    private Long jobId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
