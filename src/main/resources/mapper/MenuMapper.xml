@@ -19,7 +19,10 @@
             t.component component,
             t.icon icon,
             t.sort sort,
-            t.i_frame iFrame
+            t.i_frame iFrame,
+            t.cache cache,
+            t.hidden hidden,
+            t.create_time creTm
         FROM t_sys_menu t
         INNER JOIN t_sys_role_menu t1 on t1.menu_id = t.id
         <where>
@@ -46,8 +49,11 @@
         t.icon icon,
         t.sort sort,
         t.i_frame iFrame,
+        t.cache cache,
+        t.hidden hidden,
         t.permission permission,
-        t.type type
+        t.type type,
+        t.create_time creTm
         FROM t_sys_menu t
         INNER JOIN t_sys_role_menu t1 on t1.menu_id = t.id
         <where>
@@ -68,8 +74,11 @@
         t.icon icon,
         t.sort sort,
         t.i_frame iFrame,
+        t.cache cache,
+        t.hidden hidden,
         t.permission permission,
-        t.type type
+        t.type type,
+        t.create_time creTm
         FROM t_sys_menu t
         <where>
             <if test="_parameter != null">
@@ -89,8 +98,11 @@
         t.icon icon,
         t.sort sort,
         t.i_frame iFrame,
+        t.cache cache,
+        t.hidden hidden,
         t.permission permission,
-        t.type type
+        t.type type,
+        t.create_time creTm
         FROM t_sys_menu t
         <where>
             <if test="_parameter != null">
@@ -98,4 +110,120 @@
             </if>
         </where>
     </select>
+
+    <select id="qryMenus" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.MenuPo">
+        SELECT
+        t.id id,
+        t.pid pid,
+        t.`name` `name`,
+        t.path path,
+        t.component component,
+        t.icon icon,
+        t.sort sort,
+        t.i_frame iFrame,
+        t.cache cache,
+        t.hidden hidden,
+        t.permission permission,
+        t.type type,
+        t.create_time creTm
+        FROM t_sys_menu t
+        <where>
+            <if test="name != null">
+                t.name like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.sort ASC
+    </select>
+
+    <insert id="addMenu" parameterType="com.ycs.community.sysbo.domain.po.MenuPo">
+        INSERT INTO t_sys_menu(pid,
+        `name`,
+        path,
+        component,
+        icon,
+        sort,
+        i_frame,
+        cache,
+        hidden,
+        permission,
+        `type`,
+        create_time
+		)
+		VALUES (
+		    #{pid,jdbcType=BIGINT},
+	  		#{name,jdbcType=VARCHAR},
+			#{path,jdbcType=VARCHAR},
+	  		#{component,jdbcType=VARCHAR},
+	  		#{icon,jdbcType=VARCHAR},
+	  		#{sort,jdbcType=INTEGER},
+	  		#{iFrame,jdbcType=BIT},
+	  		#{cache,jdbcType=BIT},
+	  		#{hidden,jdbcType=BIT},
+	  		#{permission,jdbcType=VARCHAR},
+	  		#{type,jdbcType=INTEGER},
+	  		#{creTm,jdbcType=BIGINT}
+		)
+    </insert>
+
+    <delete id="delMenu" parameterType="java.lang.String">
+        DELETE FROM t_sys_menu
+        <where>
+            <if test="_parameter != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updMenu" parameterType="com.ycs.community.sysbo.domain.po.MenuPo">
+        UPDATE t_sys_menu
+        <set>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="path != null">
+                path = #{path},
+            </if>
+            <if test="component != null">
+                component = #{component},
+            </if>
+            <if test="icon != null">
+                icon = #{icon},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="iFrame != null">
+                i_frame = #{iFrame},
+            </if>
+            <if test="cache != null">
+                cache = #{cache},
+            </if>
+            <if test="hidden != null">
+                hidden = #{hidden},
+            </if>
+            <if test="permission != null">
+                permission = #{permission},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
 </mapper>

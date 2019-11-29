@@ -15,4 +15,8 @@ public interface MenuDao {
     List<MenuPo> qryMenusByPid(Long pid);
     int delMenusByRoleId(Long id);
     MenuPo qryMenu(String permission);
+    List<MenuPo> qryMenus(Map<String, Object> paramMap);
+    int addMenu(MenuPo menuPo);
+    int delMenu(Long id);
+    int updMenu(MenuPo menuPo);
 }

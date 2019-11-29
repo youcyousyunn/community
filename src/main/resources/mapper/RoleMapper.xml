@@ -224,4 +224,13 @@
             </if>
         </where>
     </delete>
+
+    <delete id="delRoleMenuByMenuId" parameterType="java.lang.String">
+        DELETE FROM t_sys_role_menu
+        <where>
+            <if test="_parameter != null">
+                menu_id = #{menuId}
+            </if>
+        </where>
+    </delete>
 </mapper>

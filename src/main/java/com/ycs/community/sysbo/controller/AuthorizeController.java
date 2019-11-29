@@ -78,6 +78,16 @@ public class AuthorizeController {
             BizLogger.info("接口请求报文异常" + request.toString());
             throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
         }
+
+        // 校验用户状态&密码
+        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(request.getName());
+        if (!userPo.isEnabled()) {
+            throw new BadRequestException("账号已被停用, 请联系管理员");
+        }
+        if (!userPo.getPassword().equals(EncryptUtil.encryptPassword(request.getPassword()))) {
+            throw new BadRequestException("密码错误");
+        }
+
         // 校验验证码
         String vCode = redisService.qryVCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + request.getUuid());
         if (StringUtils.isEmpty(vCode)) {
@@ -85,15 +95,6 @@ public class AuthorizeController {
         }
         if (!vCode.equalsIgnoreCase(request.getCode())) {
             throw new BadRequestException("验证码错误");
-        }
-
-        // 校验密码
-        UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(request.getName());
-        if (!userPo.getPassword().equals(EncryptUtil.encryptPassword(request.getPassword()))) {
-            throw new BadRequestException("密码错误");
-        }
-        if (!userPo.isEnabled()) {
-            throw new BadRequestException("账号已被停用, 请联系管理员");
         }
 
         UserResponseDto responseDto = new UserResponseDto();

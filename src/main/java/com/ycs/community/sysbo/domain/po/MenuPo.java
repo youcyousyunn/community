@@ -12,11 +12,11 @@ public class MenuPo extends BasePo {
     private String name;
     private String path;
     private String component;
-    private boolean hidden;
-    private boolean cache;
     private String redirect;
     private boolean alwaysShow;
     private boolean iFrame;
+    private boolean hidden;
+    private boolean cache;
     private String icon;
     private String permission;
     private int type;

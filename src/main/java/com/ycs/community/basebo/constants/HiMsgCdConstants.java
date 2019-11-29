@@ -113,4 +113,12 @@ public class HiMsgCdConstants {
     public static final String RELATED_USER_CAN_NOT_DEL_JOB = "B0053";
     /*** 存在岗位关联, 请取消关联后再试 ****/
     public static final String RELATED_JOB_CAN_NOT_DEL_DEPT = "B0054";
+    /*** 存在子菜单, 不能删除 ****/
+    public static final String HAS_CHILDREN_CAN_NOT_DEL_MENU = "B0055";
+    /*** 添加菜单失败 ****/
+    public static final String ADD_MENU_FAIL = "B0056";
+    /*** 删除菜单失败 ****/
+    public static final String DEL_MENU_FAIL = "B0057";
+    /*** 更新菜单失败 ****/
+    public static final String UPD_MENU_FAIL = "B0058";
 }

@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -53,5 +51,69 @@ public class MenuController {
         }
         List<Map<String, Object>> response = menuService.qryAllMenu(menuService.qryMenusByPid(pid));
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * 查询菜单树
+     * @param request
+     * @return
+     */
+    @GetMapping("/menu/tree")
+    @OperationLog(title = "查询菜单树", action = OperationType.GET, isSave = false, channel = "web")
+    public MenuResponseDto qryMenuTree(MenuRequestDto request) {
+        MenuResponseDto responseDto = new MenuResponseDto();
+        responseDto = menuService.qryMenuTree(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 添加菜单
+     * @param request
+     * @return
+     */
+    @PostMapping("/menu")
+    public MenuResponseDto addMenu(@RequestBody MenuRequestDto request) {
+        // 接口请求报文检查
+        if (!request.checkRequestDto()) {
+            BizLogger.info("接口请求报文异常" + request.toString());
+            throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+        }
+        MenuResponseDto responseDto = new MenuResponseDto();
+        menuService.addMenu(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 根据ID删除菜单
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/menu/{id}")
+    @OperationLog(title = "根据ID删除菜单", action = OperationType.GET, isSave = true, channel = "web")
+    public MenuResponseDto delMenu(@PathVariable("id") Long id) {
+        MenuResponseDto responseDto = new MenuResponseDto();
+        menuService.delMenu(id);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 更新菜单
+     * @param request
+     * @return
+     */
+    @PutMapping("/menu")
+    public MenuResponseDto updMenu(@RequestBody MenuRequestDto request) {
+        // 接口请求报文检查
+        if (!request.checkRequestDto()) {
+            BizLogger.info("接口请求报文异常" + request.toString());
+            throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+        }
+        MenuResponseDto responseDto = new MenuResponseDto();
+        menuService.updMenu(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
     }
 }
