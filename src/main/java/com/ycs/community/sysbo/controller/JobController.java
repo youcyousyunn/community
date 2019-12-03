@@ -7,6 +7,7 @@ import com.ycs.community.sysbo.domain.dto.JobRequestDto;
 import com.ycs.community.sysbo.domain.dto.JobResponseDto;
 import com.ycs.community.sysbo.domain.dto.QryJobPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryJobPageResponseDto;
+import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.JobPo;
 import com.ycs.community.sysbo.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import java.util.List;
 public class JobController {
     @Autowired
     private JobService jobService;
+    @Autowired
+    private DataScope dataScope;
 
     /**
      * 分页查询岗位列表
@@ -30,6 +33,8 @@ public class JobController {
     @GetMapping("/job/queryPage")
     public QryJobPageResponseDto qryJobPage(QryJobPageRequestDto request) {
         QryJobPageResponseDto responsePageDto = new QryJobPageResponseDto();
+        // 设置用户查看岗位权限
+        request.setDeptIds(dataScope.getDeptIds());
         responsePageDto = jobService.qryJobPage(request);
         responsePageDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responsePageDto;

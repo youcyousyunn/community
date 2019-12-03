@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DeptServiceImpl implements DeptService {
@@ -33,6 +34,9 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public DeptResponseDto qryDeptTree(DeptRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(request.getIds())) {
+            paramMap.put("ids", request.getIds());
+        }
         paramMap.put("name", request.getName());
         if (!StringUtils.isEmpty(request.getStartTime())) {
             paramMap.put("startTime", request.getStartTime().getTime());
@@ -44,24 +48,33 @@ public class DeptServiceImpl implements DeptService {
         List<DeptPo> deptPoList = deptDao.qryDeptTree(paramMap);
         // 构建部门树
         List<DeptPo> deptTree = new LinkedList<>();
+        List<DeptPo> noRepeatDeptTree = new LinkedList<>();
+        List<Long> deptIds = deptPoList.stream().map(DeptPo :: getId).collect(Collectors.toList());
         deptPoList.forEach(deptPo -> {
+            boolean isChild = false;
             if (0 == deptPo.getPid()) {
                 deptTree.add(deptPo);
             }
             for (DeptPo dept : deptPoList) {
                 if (dept.getPid().equals(deptPo.getId())) {
+                    isChild = true;
                     if (CollectionUtils.isEmpty(deptPo.getChildren())) {
                         deptPo.setChildren(new ArrayList<DeptPo>());
                     }
                     deptPo.getChildren().add(dept);
                 }
             }
+            if (isChild) {
+                noRepeatDeptTree.add(deptPo);
+            } else if (!deptIds.contains(deptDao.qryDeptById(deptPo.getPid()).getId())) {
+                noRepeatDeptTree.add(deptPo);
+            }
         });
         DeptResponseDto response = new DeptResponseDto();
         if (!CollectionUtils.isEmpty(deptTree)) {
             response.setData(deptTree);
         } else {
-            response.setData(deptPoList);
+            response.setData(noRepeatDeptTree);
         }
         return response;
     }
@@ -113,5 +126,17 @@ public class DeptServiceImpl implements DeptService {
             throw new CustomizeBusinessException(HiMsgCdConstants.UPD_DEPT_FAIL, "更新部门失败");
         }
         return true;
+    }
+
+    @Override
+    public List<DeptPo> qryDeptsByRoleId(Long roleId) {
+        List<DeptPo> deptPoList = deptDao.qryDeptsByRoleId(roleId);
+        return deptPoList;
+    }
+
+    @Override
+    public List<DeptPo> qryDeptsByPid(Long pid) {
+        List<DeptPo> deptPoList = deptDao.qryDeptsByPid(pid);
+        return deptPoList;
     }
 }

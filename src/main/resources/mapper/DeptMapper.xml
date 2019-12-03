@@ -10,8 +10,14 @@
         t.create_time creTm
         FROM t_sys_dept t
         <where>
+            <if test="ids != null">
+                t.id IN
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}

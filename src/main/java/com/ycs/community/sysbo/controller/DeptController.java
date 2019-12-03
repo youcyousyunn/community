@@ -5,6 +5,7 @@ import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.sysbo.domain.dto.DeptRequestDto;
 import com.ycs.community.sysbo.domain.dto.DeptResponseDto;
+import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class DeptController {
     @Autowired
     private DeptService deptService;
+    @Autowired
+    private DataScope dataScope;
 
     /**
      * 查询部门树
@@ -23,6 +26,8 @@ public class DeptController {
     @GetMapping("/dept/tree")
     public DeptResponseDto qryDeptTree(DeptRequestDto request) {
         DeptResponseDto responseDto = new DeptResponseDto();
+        // 设置用户查看部门权限
+        request.setIds(dataScope.getDeptIds());
         responseDto = deptService.qryDeptTree(request);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;

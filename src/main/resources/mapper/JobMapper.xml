@@ -5,8 +5,14 @@
         SELECT COUNT(*)
         FROM t_sys_job t
         <where>
+            <if test="deptIds != null">
+                t.dept_id IN
+                <foreach collection="deptIds" item="deptId" index="index" open="(" separator="," close=")">
+                    #{deptId}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
@@ -33,8 +39,14 @@
         FROM t_sys_job t
         LEFT JOIN t_sys_dept t1 ON t1.id = t.dept_id
         <where>
+            <if test="deptIds != null">
+                t.dept_id IN
+                <foreach collection="deptIds" item="deptId" index="index" open="(" separator="," close=")">
+                    #{deptId}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}

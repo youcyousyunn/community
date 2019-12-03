@@ -38,6 +38,9 @@ public class JobServiceImpl implements JobService {
     @Override
     public QryJobPageResponseDto qryJobPage(QryJobPageRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(request.getDeptIds())) {
+            paramMap.put("deptIds", request.getDeptIds());
+        }
         paramMap.put("name", request.getName());
         if (!StringUtils.isEmpty(request.getStartTime())) {
             paramMap.put("startTime", request.getStartTime().getTime());
