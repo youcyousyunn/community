@@ -37,6 +37,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public QryRolePageResponseDto qryRolePage(QryRolePageRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(request.getIds())) {
+            paramMap.put("ids", request.getIds());
+        }
         paramMap.put("name", request.getName());
         if (!StringUtils.isEmpty(request.getStartTime())) {
             paramMap.put("startTime", request.getStartTime().getTime());

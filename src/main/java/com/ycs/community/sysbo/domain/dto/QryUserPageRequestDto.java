@@ -5,9 +5,11 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class QryUserPageRequestDto extends BaseRequestDto {
+    private List<Long> deptIds;
     private Long deptId;
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

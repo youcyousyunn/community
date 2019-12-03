@@ -8,6 +8,7 @@ import com.ycs.community.sysbo.domain.dto.QryRolePageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryRolePageResponseDto;
 import com.ycs.community.sysbo.domain.dto.RoleRequestDto;
 import com.ycs.community.sysbo.domain.dto.RoleResponseDto;
+import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 public class RoleController {
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private DataScope dataScope;
 
     /**
      * 分页查询角色列表
@@ -34,6 +37,8 @@ public class RoleController {
     @GetMapping("/role/queryPage")
     public QryRolePageResponseDto qryRolePage(QryRolePageRequestDto request) {
         QryRolePageResponseDto responsePageDto = new QryRolePageResponseDto();
+        // 设置用户查看角色权限
+        request.setIds(dataScope.getRoleIds());
         responsePageDto = roleService.qryRolePage(request);
         responsePageDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responsePageDto;

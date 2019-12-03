@@ -38,8 +38,14 @@
         SELECT COUNT(*)
         FROM t_sys_role t
         <where>
+            <if test="ids != null">
+                t.id IN
+                <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
@@ -61,8 +67,14 @@
         t.create_time creTm
         FROM t_sys_role t
         <where>
+            <if test="ids != null">
+                t.id IN
+                <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
@@ -71,7 +83,7 @@
                 AND t.create_time &lt;= #{endTime}
             </if>
         </where>
-        ORDER BY t.create_time DESC
+        ORDER BY t.level ASC
         LIMIT ${startRow}, ${offset}
     </select>
 

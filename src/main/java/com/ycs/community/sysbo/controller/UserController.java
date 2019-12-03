@@ -10,6 +10,7 @@ import com.ycs.community.sysbo.domain.dto.QryUserPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.QryUserPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.UserRequestDto;
 import com.ycs.community.sysbo.domain.dto.UserResponseDto;
+import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private DataScope dataScope;
 
     /**
      * 查询用户信息
@@ -46,6 +49,8 @@ public class UserController {
     @GetMapping("/user/queryPage")
     public QryUserPageResponseDto qryUserPage(QryUserPageRequestDto request) {
         QryUserPageResponseDto responsePageDto = new QryUserPageResponseDto();
+        // 设置用户查看用户权限
+        request.setDeptIds(dataScope.getDeptIds());
         responsePageDto = userService.qryUserPage(request);
         responsePageDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responsePageDto;

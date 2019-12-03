@@ -76,4 +76,31 @@ public class DataScope {
         });
         return result;
     }
+
+    /**
+     * 获取角色IDS
+     * @return
+     */
+    public List<Long> getRoleIds() {
+        List<Long> roleIds = new ArrayList<>();
+        // 查询用户角色
+        List<RolePo> roles = roleService.qryRolesByUserId();
+        for (RolePo role : roles) {
+            // 全部的数据权限
+            if (scopeType[0].equals(role.getDataScope())) {
+                return new ArrayList<>();
+            }
+
+            // 存储本级的数据权限
+            if (scopeType[1].equals(role.getDataScope())) {
+                roleIds.add(role.getId());
+            }
+
+            // 存储自定义的数据权限
+            if (scopeType[2].equals(role.getDataScope())) {
+                roleIds.add(role.getId());
+            }
+        }
+        return roleIds;
+    }
 }

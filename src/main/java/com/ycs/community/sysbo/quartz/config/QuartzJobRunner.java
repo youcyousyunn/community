@@ -28,10 +28,10 @@ public class QuartzJobRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<QuartzJobPo> quartzJobPoList = quartzJobService.qryJobByRunning();
-        logger.info("--------------------注入定时任务---------------------");
+        logger.info("\n" + "注入定时任务开始......");
         for (QuartzJobPo quartzJobPo : quartzJobPoList ) {
             quartzManage.addJob(quartzJobPo);
         }
-        logger.info("------------------注入定时任务完成-------------------");
+        logger.info("\n" + "------------------注入定时任务完成-------------------");
     }
 }
