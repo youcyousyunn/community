@@ -43,13 +43,15 @@ public class AttachServiceImpl implements AttachService {
         String suffix = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        File file = FileUtil.upload(multipartFile, uploadPath + dateStr + File.separator + type +  File.separator);
+        File file = FileUtil.upload(multipartFile, uploadPath + File.separator + dateStr + File.separator + type +  File.separator);
         if (!StringUtils.isEmpty(file)) {
+            String[] array = uploadPath.split("/");
+            String relativePath = "/" + array[array.length-2] + "/" + array[array.length-1] + "/" + dateStr + "/" + type + "/" + file.getName();
             name = StringUtils.isEmpty(name) ? FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename()) : name;
             AttachPo attachPo = new AttachPo();
             attachPo.setName(name);
             attachPo.setRealNm(file.getName());
-            attachPo.setPath(file.getPath());
+            attachPo.setPath(relativePath);
             attachPo.setSuffix(suffix);
             attachPo.setType(type);
             attachPo.setSize(FileUtil.getSize(multipartFile.getSize()));
@@ -87,7 +89,13 @@ public class AttachServiceImpl implements AttachService {
     public boolean delAttach(Long id) {
         AttachPo attachPo = attachDao.qryAttachById(id);
         if (!StringUtils.isEmpty(attachPo)) {
-            boolean result = FileUtil.del(attachPo.getPath());
+            String[] array = attachPo.getPath().split("/");
+            StringBuilder sb = new StringBuilder();
+            for (int i=3; i<array.length; i++) {
+                sb.append("/" + array[i]);
+            }
+            String absolutePath = uploadPath + sb.toString();
+            boolean result = FileUtil.del(absolutePath);
             if (result) {
                 if (1 == attachDao.delAttachById(attachPo.getId())) {
                     return true;
@@ -135,7 +143,13 @@ public class AttachServiceImpl implements AttachService {
         for (Long id : ids) { // 循环遍历删除
             AttachPo attachPo = attachDao.qryAttachById(id);
             if (!StringUtils.isEmpty(attachPo)) {
-                boolean isDeleted = FileUtil.del(attachPo.getPath());
+                String[] array = attachPo.getPath().split("/");
+                StringBuilder sb = new StringBuilder();
+                for (int i=3; i<array.length; i++) {
+                    sb.append("/" + array[i]);
+                }
+                String absolutePath = uploadPath + sb.toString();
+                boolean isDeleted = FileUtil.del(absolutePath);
                 if (isDeleted) {
                     if (1 == attachDao.delAttachById(attachPo.getId())) {
                         result++;

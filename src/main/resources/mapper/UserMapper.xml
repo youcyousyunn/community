@@ -10,7 +10,7 @@
             dept_id,
             job_id,
             token,
-            avatar_url,
+            avatar,
             enabled,
             create_time
         )
@@ -23,7 +23,7 @@
             #{deptId,jdbcType=BIGINT},
             #{jobId,jdbcType=BIGINT},
             #{token,jdbcType=VARCHAR},
-            #{avatarUrl,jdbcType=VARCHAR},
+            #{avatar,jdbcType=VARCHAR},
             #{enabled,jdbcType=BIT},
             #{creTm,jdbcType=BIGINT}
         )
@@ -47,8 +47,8 @@
             <if test="jobId != null">
                 job_id = #{jobId},
             </if>
-            <if test="avatarUrl != null">
-                avatar_url = #{avatarUrl},
+            <if test="avatar != null">
+                avatar = #{avatar},
             </if>
             <if test="enabled != null">
                 enabled = #{enabled},
@@ -77,9 +77,10 @@
         dept_id deptId,
         job_id jobId,
         token token,
-        avatar_url avatarUrl,
+        avatar avatar,
         enabled enabled,
-        last_password_reset_time lastPasswordResetTime
+        last_password_reset_time lastPasswordResetTime,
+        create_time creTm
         FROM t_sys_userinfo
         <where>
             <if test="_parameter != null">
@@ -99,7 +100,7 @@
         job_id jobId,
         `password` `password`,
         token token,
-        avatar_url avatarUrl,
+        avatar avatar,
         enabled enabled,
         last_password_reset_time lastPasswordResetTime
         FROM t_sys_userinfo
@@ -146,7 +147,7 @@
         t.job_id jobId,
         t.`password` `password`,
         t.token token,
-        t.avatar_url avatarUrl,
+        t.avatar avatar,
         t.enabled enabled,
         t.last_password_reset_time lastPasswordResetTime,
         t.create_time creTm
@@ -218,7 +219,7 @@
         job_id jobId,
         `password` `password`,
         token token,
-        avatar_url avatarUrl,
+        avatar avatar,
         enabled enabled,
         last_password_reset_time lastPasswordResetTime
         FROM t_sys_userinfo

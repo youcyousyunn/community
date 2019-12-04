@@ -192,7 +192,7 @@ public class AuthorizeController {
             userPo.setToken(session.getId());
             userPo.setName(githubUserResponseDto.getName());
             userPo.setAccountId(githubUserResponseDto.getId());
-            userPo.setAvatarUrl(githubUserResponseDto.getAvatarUrl());
+            userPo.setAvatar(githubUserResponseDto.getAvatar());
             boolean result = userService.addOrUpdateUser(userPo);
             if(result) {
                 // 生成令牌

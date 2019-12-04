@@ -146,4 +146,20 @@
             </if>
         </where>
     </select>
+
+    <select id="qryJobById" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.JobPo">
+        SELECT
+        t.id id,
+        t.name name,
+        t.dept_id deptId,
+        t.sort sort,
+        t.enabled enabled,
+        t.create_time creTm
+        FROM t_sys_job t
+        <where>
+            <if test="_parameter != null">
+                t.id = #{id}
+            </if>
+        </where>
+    </select>
 </mapper>

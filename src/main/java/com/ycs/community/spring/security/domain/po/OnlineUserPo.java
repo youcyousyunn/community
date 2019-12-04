@@ -14,7 +14,7 @@ import java.util.List;
 public class OnlineUserPo implements Serializable {
     private static final long serialVersionUID = 3065891170336873304L;
     private String name;
-    private String avatarUrl;
+    private String avatar;
     private String requestIp;
     private String address;
     private String browser;

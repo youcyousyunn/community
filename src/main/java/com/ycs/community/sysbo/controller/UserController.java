@@ -1,6 +1,7 @@
 package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
+import com.ycs.community.coobo.domain.dto.AttachResponseDto;
 import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeRequestException;
@@ -14,8 +15,11 @@ import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -108,5 +112,17 @@ public class UserController {
         userService.updUser(request);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
+    }
+
+    /**
+     * 更新用户头像
+     * @param file
+     * @return
+     */
+    @PostMapping("/user/avatar")
+    @OperationLog(title = "更新用户头像", action = OperationType.POST, isSave = true, channel = "web")
+    public ResponseEntity updAvatar(@RequestParam("file") MultipartFile file) {
+        userService.updAvatar(file);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -121,4 +121,6 @@ public class HiMsgCdConstants {
     public static final String DEL_MENU_FAIL = "B0057";
     /*** 更新菜单失败 ****/
     public static final String UPD_MENU_FAIL = "B0058";
+    /*** 更新用户头像失败 ****/
+    public static final String UPD_USER_AVATAR_FAIL = "B0059";
 }

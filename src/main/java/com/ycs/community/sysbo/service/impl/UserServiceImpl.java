@@ -3,7 +3,10 @@ package com.ycs.community.sysbo.service.impl;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.basebo.utils.PageUtil;
+import com.ycs.community.coobo.utils.FileUtil;
+import com.ycs.community.spring.exception.BadRequestException;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.spring.security.utils.SecurityUtil;
 import com.ycs.community.sysbo.dao.DeptDao;
 import com.ycs.community.sysbo.dao.JobDao;
 import com.ycs.community.sysbo.dao.RoleDao;
@@ -18,11 +21,14 @@ import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
 import com.ycs.community.sysbo.utils.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +42,10 @@ public class UserServiceImpl implements UserService {
     private DeptDao deptDao;
     @Autowired
     private JobDao jobDao;
+    @Value("${file.avatar}")
+    private String avatarPath;
+    @Value("${file.max-size}")
+    private long maxSize;
 
     @Override
     public boolean addOrUpdateUser(UserPo userPo) {
@@ -53,7 +63,7 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             user.setName(userPo.getName());
-            user.setAvatarUrl(userPo.getAvatarUrl());
+            user.setAvatar(userPo.getAvatar());
             user.setUpdTm(new Date().getTime());
             int result = userDao.updUser(user);
             if (result != 1) {
@@ -71,6 +81,14 @@ public class UserServiceImpl implements UserService {
             // 根据用户ID获取角色
             List<RolePo> roleList = roleDao.qryRolesByUserId(userPo.getId());
             userPo.setRoles(roleList);
+
+            // 根据部门ID获取部门
+            DeptPo deptPo = deptDao.qryDeptById(userPo.getDeptId());
+            userPo.setDept(deptPo);
+
+            // 根据岗位ID获取岗位
+            JobPo jobPo = jobDao.qryJobById(userPo.getJobId());
+            userPo.setJob(jobPo);
             return userPo;
         } else {
             throw new CustomizeBusinessException(HiMsgCdConstants.USER_NOT_EXIST, "用户不存在");
@@ -255,6 +273,38 @@ public class UserServiceImpl implements UserService {
         userPo.setUpdTm(new Date().getTime());
         if (userDao.updUser(userPo) < 1) {
             throw new CustomizeBusinessException(HiMsgCdConstants.UPD_USER_FAIL, "更新用户失败");
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    public boolean updAvatar(MultipartFile multipartFile) {
+        if(!FileUtil.isAllowedSize(maxSize, multipartFile.getSize())) {
+            throw new BadRequestException("文件超出规定大小");
+        }
+        File file = FileUtil.upload(multipartFile, avatarPath + File.separator);
+        if (!StringUtils.isEmpty(file)) {
+            // 更新用户头像
+            UserPo userPo = userDao.qryUserById(SecurityUtil.getUserId());
+            String oldAvatarPath = userPo.getAvatar(); // 保留旧的头像路径
+            String[] array = avatarPath.split("/");
+            String relativePath = "/" + array[array.length-2] + "/" + array[array.length-1] + "/" + file.getName();
+            userPo.setAvatar(relativePath);
+            if (userDao.updUser(userPo) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.UPD_USER_AVATAR_FAIL, "更新用户头像失败");
+            }
+
+            // 更新头像成功后删除原有头像
+            if (!StringUtils.isEmpty(oldAvatarPath)) {
+                String[] arrays = oldAvatarPath.split("/");
+                StringBuilder sb = new StringBuilder();
+                for (int i=3; i<arrays.length; i++) {
+                    sb.append("/" + arrays[i]);
+                }
+                String absolutePath = avatarPath + sb.toString();
+                FileUtil.del(absolutePath);
+            }
         }
         return true;
     }

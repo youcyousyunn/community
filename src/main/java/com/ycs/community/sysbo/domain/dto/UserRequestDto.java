@@ -21,7 +21,7 @@ public class UserRequestDto extends BaseRequestDto {
     private String email;
     private String password;
     private String token;
-    private String avatarUrl;
+    private String avatar;
     private boolean enabled;
     private Long lastPasswordResetTime;
     private List<RolePo> roles;

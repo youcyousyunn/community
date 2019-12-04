@@ -26,5 +26,9 @@ public class Test {
         levels.add(2);
         levels.add(3);
         System.out.println(Collections.min(levels));
+
+        String str = "D:/study/Vue/Projects/eladmin/upload/attach";
+        String[] array = str.split("/");
+        System.out.println(array.toString());
     }
 }

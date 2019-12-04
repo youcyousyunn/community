@@ -5,6 +5,7 @@ import com.ycs.community.sysbo.domain.dto.QryUserPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.UserRequestDto;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.domain.po.UserPo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface UserService {
     boolean updUser(UserRequestDto request);
     boolean delUser(Long id);
     boolean addUser(UserRequestDto request);
+    boolean updAvatar(MultipartFile multipartFile);
 }

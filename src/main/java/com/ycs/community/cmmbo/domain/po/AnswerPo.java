@@ -12,5 +12,5 @@ public class AnswerPo extends BasePo {
     private int likeCount;
     private Long answerer;
     private String userName;
-    private String avatarUrl;
+    private String avatar;
 }

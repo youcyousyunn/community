@@ -13,5 +13,5 @@ public class CommentPo extends BasePo {
     private String comment;
     private int commentCount;
     private String userName;
-    private String avatarUrl;
+    private String avatar;
 }

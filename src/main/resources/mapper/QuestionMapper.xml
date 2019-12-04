@@ -77,7 +77,7 @@
             t.create_time creTm,
             t.update_time updTm,
             t1.name userName,
-            t1.avatar_url avatarUrl
+            t1.avatar avatar
         FROM t_cmm_question t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.creator
         <where>
@@ -125,7 +125,7 @@
             t.create_time creTm,
             t.update_time updTm,
             t1.name userName,
-            t1.avatar_url avatarUrl
+            t1.avatar avatar
         FROM t_cmm_question t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.creator
         <where>
