@@ -200,8 +200,8 @@ public class RoleServiceImpl implements RoleService {
             List<MenuPo> menuPoList = menuDao.qryMenusByRoleId(rolePo.getId());
             if (!CollectionUtils.isEmpty(menuPoList)) {
                 rolePo.setMenus(menuPoList);
-            } else {
-                throw new CustomizeBusinessException(HiMsgCdConstants.QRY_ROLE_MENU_FAIL, "查询角色菜单失败");
+            } else { // 允许角色没有菜单权限
+//                throw new CustomizeBusinessException(HiMsgCdConstants.QRY_ROLE_MENU_FAIL, "查询角色菜单失败");
             }
         } else {
             throw new CustomizeBusinessException(HiMsgCdConstants.QRY_ROLE_FAIL, "查询角色失败");

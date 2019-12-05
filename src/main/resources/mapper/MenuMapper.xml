@@ -113,7 +113,7 @@
 
     <select id="qryMenus" parameterType="java.util.Map" resultType="com.ycs.community.sysbo.domain.po.MenuPo">
         SELECT
-        t.id id,
+        DISTINCT t.id id,
         t.pid pid,
         t.`name` `name`,
         t.path path,
@@ -127,9 +127,16 @@
         t.type type,
         t.create_time creTm
         FROM t_sys_menu t
+        INNER JOIN t_sys_role_menu t1 on t1.menu_id = t.id
         <where>
+            <if test="rolePoList != null">
+                t1.role_id IN
+                <foreach collection="rolePoList" item="rolePo" index="index" open="(" separator="," close=")">
+                    #{rolePo.id}
+                </foreach>
+            </if>
             <if test="name != null">
-                t.name like <![CDATA['%${name}%']]>
+                AND t.name like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}

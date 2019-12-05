@@ -25,7 +25,8 @@
         t.`name` `name`,
         t.data_scope dataScope,
         t.level level,
-        t.`desc` `desc`
+        t.`desc` `desc`,
+        t.create_time creTm
         FROM t_sys_role t
         <where>
             <if test="_parameter != null">

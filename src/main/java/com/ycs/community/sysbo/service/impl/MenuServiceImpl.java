@@ -147,6 +147,9 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuResponseDto qryMenuTree(MenuRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
+        Long userId = SecurityUtil.getUserId();
+        List<RolePo> rolePoList = roleDao.qryRolesByUserId(userId);
+        paramMap.put("rolePoList", rolePoList);
         paramMap.put("name", request.getName());
         if (!StringUtils.isEmpty(request.getStartTime())) {
             paramMap.put("startTime", request.getStartTime().getTime());
