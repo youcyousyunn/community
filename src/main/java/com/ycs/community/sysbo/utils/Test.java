@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Test {
     public static void main(String[] args) {
@@ -30,5 +31,14 @@ public class Test {
         String str = "D:/study/Vue/Projects/eladmin/upload/attach";
         String[] array = str.split("/");
         System.out.println(array.toString());
+
+        List<Integer> list = new ArrayList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(1);
+        list.add(2);
+        List<Integer> newList = list.stream().distinct().collect(Collectors.toList());
+        System.out.println(newList);
     }
 }

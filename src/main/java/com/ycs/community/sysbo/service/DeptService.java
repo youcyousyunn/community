@@ -13,4 +13,5 @@ public interface DeptService {
     boolean addDept(DeptRequestDto request);
     List<DeptPo> qryDeptsByRoleId(Long roleId);
     List<DeptPo> qryDeptsByPid(Long pid);
+    DeptPo qryDeptById(Long pid);
 }

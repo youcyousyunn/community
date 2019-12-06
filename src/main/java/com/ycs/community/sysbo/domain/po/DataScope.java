@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DataScope {
@@ -50,12 +51,28 @@ public class DataScope {
                 List<DeptPo> depts = deptService.qryDeptsByRoleId(role.getId());
                 for (DeptPo dept : depts) {
                     deptIds.add(dept.getId());
+                    deptIds = getDeptFatherIds(dept.getPid(), deptIds);
                     List<DeptPo> children = deptService.qryDeptsByPid(dept.getId());
                     if (!CollectionUtils.isEmpty(children)) {
                         deptIds.addAll(getDeptChildrenIds(children));
                     }
                 }
             }
+        }
+        return deptIds.stream().distinct().collect(Collectors.toList()); // 去重
+    }
+
+    /**
+     * 递归获取所有父部门ID
+     * @param pid
+     * @param deptIds
+     * @return
+     */
+    private List<Long> getDeptFatherIds(Long pid, List<Long> deptIds) {
+        deptIds.add(pid);
+        DeptPo deptPo = deptService.qryDeptById(pid);
+        if (deptPo.getPid() != 0) {
+            getDeptFatherIds(deptPo.getPid(), deptIds);
         }
         return deptIds;
     }

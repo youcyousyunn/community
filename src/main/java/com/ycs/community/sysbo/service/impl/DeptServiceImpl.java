@@ -139,4 +139,10 @@ public class DeptServiceImpl implements DeptService {
         List<DeptPo> deptPoList = deptDao.qryDeptsByPid(pid);
         return deptPoList;
     }
+
+    @Override
+    public DeptPo qryDeptById(Long id) {
+        DeptPo deptPo = deptDao.qryDeptById(id);
+        return deptPo;
+    }
 }
