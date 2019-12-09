@@ -10,4 +10,5 @@ public interface RedisService {
     boolean clearRedis();
     boolean addVerifyCode(String uuid, String code);
     String qryVCode(String key);
+    boolean delVCode(String key);
 }

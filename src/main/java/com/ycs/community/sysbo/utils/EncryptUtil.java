@@ -3,11 +3,14 @@ package com.ycs.community.sysbo.utils;
 import org.springframework.util.DigestUtils;
 
 import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 public class EncryptUtil {
     private final static String DES_KEY = "PASS_KEY";
@@ -17,18 +20,24 @@ public class EncryptUtil {
     /**
      * 对称加密
      */
-    public static String desEncrypt(String source) throws Exception {
+    public static String desEncrypt(String source) {
         if (source == null || source.length() == 0) {
             return null;
         }
-        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        DESKeySpec desKeySpec = new DESKeySpec(DES_KEY.getBytes(StandardCharsets.UTF_8));
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        IvParameterSpec iv = new IvParameterSpec(IV_PARAM.getBytes(StandardCharsets.UTF_8));
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-        return byte2hex(
-                cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
+        String result = null;
+        Cipher cipher;
+        try {
+            cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            DESKeySpec desKeySpec = new DESKeySpec(DES_KEY.getBytes(StandardCharsets.UTF_8));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
+            IvParameterSpec iv = new IvParameterSpec(IV_PARAM.getBytes(StandardCharsets.UTF_8));
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
+            result =  byte2hex(cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private static String byte2hex(byte[] inStr) {
@@ -61,19 +70,27 @@ public class EncryptUtil {
     /**
      * 对称解密
      */
-    public static String desDecrypt(String source) throws Exception {
+    public static String desDecrypt(String source) {
         if (source == null || source.length() == 0){
             return null;
         }
-        byte[] src = hex2byte(source.getBytes());
-        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        DESKeySpec desKeySpec = new DESKeySpec(DES_KEY.getBytes(StandardCharsets.UTF_8));
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        IvParameterSpec iv = new IvParameterSpec(IV_PARAM.getBytes(StandardCharsets.UTF_8));
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
-        byte[] retByte = cipher.doFinal(src);
-        return new String(retByte);
+        String result = null;
+        Cipher cipher;
+        try {
+            byte[] src = hex2byte(source.getBytes());
+            cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            DESKeySpec desKeySpec = new DESKeySpec(DES_KEY.getBytes(StandardCharsets.UTF_8));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
+            IvParameterSpec iv = new IvParameterSpec(IV_PARAM.getBytes(StandardCharsets.UTF_8));
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+            byte[] retByte = cipher.doFinal(src);
+            result = new String(retByte);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     /**

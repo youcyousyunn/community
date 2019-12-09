@@ -1,7 +1,6 @@
 package com.ycs.community.basebo.utils;
 
 import com.ycs.community.basebo.constants.Constants;
-import com.ycs.community.sysbo.domain.po.RedisPo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +50,11 @@ public class PageUtil {
      * @param data
      * @return
      */
-    public static List<RedisPo> toPage(int currentPage, int pageSize , List<RedisPo> data) {
+    public static List toPage(int currentPage, int pageSize , List data) {
         int fromIndex = (currentPage-1) * pageSize;
         int endIndex = currentPage * pageSize;
         if (fromIndex > data.size()) {
-            return new ArrayList<RedisPo>();
+            return new ArrayList<>();
         } else if (endIndex >= data.size()) {
             return data.subList(fromIndex, data.size());
         } else {

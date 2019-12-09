@@ -90,6 +90,7 @@ public class AuthorizeController {
 
         // 校验验证码
         String vCode = redisService.qryVCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + request.getUuid());
+        redisService.delVCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + request.getUuid());
         if (StringUtils.isEmpty(vCode)) {
             throw new BadRequestException("验证码已过期");
         }

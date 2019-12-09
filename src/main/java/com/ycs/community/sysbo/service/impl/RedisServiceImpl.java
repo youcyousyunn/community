@@ -72,4 +72,10 @@ public class RedisServiceImpl implements RedisService {
     public String qryVCode(String key) {
         return String.valueOf(redisTemplate.opsForValue().get(key));
     }
+
+    @Override
+    public boolean delVCode(String key) {
+        boolean result = redisTemplate.delete(key);
+        return result;
+    }
 }
