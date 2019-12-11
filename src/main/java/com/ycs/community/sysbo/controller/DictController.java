@@ -5,11 +5,13 @@ import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.sysbo.domain.dto.*;
 import com.ycs.community.sysbo.service.DictService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "系统管理: 字典管理")
 public class DictController {
     @Autowired
     private DictService dictService;

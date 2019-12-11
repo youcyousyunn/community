@@ -9,11 +9,13 @@ import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.sysbo.domain.dto.EmailRequestDto;
 import com.ycs.community.sysbo.domain.dto.EmailResponseDto;
 import com.ycs.community.sysbo.service.EmailService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "系统工具: 邮件工具")
 public class EmailController {
     @Autowired
     private EmailService emailService;

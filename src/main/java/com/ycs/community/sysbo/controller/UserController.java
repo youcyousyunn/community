@@ -1,19 +1,20 @@
 package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
-import com.ycs.community.coobo.domain.dto.AttachResponseDto;
 import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.spring.security.utils.SecurityUtil;
-import com.ycs.community.sysbo.domain.dto.QryUserPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.QryUserPageRequestDto;
+import com.ycs.community.sysbo.domain.dto.QryUserPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.UserRequestDto;
 import com.ycs.community.sysbo.domain.dto.UserResponseDto;
 import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.UserPo;
 import com.ycs.community.sysbo.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@Api(tags = "系统管理: 用户管理")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -37,6 +39,7 @@ public class UserController {
      */
     @GetMapping("/user/info")
     @OperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
+    @ApiOperation(value = "获取用户信息")
     public UserResponseDto qryUserInfo (HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
         UserPo userPo = userService.qryUserById(SecurityUtil.getUserId());

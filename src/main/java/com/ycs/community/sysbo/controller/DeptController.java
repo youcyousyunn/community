@@ -7,11 +7,13 @@ import com.ycs.community.sysbo.domain.dto.DeptRequestDto;
 import com.ycs.community.sysbo.domain.dto.DeptResponseDto;
 import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.service.DeptService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "系统管理: 部门管理")
 public class DeptController {
     @Autowired
     private DeptService deptService;

@@ -8,10 +8,12 @@ import com.ycs.community.sysbo.domain.dto.QryQuartzJobPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.QuartzJobRequestDto;
 import com.ycs.community.sysbo.domain.dto.QuartzJobResponseDto;
 import com.ycs.community.sysbo.service.QuartzJobService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "系统工具: 定时任务")
 public class QuartzJobController {
     @Autowired
     private QuartzJobService quartzJobService;

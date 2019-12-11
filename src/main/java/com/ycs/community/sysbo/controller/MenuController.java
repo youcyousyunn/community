@@ -8,6 +8,7 @@ import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.sysbo.domain.dto.MenuRequestDto;
 import com.ycs.community.sysbo.domain.dto.MenuResponseDto;
 import com.ycs.community.sysbo.service.MenuService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Api(tags = "系统管理: 菜单管理")
 public class MenuController {
     @Autowired
     private MenuService menuService;

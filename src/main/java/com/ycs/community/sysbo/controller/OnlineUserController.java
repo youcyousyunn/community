@@ -6,6 +6,7 @@ import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.security.service.OnlineUserService;
 import com.ycs.community.sysbo.domain.dto.QryOnlineUserPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryOnlineUserPageResponseDto;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Api(tags = "系统监控: 在线用户")
 public class OnlineUserController {
     @Autowired
     private OnlineUserService onlineUserService;

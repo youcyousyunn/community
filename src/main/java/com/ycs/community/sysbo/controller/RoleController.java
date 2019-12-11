@@ -11,6 +11,7 @@ import com.ycs.community.sysbo.domain.dto.RoleResponseDto;
 import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.RolePo;
 import com.ycs.community.sysbo.service.RoleService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Api(tags = "系统管理: 角色管理")
 public class RoleController {
     @Autowired
     private RoleService roleService;

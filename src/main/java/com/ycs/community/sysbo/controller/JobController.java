@@ -10,6 +10,7 @@ import com.ycs.community.sysbo.domain.dto.QryJobPageResponseDto;
 import com.ycs.community.sysbo.domain.po.DataScope;
 import com.ycs.community.sysbo.domain.po.JobPo;
 import com.ycs.community.sysbo.service.JobService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Api(tags = "系统管理: 岗位管理")
 public class JobController {
     @Autowired
     private JobService jobService;

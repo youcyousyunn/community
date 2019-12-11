@@ -30,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String pathUrl = Paths.get(path).normalize().toUri().toASCIIString();
         registry.addResourceHandler("/attach/**").addResourceLocations(pathUrl).setCachePeriod(0);
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0); // 配置web访问swagger-ui.html
     }
 
     @Override

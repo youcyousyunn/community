@@ -24,6 +24,7 @@ import com.ycs.community.sysbo.domain.po.VerifyCodePo;
 import com.ycs.community.sysbo.service.RedisService;
 import com.ycs.community.sysbo.utils.EncryptUtil;
 import com.ycs.community.sysbo.utils.VerifyCodeUtil;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
+@Api(tags = "用户登录权限认证")
 public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
