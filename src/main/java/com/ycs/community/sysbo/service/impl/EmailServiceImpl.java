@@ -9,6 +9,7 @@ import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.sysbo.dao.EmailDao;
 import com.ycs.community.sysbo.domain.dto.EmailRequestDto;
 import com.ycs.community.sysbo.domain.dto.EmailResponseDto;
+import com.ycs.community.sysbo.domain.po.EmailPo;
 import com.ycs.community.sysbo.email.EmailConfig;
 import com.ycs.community.sysbo.service.EmailService;
 import com.ycs.community.sysbo.utils.EncryptUtil;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,6 +60,11 @@ public class EmailServiceImpl implements EmailService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<EmailPo> qryEmailReceivers(String filter) {
+        return emailDao.qryEmailReceivers(filter);
     }
 
     @Override

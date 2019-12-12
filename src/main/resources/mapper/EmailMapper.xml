@@ -63,4 +63,16 @@
             1=1
         </where>
     </select>
+
+    <select id="qryEmailReceivers" parameterType="java.lang.String" resultType="com.ycs.community.sysbo.domain.po.EmailPo">
+        SELECT
+        `name` `name`,
+        email receiver
+        FROM t_sys_userinfo t
+        <where>
+            <if test="_parameter != null">
+                t.name like <![CDATA['%${filter}%']]> OR t.email like <![CDATA['%${filter}%']]>
+            </if>
+        </where>
+    </select>
 </mapper>
