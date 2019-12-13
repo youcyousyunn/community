@@ -67,9 +67,9 @@ public class EmailController {
      * @param filter
      * @return
      */
-    @GetMapping("/email/{filter}")
+    @GetMapping("/email/receiver/{filter}")
     @OperationLog(title = "匹配收件人", action = OperationType.POST, isSave = false, channel = "web")
-    public ResponseEntity qryEmailReceivers(@PathVariable("filter") String filter) {
+    public ResponseEntity qryEmailReceivers(@PathVariable(value = "filter", required = false) String filter) {
         List<EmailPo> data = emailService.qryEmailReceivers(filter);
         return new ResponseEntity(data, HttpStatus.OK);
     }

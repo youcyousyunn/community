@@ -89,8 +89,9 @@ public class EmailServiceImpl implements EmailService {
 
         // 发送邮件
         try {
+            int size = request.getReceivers().size();
             Mail.create(account)
-                    .setTos(request.getReceiver())
+                    .setTos(request.getReceivers().toArray(new String[size]))
                     .setTitle(request.getSubject())
                     .setContent(request.getContent())
                     .setHtml(true)

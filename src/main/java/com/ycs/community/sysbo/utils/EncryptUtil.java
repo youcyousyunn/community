@@ -111,7 +111,7 @@ public class EncryptUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String pwd = "123456";
+        String pwd = "dqjdda1996.";
         String encryptPwd = desEncrypt(pwd);
         System.out.println("加密后密码: " + encryptPwd);
         String decryptPwd = desDecrypt(encryptPwd);

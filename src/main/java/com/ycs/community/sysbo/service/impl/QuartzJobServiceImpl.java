@@ -92,6 +92,12 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     public QryQuartzJobPageResponseDto qryQuartzPage(QryQuartzJobPageRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", request.getName());
+        if (!StringUtils.isEmpty(request.getStartTime())) {
+            paramMap.put("startTime", request.getStartTime().getTime());
+        }
+        if (!StringUtils.isEmpty(request.getEndTime())) {
+            paramMap.put("endTime", request.getEndTime().getTime());
+        }
         // 查询总条数
         int totalCount = quartzJobDao.qryQuartzCount(paramMap);
         // 计算分页信息

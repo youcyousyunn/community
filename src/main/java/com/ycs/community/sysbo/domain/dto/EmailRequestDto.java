@@ -2,7 +2,10 @@ package com.ycs.community.sysbo.domain.dto;
 
 import com.ycs.community.basebo.domain.dto.BaseRequestDto;
 import lombok.Data;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 @Data
 public class EmailRequestDto extends BaseRequestDto {
@@ -15,7 +18,7 @@ public class EmailRequestDto extends BaseRequestDto {
     private String password;
 
     // 发送邮件信息
-    private String receiver; // 多个收件人以英文分号(;)隔开
+    private List<String> receivers; // 收件人(复数)
     private String subject;
     private String content;
 
@@ -47,7 +50,7 @@ public class EmailRequestDto extends BaseRequestDto {
      * @return
      */
     public boolean checkSendMailRequestDto() {
-        if (null == receiver || StringUtils.isEmpty(receiver)) {
+        if (CollectionUtils.isEmpty(receivers)) {
             return false;
         }
         if (null == subject || StringUtils.isEmpty(subject)) {

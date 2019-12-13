@@ -36,9 +36,9 @@
             <if test="fromUser != null">
                 from_user = #{fromUser},
             </if>
-            <if test="password != null">
-                password = #{password},
-            </if>
+<!--            <if test="password != null">-->
+<!--                password = #{password},-->
+<!--            </if>-->
             <if test="updTm != null">
                 update_time = #{updTm}
             </if>
