@@ -2,16 +2,18 @@ package com.ycs.community.spring.security.expression;
 
 import com.ycs.community.spring.exception.BadRequestException;
 import com.ycs.community.sysbo.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
 
 public class CustomMethodSecurityExpression extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
-    private AuthService authService;
+//    @Autowired
+//    private AuthService authService;
 
-    public CustomMethodSecurityExpression(Authentication authentication, AuthService authService) {
+    public CustomMethodSecurityExpression(Authentication authentication) {
         super(authentication);
-        this.authService = authService;
+//        this.authService = authService;
     }
 
     /**
@@ -20,8 +22,8 @@ public class CustomMethodSecurityExpression extends SecurityExpressionRoot imple
      * @return
      */
     public boolean hasPermission(String permission) {
-        boolean result = authService.hasPermission(permission);
-        if (!result) {
+//        boolean result = authService.hasPermission(permission);
+        if (!false) {
             throw new BadRequestException("接口权限不足");
         }
         return true;

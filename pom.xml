@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ycs</groupId>
 	<artifactId>community</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>community</name>
 	<description>Community project for Spring Boot</description>
 	<url>http://maven.apache.org</url>
@@ -155,7 +155,7 @@
 			<version>2.7.8</version>
 		</dependency>
 
-		<!-- redis -->
+		<!--redis-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -208,6 +208,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!--跳过单元测试-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

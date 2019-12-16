@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
     private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
-    @Autowired
-    private AuthService authService;
+//    @Autowired
+//    private AuthService authService;
 
     @Override
     public void setReturnObject(Object returnObject, EvaluationContext ctx) {
@@ -25,7 +25,7 @@ public class CustomMethodSecurityExpressionHandler extends DefaultMethodSecurity
 
     @Override
     protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
-        final CustomMethodSecurityExpression root = new CustomMethodSecurityExpression(authentication, authService);
+        final CustomMethodSecurityExpression root = new CustomMethodSecurityExpression(authentication);
         root.setPermissionEvaluator(getPermissionEvaluator());
         root.setTrustResolver(this.trustResolver);
         root.setRoleHierarchy(getRoleHierarchy());

@@ -6,6 +6,7 @@ import com.ycs.community.cmmbo.domain.dto.QryQuestionPageResponseDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionRequestDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionResponseDto;
 import com.ycs.community.cmmbo.service.QuestionService;
+import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
@@ -25,6 +26,7 @@ public class QuestionController {
 	 * @return
 	 */
 	@PostMapping("/question")
+	@AnonymousAccess
 	public QuestionResponseDto askQuestion(@RequestBody QuestionRequestDto request) throws CustomizeBusinessException {
 		// 接口请求报文检查
 		if (!request.checkRequestDto()) {
@@ -48,6 +50,7 @@ public class QuestionController {
 	 * @return
 	 */
 	@DeleteMapping("/question/{id}")
+	@AnonymousAccess
 	public QuestionResponseDto delQuestion(@PathVariable("id") Long id) {
 		QuestionResponseDto responseDto = new QuestionResponseDto();
 		if (questionService.delQuestion(id)) {
@@ -62,6 +65,7 @@ public class QuestionController {
 	 * @return
 	 */
 	@PutMapping("/question")
+	@AnonymousAccess
 	public QuestionResponseDto updQuestion(@RequestBody QuestionRequestDto request) {
 		QuestionResponseDto responseDto = new QuestionResponseDto();
 		if (questionService.updQuestion(request)) {
@@ -77,6 +81,7 @@ public class QuestionController {
 	 */
 	@GetMapping("/question/{id}")
     @OperationLog(title = "根据id查询单个问题", action = OperationType.GET, isSave = true, channel = "web")
+	@AnonymousAccess
 	public QuestionResponseDto qryQuestion(@PathVariable("id") Long id) {
 		QuestionResponseDto responseDto = new QuestionResponseDto();
 		responseDto = questionService.qryQuestion(id);
@@ -92,6 +97,7 @@ public class QuestionController {
 	 * @return
 	 */
 	@PostMapping("/question/queryPage")
+	@AnonymousAccess
 	public QryQuestionPageResponseDto qryQuestionPage(@RequestBody QryQuestionPageRequestDto request) {
 		QryQuestionPageResponseDto responsePageDto = new QryQuestionPageResponseDto();
 		responsePageDto = questionService.qryQuestionPage(request);

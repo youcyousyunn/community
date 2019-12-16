@@ -49,11 +49,9 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             logger.error("从缓存获取在线用户信息: {}", e.getMessage());
         }
         if (onlineUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // It is not compelling necessary to load the use details from the database. You could also store the information
-            // in the token and read it from it. It's up to you ;)
+            // 此步骤（从数据库中获取用户信息）非必须操作
             UserPo userPo = (UserPo) userDetailsService.loadUserByUsername(onlineUser.getName());
-            // For simple validation it is completely sufficient to just check the token integrity. You don't have to call
-            // the database compellingly. Again it's up to you ;)
+            // 验证令牌是否过期
             if (jwtTokenUtil.validateToken(authToken, userPo)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userPo, null, userPo.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
