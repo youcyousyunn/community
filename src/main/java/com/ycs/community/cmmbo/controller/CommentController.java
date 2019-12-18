@@ -4,13 +4,16 @@ import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.cmmbo.domain.dto.*;
 import com.ycs.community.cmmbo.service.CommentService;
 import com.ycs.community.cmmbo.service.QuestionService;
+import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "社区管理: 评论管理")
 public class CommentController {
 	@Autowired
 	private CommentService commentService;
@@ -22,6 +25,7 @@ public class CommentController {
      * @return
      */
     @GetMapping("/comment/{parentId}")
+	@AnonymousAccess
     public CommentResponseDto qryComment(@PathVariable("parentId") Long parentId, @RequestParam(value = "commentType") int commentType) {
         CommentResponseDto responseDto = new CommentResponseDto();
         responseDto = commentService.qryComment(parentId, commentType);
@@ -36,6 +40,7 @@ public class CommentController {
      * @throws CustomizeBusinessException
 	 */
 	@PostMapping("/comment")
+	@AnonymousAccess
 	public CommentResponseDto commentQuestionOrAnswer(@RequestBody CommentRequestDto request) throws CustomizeBusinessException {
 		// 接口请求报文检查
 		if (!request.checkRequestDto()) {

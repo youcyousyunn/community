@@ -42,7 +42,7 @@ public class SwaggerConfig {
                 .enable(enabled)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ycs.community.sysbo.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ycs.community"))
                 .paths(Predicates.not(PathSelectors.regex("/error.*")))
                 .build()
                 .globalOperationParameters(params);

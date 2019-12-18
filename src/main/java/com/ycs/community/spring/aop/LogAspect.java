@@ -104,16 +104,16 @@ public class LogAspect {
      */
     @AfterThrowing(value = "pointcut()", throwing = "throwable")
     public void doAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
-        // 开始时间
-        long startTime = System.currentTimeMillis();
-        LogJnlPo logJnlPo = this.buildLogJnlPo((ProceedingJoinPoint) joinPoint);
-        logJnlPo.setException(ThrowableUtil.getStackTrace(throwable));
-        logJnlPo.setType("ERROR");
-        logJnlPo.setCostTime(System.currentTimeMillis() - startTime);
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method reflectMethod = methodSignature.getMethod();
         OperationLog operationLog = reflectMethod.getAnnotation(OperationLog.class);
         if (operationLog.isSave()) {
+            // 开始时间
+            long startTime = System.currentTimeMillis();
+            LogJnlPo logJnlPo = this.buildLogJnlPo((ProceedingJoinPoint) joinPoint);
+            logJnlPo.setException(ThrowableUtil.getStackTrace(throwable));
+            logJnlPo.setType("ERROR");
+            logJnlPo.setCostTime(System.currentTimeMillis() - startTime);
             logService.addLog(logJnlPo);
         }
     }

@@ -12,10 +12,12 @@ import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "社区管理: 问题管理")
 public class QuestionController {
 	@Autowired
 	private QuestionService questionService;
@@ -80,7 +82,6 @@ public class QuestionController {
 	 * @return
 	 */
 	@GetMapping("/question/{id}")
-    @OperationLog(title = "根据id查询单个问题", action = OperationType.GET, isSave = true, channel = "web")
 	@AnonymousAccess
 	public QuestionResponseDto qryQuestion(@PathVariable("id") Long id) {
 		QuestionResponseDto responseDto = new QuestionResponseDto();

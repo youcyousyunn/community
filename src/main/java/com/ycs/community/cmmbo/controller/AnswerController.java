@@ -5,12 +5,15 @@ import com.ycs.community.cmmbo.domain.dto.AnswerRequestDto;
 import com.ycs.community.cmmbo.domain.dto.AnswerResponseDto;
 import com.ycs.community.cmmbo.domain.dto.CommentResponseDto;
 import com.ycs.community.cmmbo.service.AnswerService;
+import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "社区管理: 回答管理")
 public class AnswerController {
 	@Autowired
 	private AnswerService answerService;
@@ -21,6 +24,7 @@ public class AnswerController {
 	 * @return
 	 */
 	@GetMapping("/answer/{questionId}")
+	@AnonymousAccess
 	public AnswerResponseDto qryAnswerByQuestionId(@PathVariable("questionId") Long questionId) {
 		// 接口请求报文检查
 		if (questionId.equals(null)) {
@@ -39,6 +43,7 @@ public class AnswerController {
 	 * @throws CustomizeBusinessException
 	 */
 	@PostMapping("/answer")
+	@AnonymousAccess
 	public AnswerResponseDto answerQuestion(@RequestBody AnswerRequestDto request) throws CustomizeBusinessException {
 		// 接口请求报文检查
 		if (!request.checkRequestDto()) {
