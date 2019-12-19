@@ -15,7 +15,7 @@
             #{title,jdbcType=VARCHAR},
             #{description,jdbcType=VARCHAR},
             #{tag,jdbcType=VARCHAR},
-            #{creator,jdbcType=INTEGER},
+            #{creator,jdbcType=BIGINT},
             #{likeCount,jdbcType=INTEGER},
             #{commentCount,jdbcType=INTEGER},
             #{viewCount,jdbcType=INTEGER},

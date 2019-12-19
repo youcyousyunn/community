@@ -10,7 +10,7 @@ public class QuestionRequestDto extends BaseRequestDto {
     private String title;
     private String description;
     private String tag;
-    private int creator;
+    private Long creator;
     private int likeCount;
     private int commentCount;
     private int viewCount;
