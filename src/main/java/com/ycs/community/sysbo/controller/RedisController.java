@@ -25,7 +25,7 @@ public class RedisController {
     /**
      * 分页查询Redis缓存列表
      * @param request
-     * @return@PreAuthorize
+     * @return
      */
     @GetMapping("/redis/queryPage")
     @OperationLog(title = "分页查询Redis缓存列表", action = OperationType.GET, isSave = true, channel = "web")

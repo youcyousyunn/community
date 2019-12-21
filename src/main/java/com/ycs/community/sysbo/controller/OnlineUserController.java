@@ -42,7 +42,7 @@ public class OnlineUserController {
      * @return
      */
     @DeleteMapping("/online/{key}")
-    @PreAuthorize("hasPermission('online:tick')")
+    @PreAuthorize("@el.hasPermission('online:tick')")
     public ResponseEntity kickOut(@PathVariable("key") String key) {
         onlineUserService.kickOut(key);
         return new ResponseEntity(HttpStatus.OK);

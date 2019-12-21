@@ -83,7 +83,7 @@ public class RoleController {
      * @return
      */
     @PutMapping("/role")
-    @PreAuthorize("hasPermission('role:upd')")
+    @PreAuthorize("@el.hasPermission('role:upd')")
     public RoleResponseDto updRole(@RequestBody RoleRequestDto request) {
         // 接口请求报文检查
         if (!request.checkRequestDto()) {

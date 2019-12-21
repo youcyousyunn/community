@@ -1,9 +1,7 @@
 package com.ycs.community.spring.security.handler;
 
 import com.ycs.community.spring.security.expression.CustomMethodSecurityExpression;
-import com.ycs.community.sysbo.service.AuthService;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
