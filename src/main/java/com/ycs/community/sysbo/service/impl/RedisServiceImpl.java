@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,11 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public String qryVCode(String key) {
-        return String.valueOf(redisTemplate.opsForValue().get(key));
+        Object vCode = redisTemplate.opsForValue().get(key);
+        if (!StringUtils.isEmpty(vCode)) {
+            return String.valueOf(vCode);
+        }
+        return null;
     }
 
     @Override

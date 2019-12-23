@@ -97,9 +97,9 @@ public class QuestionController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/question/queryPage")
+	@GetMapping("/question/queryPage")
 	@AnonymousAccess
-	public QryQuestionPageResponseDto qryQuestionPage(@RequestBody QryQuestionPageRequestDto request) {
+	public QryQuestionPageResponseDto qryQuestionPage(QryQuestionPageRequestDto request) {
 		QryQuestionPageResponseDto responsePageDto = new QryQuestionPageResponseDto();
 		responsePageDto = questionService.qryQuestionPage(request);
 		responsePageDto.setRspCode(HiMsgCdConstants.SUCCESS);

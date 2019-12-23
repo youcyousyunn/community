@@ -94,7 +94,7 @@ public class AuthorizeController {
         String vCode = redisService.qryVCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + request.getUuid());
         redisService.delVCode(Constants.LOGIN_CAPTCHA_PREFIX + "::" + request.getUuid());
         if (StringUtils.isEmpty(vCode)) {
-            throw new BadRequestException("验证码已过期");
+            throw new BadRequestException("验证码不存在或已过期");
         }
         if (!vCode.equalsIgnoreCase(request.getCode())) {
             throw new BadRequestException("验证码错误");

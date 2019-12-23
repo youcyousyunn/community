@@ -14,5 +14,6 @@ public class QuestionPo extends BasePo {
     private int commentCount;
     private int viewCount;
     private String userName;
+    private String nickname;
     private String avatar;
 }

@@ -106,8 +106,14 @@
         FROM t_cmm_question t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.creator
         <where>
-            <if test="title != null">
-                t.title like <![CDATA['%${title}%']]>
+            <if test="name != null">
+                t.title like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
             </if>
         </where>
     </select>
@@ -125,12 +131,19 @@
             t.create_time creTm,
             t.update_time updTm,
             t1.name userName,
+            t1.nickname nickname,
             t1.avatar avatar
         FROM t_cmm_question t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.creator
         <where>
-            <if test="title != null">
-                t.title like <![CDATA['%${title}%']]>
+            <if test="name != null">
+                t.title like <![CDATA['%${name}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
             </if>
         </where>
         ORDER BY t.create_time DESC

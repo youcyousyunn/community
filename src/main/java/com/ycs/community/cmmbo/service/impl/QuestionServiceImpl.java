@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -81,6 +82,13 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public QryQuestionPageResponseDto qryQuestionPage(QryQuestionPageRequestDto request) {
 		Map<String, Object> paramMap = new HashMap<>();
+		if (!StringUtils.isEmpty(request.getStartTime())) {
+			paramMap.put("startTime", request.getStartTime().getTime());
+		}
+		if (!StringUtils.isEmpty(request.getEndTime())) {
+			paramMap.put("endTime", request.getEndTime().getTime());
+		}
+		paramMap.put("name", request.getName());
 		// 查询总条数
 		int totalCount = questionDao.qryQuestionCount(paramMap);
 		// 计算分页信息
