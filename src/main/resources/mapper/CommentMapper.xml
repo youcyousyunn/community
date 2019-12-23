@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ycs.community.cmmbo.dao.CommentDao">
-    <select id="qryComment" parameterType="java.util.Map" resultType="com.ycs.community.cmmbo.domain.po.CommentPo">
+    <select id="qryCommentsByQuestionId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.CommentPo">
         SELECT
             t.id id,
             t.parent_id parentId,
@@ -17,11 +17,8 @@
         FROM t_cmm_comment t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.commentator
         <where>
-            <if test="parentId != null">
-                t.parent_id = #{parentId}
-            </if>
-            <if test="commentType != null">
-                AND t.comment_type = #{commentType}
+            <if test="_parameter != null">
+                t.parent_id = #{questionId}
             </if>
         </where>
         ORDER BY t.create_time
@@ -47,6 +44,15 @@
         )
     </insert>
 
+    <delete id="delCommentsByQuestionId" parameterType="java.lang.String">
+        DELETE FROM t_cmm_comment
+        <where>
+            <if test="_parameter != null">
+                parent_id = #{questionId}
+            </if>
+        </where>
+    </delete>
+
     <update id="increaseComment" parameterType="java.util.Map">
         UPDATE t_cmm_question
         <set>
@@ -60,4 +66,16 @@
             </if>
         </where>
     </update>
+
+    <delete id="delCommentsByAnswerIds" parameterType="java.util.List">
+        DELETE FROM t_cmm_comment
+        <where>
+            <if test="list != null">
+                parent_id IN
+                <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
 </mapper>

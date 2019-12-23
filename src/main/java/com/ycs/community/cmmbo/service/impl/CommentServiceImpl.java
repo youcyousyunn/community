@@ -3,18 +3,16 @@ package com.ycs.community.cmmbo.service.impl;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.enums.CommentTypeEnum;
 import com.ycs.community.basebo.utils.BeanUtil;
-import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.cmmbo.dao.AnswerDao;
 import com.ycs.community.cmmbo.dao.CommentDao;
 import com.ycs.community.cmmbo.dao.QuestionDao;
-import com.ycs.community.cmmbo.domain.dto.*;
+import com.ycs.community.cmmbo.domain.dto.CommentRequestDto;
+import com.ycs.community.cmmbo.domain.dto.CommentResponseDto;
 import com.ycs.community.cmmbo.domain.po.AnswerPo;
 import com.ycs.community.cmmbo.domain.po.CommentPo;
 import com.ycs.community.cmmbo.domain.po.QuestionPo;
 import com.ycs.community.cmmbo.service.CommentService;
-import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
-import com.ycs.community.spring.exception.CustomizeRollbackException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,12 +34,9 @@ public class CommentServiceImpl implements CommentService {
 	private AnswerDao answerDao;
 
 	@Override
-	public CommentResponseDto qryComment(Long parentId, int commentType) {
+	public CommentResponseDto qryCommentsByQuestionId(Long questionId) {
 		CommentResponseDto response = new CommentResponseDto();
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("parentId", parentId);
-		paramMap.put("commentType", commentType);
-		List<CommentPo> data = commentDao.qryComment(paramMap);
+		List<CommentPo> data = commentDao.qryCommentsByQuestionId(questionId);
 		if (!CollectionUtils.isEmpty(data)) {
 			response.setData(data);
 			return response;

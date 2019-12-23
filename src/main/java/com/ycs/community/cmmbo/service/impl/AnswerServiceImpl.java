@@ -34,9 +34,9 @@ public class AnswerServiceImpl implements AnswerService {
 	private QuestionDao questionDao;
 
 	@Override
-	public AnswerResponseDto qryAnswerByQuestionId(Long questionId) {
+	public AnswerResponseDto qryAnswersByQuestionId(Long questionId) {
 		AnswerResponseDto response = new AnswerResponseDto();
-		List<AnswerPo> data = answerDao.qryAnswerByQuestionId(questionId);
+		List<AnswerPo> data = answerDao.qryAnswersByQuestionId(questionId);
 		if (!CollectionUtils.isEmpty(data)) {
 			response.setData(data);
 			return response;

@@ -11,8 +11,9 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface AnswerDao {
-    List<AnswerPo> qryAnswerByQuestionId(Long questionId);
+    List<AnswerPo> qryAnswersByQuestionId(Long questionId);
     int answerQuestion(AnswerPo answerPo);
     int increaseAnswer(Map<String, Object> paramMap);
     AnswerPo qryAnswer(Long parentId);
+    int delAnswersByQuestionId(Long questionId);
 }

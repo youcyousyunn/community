@@ -1,9 +1,9 @@
 package com.ycs.community.cmmbo.service;
 
-import com.ycs.community.cmmbo.domain.dto.*;
-import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.cmmbo.domain.dto.CommentRequestDto;
+import com.ycs.community.cmmbo.domain.dto.CommentResponseDto;
 
 public interface CommentService {
-    CommentResponseDto qryComment(Long parentId, int commentType);
+    CommentResponseDto qryCommentsByQuestionId(Long questionId);
     boolean commentQuestionOrAnswer(CommentRequestDto request);
 }

@@ -25,13 +25,13 @@ public class AnswerController {
 	 */
 	@GetMapping("/answer/{questionId}")
 	@AnonymousAccess
-	public AnswerResponseDto qryAnswerByQuestionId(@PathVariable("questionId") Long questionId) {
+	public AnswerResponseDto qryAnswersByQuestionId(@PathVariable("questionId") Long questionId) {
 		// 接口请求报文检查
 		if (questionId.equals(null)) {
 			throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
 		}
 		AnswerResponseDto responseDto = new AnswerResponseDto();
-		responseDto = answerService.qryAnswerByQuestionId(questionId);
+		responseDto = answerService.qryAnswersByQuestionId(questionId);
 		responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
 		return responseDto;
 	}

@@ -4,6 +4,6 @@ import com.ycs.community.cmmbo.domain.dto.AnswerRequestDto;
 import com.ycs.community.cmmbo.domain.dto.AnswerResponseDto;
 
 public interface AnswerService {
-    AnswerResponseDto qryAnswerByQuestionId(Long questionId);
+    AnswerResponseDto qryAnswersByQuestionId(Long questionId);
     boolean answerQuestion(AnswerRequestDto request);
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ycs.community.cmmbo.dao.AnswerDao">
-    <select id="qryAnswerByQuestionId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.AnswerPo">
+    <select id="qryAnswersByQuestionId" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.AnswerPo">
         SELECT
             t.id id,
             t.question_id questionId,
@@ -39,6 +39,15 @@
             #{creTm,jdbcType=BIGINT}
         )
     </insert>
+
+    <delete id="delAnswersByQuestionId" parameterType="java.util.List">
+        DELETE FROM t_cmm_answer
+        <where>
+            <if test="_parameter != null">
+                AND question_id = #{questionId}
+            </if>
+        </where>
+    </delete>
 
     <update id="increaseAnswer" parameterType="java.util.Map">
         UPDATE t_cmm_answer

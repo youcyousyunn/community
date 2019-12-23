@@ -1,9 +1,9 @@
 package com.ycs.community.cmmbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
-import com.ycs.community.cmmbo.domain.dto.*;
+import com.ycs.community.cmmbo.domain.dto.CommentRequestDto;
+import com.ycs.community.cmmbo.domain.dto.CommentResponseDto;
 import com.ycs.community.cmmbo.service.CommentService;
-import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
@@ -20,15 +20,14 @@ public class CommentController {
 
     /**
      * 根据问题id查询评论
-     * @param parentId
-     * @param commentType
+     * @param questionId
      * @return
      */
-    @GetMapping("/comment/{parentId}")
+    @GetMapping("/comment/{questionId}")
 	@AnonymousAccess
-    public CommentResponseDto qryComment(@PathVariable("parentId") Long parentId, @RequestParam(value = "commentType") int commentType) {
+    public CommentResponseDto qryCommentsByQuestionId(@PathVariable("questionId") Long questionId) {
         CommentResponseDto responseDto = new CommentResponseDto();
-        responseDto = commentService.qryComment(parentId, commentType);
+        responseDto = commentService.qryCommentsByQuestionId(questionId);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }

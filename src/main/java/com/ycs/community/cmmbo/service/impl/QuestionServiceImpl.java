@@ -3,9 +3,14 @@ package com.ycs.community.cmmbo.service.impl;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.BeanUtil;
 import com.ycs.community.basebo.utils.PageUtil;
+import com.ycs.community.cmmbo.dao.AnswerDao;
+import com.ycs.community.cmmbo.dao.CommentDao;
 import com.ycs.community.cmmbo.dao.QuestionDao;
-import com.ycs.community.cmmbo.domain.dto.*;
-import com.ycs.community.cmmbo.domain.po.CommentPo;
+import com.ycs.community.cmmbo.domain.dto.QryQuestionPageRequestDto;
+import com.ycs.community.cmmbo.domain.dto.QryQuestionPageResponseDto;
+import com.ycs.community.cmmbo.domain.dto.QuestionRequestDto;
+import com.ycs.community.cmmbo.domain.dto.QuestionResponseDto;
+import com.ycs.community.cmmbo.domain.po.AnswerPo;
 import com.ycs.community.cmmbo.domain.po.QuestionPo;
 import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
@@ -19,11 +24,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 	@Autowired
 	private QuestionDao questionDao;
+	@Autowired
+	private CommentDao commentDao;
+	@Autowired
+	private AnswerDao answerDao;
 
 	@Override
     @Transactional (rollbackFor = {CustomizeBusinessException.class})
@@ -38,7 +48,27 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
     @Override
+	@Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean delQuestion(Long id) {
+		// 删除问题前删除问题的评论
+		if (commentDao.delCommentsByQuestionId(id) < 0) {
+			throw new CustomizeBusinessException(HiMsgCdConstants.DEL_QUESTION_COMMENT_FAIL, "删除问题评论失败");
+		}
+
+		// 删除问题前删除回答
+		List<AnswerPo> answerPoList = answerDao.qryAnswersByQuestionId(id);
+		if (!CollectionUtils.isEmpty(answerPoList)) {
+			// 删除问题回答前删除评论
+			List<Long> answerIds = answerPoList.stream().map(AnswerPo :: getId).collect(Collectors.toList());
+			if (commentDao.delCommentsByAnswerIds(answerIds) < 1) {
+				throw new CustomizeBusinessException(HiMsgCdConstants.DEL_ANSWER_COMMENT_FAIL, "删除回答评论失败");
+			}
+			if (answerDao.delAnswersByQuestionId(id) < 1) {
+				throw new CustomizeBusinessException(HiMsgCdConstants.DEL_QUESTION_ANSWER_FAIL, "删除问题回答失败");
+			}
+		}
+
+		// 删除问题
 	    int result = questionDao.delQuestion(id);
 	    if (result == 1) {
 	        return true;
