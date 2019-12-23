@@ -4,6 +4,8 @@
     <insert id="addUser" parameterType="com.ycs.community.sysbo.domain.po.UserPo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_sys_userinfo (account_id,
             `name`,
+            nickname;
+            sex,
             password,
             phone,
             email,
@@ -17,6 +19,8 @@
         values (
             #{accountId,jdbcType=BIGINT},
             #{name,jdbcType=VARCHAR},
+            #{nickname,jdbcType=VARCHAR},
+            #{sex,jdbcType=INTEGER},
             #{password,jdbcType=VARCHAR},
             #{phone,jdbcType=VARCHAR},
             #{email,jdbcType=VARCHAR},
@@ -34,6 +38,12 @@
         <set>
             <if test="name != null">
                 `name` = #{name},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
             </if>
             <if test="phone != null">
                 phone = #{phone},
@@ -72,6 +82,8 @@
         id id,
         account_id accountId,
         `name` `name`,
+        nickname nickname,
+        sex, sex,
         phone phone,
         email email,
         dept_id deptId,
@@ -94,6 +106,8 @@
         id id,
         account_id accountId,
         `name` `name`,
+        nickname nickname,
+        sex sex,
         phone phone,
         email email,
         dept_id deptId,
@@ -141,6 +155,7 @@
         t.id id,
         t.account_id accountId,
         t.`name` `name`,
+        t.sex sex,
         t.phone phone,
         t.email email,
         t.dept_id deptId,
@@ -213,6 +228,8 @@
         id id,
         account_id accountId,
         `name` `name`,
+        nickname nickname,
+        sex sex,
         phone phone,
         email email,
         dept_id deptId,
@@ -229,4 +246,33 @@
             </if>
         </where>
     </select>
+
+    <update id="updUserBasic" parameterType="com.ycs.community.sysbo.domain.po.UserPo">
+        UPDATE t_sys_userinfo
+        <set>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="accountId != null">
+                account_id = #{accountId}
+            </if>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+        </where>
+    </update>
 </mapper>

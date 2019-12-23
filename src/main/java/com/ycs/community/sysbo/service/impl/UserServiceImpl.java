@@ -308,4 +308,15 @@ public class UserServiceImpl implements UserService {
         }
         return true;
     }
+
+    @Override
+    public boolean updUserBasic(UserRequestDto request) {
+        // 更新用户基本信息
+        UserPo userPo = BeanUtil.trans2Entity(request, UserPo.class);
+        userPo.setUpdTm(new Date().getTime());
+        if (userDao.updUserBasic(userPo) < 1) {
+            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_USER_FAIL, "更新用户失败");
+        }
+        return true;
+    }
 }

@@ -19,4 +19,5 @@ public interface UserService {
     boolean delUser(Long id);
     boolean addUser(UserRequestDto request);
     boolean updAvatar(MultipartFile multipartFile);
+    boolean updUserBasic(UserRequestDto request);
 }

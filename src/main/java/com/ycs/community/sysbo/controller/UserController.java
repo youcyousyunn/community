@@ -128,4 +128,22 @@ public class UserController {
         userService.updAvatar(file);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    /**
+     * 更新用户基本信息
+     * @param request
+     * @return
+     */
+    @PutMapping("/user/basic")
+    public UserResponseDto updUserBasic(@RequestBody UserRequestDto request) {
+        // 接口请求报文检查
+        if (!request.checkRequestBasicDto()) {
+            BizLogger.info("接口请求报文异常" + request.toString());
+            throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+        }
+        UserResponseDto responseDto = new UserResponseDto();
+        userService.updUserBasic(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
 }

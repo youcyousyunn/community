@@ -14,6 +14,8 @@ public class OnlineUserPo implements Serializable {
     private static final long serialVersionUID = 3065891170336873304L;
     private String key;
     private String name;
+    private String nickname;
+    private int sex;
     private String job;
     private String avatar;
     private String requestIp;

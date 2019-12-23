@@ -14,6 +14,8 @@ public class UserPo extends BasePo implements UserDetails {
     private Long id;
     private Long accountId;
     private String name;
+    private String nickname;
+    private int sex;
     private String phone;
     private String email;
     private String password;

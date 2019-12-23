@@ -20,4 +20,5 @@ public interface UserDao {
     int addUserRoles(Map<String, Object> paramMap);
     int delUser(Long id);
     List<UserPo> qryUsersByJobId(Long deptId);
+    int updUserBasic(UserPo userPo);
 }

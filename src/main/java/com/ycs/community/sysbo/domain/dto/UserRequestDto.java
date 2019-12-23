@@ -17,6 +17,8 @@ public class UserRequestDto extends BaseRequestDto {
     private String uuid;
     private Long accountId;
     private String name;
+    private String nickname;
+    private int sex;
     private String phone;
     private String email;
     private String password;
@@ -72,6 +74,23 @@ public class UserRequestDto extends BaseRequestDto {
             return false;
         }
         if (CollectionUtils.isEmpty(roles)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 修改用户基本信息接口请求报文检查
+     * @return
+     */
+    public boolean checkRequestBasicDto() {
+        if (null == id || StringUtils.isEmpty(id)) {
+            return false;
+        }
+        if (StringUtils.isEmpty(nickname)) {
+            return false;
+        }
+        if (StringUtils.isEmpty(phone)) {
             return false;
         }
         return true;
