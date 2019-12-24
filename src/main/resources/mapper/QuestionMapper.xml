@@ -97,8 +97,11 @@
         FROM t_cmm_question t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.creator
         <where>
+            <if test="tag != null">
+                t.tag like <![CDATA['%${tag}%']]>
+            </if>
             <if test="name != null">
-                t.title like <![CDATA['%${name}%']]>
+                AND t.title like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
@@ -127,8 +130,11 @@
         FROM t_cmm_question t
         LEFT JOIN t_sys_userinfo t1 on t1.account_id = t.creator
         <where>
+            <if test="tag != null">
+                t.tag like <![CDATA['%${tag}%']]>
+            </if>
             <if test="name != null">
-                t.title like <![CDATA['%${name}%']]>
+                AND t.title like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t.create_time &gt;= #{startTime}
