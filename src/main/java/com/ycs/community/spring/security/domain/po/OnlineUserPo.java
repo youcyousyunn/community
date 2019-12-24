@@ -13,6 +13,7 @@ import java.util.Date;
 public class OnlineUserPo implements Serializable {
     private static final long serialVersionUID = 3065891170336873304L;
     private String key;
+    private Long accountId;
     private String name;
     private String nickname;
     private int sex;

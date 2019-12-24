@@ -20,10 +20,13 @@ public class QuestionRequestDto extends BaseRequestDto {
      * @return
      */
     public boolean checkRequestDto() {
-        if (null == title || StringUtils.isEmpty(title)) {
+        if (StringUtils.isEmpty(title)) {
             return false;
         }
-        if (null == description || StringUtils.isEmpty(description)) {
+        if (StringUtils.isEmpty(description)) {
+            return false;
+        }
+        if (StringUtils.isEmpty(tag)) {
             return false;
         }
         return true;

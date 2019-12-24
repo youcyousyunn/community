@@ -69,6 +69,11 @@ public class QuestionController {
 	@PutMapping("/question")
 	@AnonymousAccess
 	public QuestionResponseDto updQuestion(@RequestBody QuestionRequestDto request) {
+		// 接口请求报文检查
+		if (!request.checkRequestDto()) {
+			BizLogger.info("接口请求报文异常" + request.toString());
+			throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+		}
 		QuestionResponseDto responseDto = new QuestionResponseDto();
 		if (questionService.updQuestion(request)) {
 			responseDto.setRspCode(HiMsgCdConstants.SUCCESS);

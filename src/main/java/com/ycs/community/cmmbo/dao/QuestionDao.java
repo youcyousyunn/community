@@ -1,7 +1,5 @@
 package com.ycs.community.cmmbo.dao;
 
-import com.ycs.community.cmmbo.domain.dto.QuestionRequestDto;
-import com.ycs.community.cmmbo.domain.po.CommentPo;
 import com.ycs.community.cmmbo.domain.po.QuestionPo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -14,7 +12,7 @@ import java.util.Map;
 public interface QuestionDao {
     int askQuestion(QuestionPo request);
     int delQuestion(Long id);
-    int updQuestion(QuestionRequestDto request);
+    int updQuestion(QuestionPo questionPo);
     QuestionPo qryQuestion(Long id);
     int increaseView(Map<String, Object> paramMap);
     int qryQuestionCount(Map<String, Object> paramMap);

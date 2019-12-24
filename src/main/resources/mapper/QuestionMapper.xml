@@ -44,15 +44,6 @@
             <if test="tag != null">
                 tag = #{tag},
             </if>
-            <if test="likeCount != null">
-                like_count = #{likeCount},
-            </if>
-            <if test="commentCount != null">
-                comment_count = #{commentCount},
-            </if>
-            <if test="viewCount != null">
-                view_count = #{viewCount},
-            </if>
             <if test="updTm != null">
                 update_time = #{updTm}
             </if>

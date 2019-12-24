@@ -68,6 +68,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         String address = getAddressByIp(ip);
         OnlineUserPo onlineUserPo = new OnlineUserPo();
         onlineUserPo.setKey(EncryptUtil.desEncrypt(token));
+        onlineUserPo.setAccountId(userPo.getAccountId());
         onlineUserPo.setName(userPo.getName());
         if (!StringUtils.isEmpty(dept) && !StringUtils.isEmpty(job)) {
             onlineUserPo.setJob(dept.getName() + "/" + job.getName());

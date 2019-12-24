@@ -41,4 +41,13 @@ public class SecurityUtil {
         Object obj = getUserPo();
         return new JSONObject(obj).get("id", Long.class);
     }
+
+    /**
+     * 获取用户账号
+     * @return
+     */
+    public static Long getAccountId() {
+        Object obj = getUserPo();
+        return new JSONObject(obj).get("accountId", Long.class);
+    }
 }

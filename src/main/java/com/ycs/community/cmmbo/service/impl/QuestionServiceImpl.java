@@ -14,6 +14,7 @@ import com.ycs.community.cmmbo.domain.po.AnswerPo;
 import com.ycs.community.cmmbo.domain.po.QuestionPo;
 import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
+import com.ycs.community.spring.security.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional (rollbackFor = {CustomizeBusinessException.class})
 	public boolean askQuestion(QuestionRequestDto request) throws CustomizeBusinessException {
 		QuestionPo questionPo = BeanUtil.trans2Entity(request, QuestionPo.class);
+		if (StringUtils.isEmpty(questionPo.getCreator())) {
+			questionPo.setCreator(SecurityUtil.getAccountId());
+		}
 		questionPo.setCreTm(new Date().getTime());
 		int result = questionDao.askQuestion(questionPo);
 		if (result == 1) {
@@ -79,8 +83,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public boolean updQuestion(QuestionRequestDto request) {
         QuestionPo questionPo = BeanUtil.trans2Entity(request, QuestionPo.class);
-        questionPo.setCreTm(new Date().getTime());
-        int result = questionDao.updQuestion(request);
+        questionPo.setUpdTm(new Date().getTime());
+        int result = questionDao.updQuestion(questionPo);
         if (result == 1) {
             return true;
         }
