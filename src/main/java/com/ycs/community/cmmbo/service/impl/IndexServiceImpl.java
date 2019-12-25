@@ -2,7 +2,7 @@ package com.ycs.community.cmmbo.service.impl;
 
 import com.ycs.community.cmmbo.dao.IndexDao;
 import com.ycs.community.cmmbo.domain.dto.TopicResponseDto;
-import com.ycs.community.cmmbo.domain.po.TopicPo;
+import com.ycs.community.cmmbo.domain.po.TagPo;
 import com.ycs.community.cmmbo.service.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,9 @@ public class IndexServiceImpl implements IndexService {
 	private IndexDao indexDao;
 
 	@Override
-	public TopicResponseDto qryTopicList() {
+	public TopicResponseDto qryTopicList(long pid) {
         TopicResponseDto response = new TopicResponseDto();
-		List<TopicPo> topicList = indexDao.qryTopicList();
+		List<TagPo> topicList = indexDao.qryTopicList(pid);
         response.setData(topicList);
 		return response;
 	}

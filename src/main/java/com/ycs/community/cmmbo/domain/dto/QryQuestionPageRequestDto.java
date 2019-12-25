@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class QryQuestionPageRequestDto extends BaseRequestDto {
+    private String type;
     private String tag;
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

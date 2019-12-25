@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@Repository  // 也可以使用@Component，效果都是一样的，只是为了声明为bean
-public interface IndexDao {
-    List<TagPo> qryTopicList(long pid);
-
+@Repository
+public interface TagDao {
+    List<TagPo> qryTagList(long pid);
+    List<TagPo> qryMostStarTagList();
 }

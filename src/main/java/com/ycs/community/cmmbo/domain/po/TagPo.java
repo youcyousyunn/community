@@ -4,9 +4,12 @@ import com.ycs.community.basebo.domain.po.BasePo;
 import lombok.Data;
 
 @Data
-public class TopicPo extends BasePo {
-    private int id;
+public class TagPo extends BasePo {
+    private long id;
     private String name;
+    private long pid;
+    private String description;
     private String icon;
+    private int star;
     private int order;
 }

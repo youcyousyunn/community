@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.cmmbo.dao.TagDao">
+    <select id="qryTagList" parameterType="java.lang.String" resultType="com.ycs.community.cmmbo.domain.po.TagPo">
+        SELECT
+            id id,
+            `name` `name`,
+            description description,
+            icon icon,
+            star star,
+            `order` `order`
+        FROM t_cmm_tag
+        <where>
+            <if test="_parameter != null">
+                pid = #{pid}
+            </if>
+        </where>
+        ORDER BY `order` ASC
+    </select>
+
+    <select id="qryMostStarTagList" resultType="com.ycs.community.cmmbo.domain.po.TagPo">
+        SELECT
+        id id,
+        `name` `name`,
+        description description,
+        icon icon,
+        star star,
+        `order` `order`
+        FROM t_cmm_tag
+        <where>
+            1=1
+        </where>
+        ORDER BY star DESC
+        LIMIT 0, 5
+    </select>
+</mapper>

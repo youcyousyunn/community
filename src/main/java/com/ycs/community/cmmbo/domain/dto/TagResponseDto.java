@@ -7,6 +7,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TopicResponseDto extends BaseResponseDto {
+public class TagResponseDto extends BaseResponseDto {
     private List<TagPo> data;
 }

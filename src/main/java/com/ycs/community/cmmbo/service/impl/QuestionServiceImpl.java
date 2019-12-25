@@ -122,6 +122,7 @@ public class QuestionServiceImpl implements QuestionService {
 		if (!StringUtils.isEmpty(request.getEndTime())) {
 			paramMap.put("endTime", request.getEndTime().getTime());
 		}
+		paramMap.put("type", request.getType());
 		paramMap.put("tag", request.getTag());
 		paramMap.put("name", request.getName());
 		// 查询总条数

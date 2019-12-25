@@ -7,6 +7,7 @@ import com.ycs.community.spring.annotation.AnonymousAccess;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,13 +18,14 @@ public class IndexController {
 
 	/**
 	 * 查询话题列表
+	 * @param pid
 	 * @return
 	 */
-	@GetMapping("/qryTopicList")
+	@GetMapping("/qryTopicList/{pid}")
 	@AnonymousAccess
-	public TopicResponseDto qryTopicList() {
+	public TopicResponseDto qryTopicList(@PathVariable("pid") long pid) {
 		TopicResponseDto responseDto = new TopicResponseDto();
-		responseDto = indexService.qryTopicList();
+		responseDto = indexService.qryTopicList(pid);
 		responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
 		return responseDto;
 	}
