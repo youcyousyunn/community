@@ -11,4 +11,5 @@ import java.util.List;
 public interface TagDao {
     List<TagPo> qryTagList(long pid);
     List<TagPo> qryMostStarTagList();
+    List<TagPo> qryTagListByIds(List<String> ids);
 }

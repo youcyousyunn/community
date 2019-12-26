@@ -33,4 +33,24 @@
         ORDER BY star DESC
         LIMIT 0, 5
     </select>
+
+    <select id="qryTagListByIds" parameterType="java.util.List" resultType="com.ycs.community.cmmbo.domain.po.TagPo">
+        SELECT
+        id id,
+        `name` `name`,
+        description description,
+        icon icon,
+        star star,
+        `order` `order`
+        FROM t_cmm_tag
+        <where>
+            <if test="list != null">
+                id IN
+                <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY star DESC
+    </select>
 </mapper>

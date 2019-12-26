@@ -6,12 +6,14 @@ import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.cmmbo.dao.AnswerDao;
 import com.ycs.community.cmmbo.dao.CommentDao;
 import com.ycs.community.cmmbo.dao.QuestionDao;
+import com.ycs.community.cmmbo.dao.TagDao;
 import com.ycs.community.cmmbo.domain.dto.QryQuestionPageRequestDto;
 import com.ycs.community.cmmbo.domain.dto.QryQuestionPageResponseDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionRequestDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionResponseDto;
 import com.ycs.community.cmmbo.domain.po.AnswerPo;
 import com.ycs.community.cmmbo.domain.po.QuestionPo;
+import com.ycs.community.cmmbo.domain.po.TagPo;
 import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.security.utils.SecurityUtil;
@@ -21,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +34,8 @@ public class QuestionServiceImpl implements QuestionService {
 	private CommentDao commentDao;
 	@Autowired
 	private AnswerDao answerDao;
+	@Autowired
+	private TagDao tagDao;
 
 	@Override
     @Transactional (rollbackFor = {CustomizeBusinessException.class})
@@ -93,12 +94,22 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
 	public QuestionResponseDto qryQuestion(Long id) {
-		QuestionResponseDto result = new QuestionResponseDto();
+		QuestionResponseDto response = new QuestionResponseDto();
 		QuestionPo questionPo = questionDao.qryQuestion(id);
-		if (null != questionPo) {
-			result.setData(questionPo);
+		if (StringUtils.isEmpty(questionPo)) {
+			throw new CustomizeBusinessException(HiMsgCdConstants.QRY_QUESTION_FAIL, "问题不存在或已被删除");
 		}
-		return result;
+		// 查询问题标签
+		if (!StringUtils.isEmpty(questionPo.getTag())) {
+			List<String> ids = Arrays.asList(questionPo.getTag().split(","));
+			List<TagPo> tagPoList = tagDao.qryTagListByIds(ids);
+			if (!CollectionUtils.isEmpty(tagPoList)) {
+				questionPo.setTagList(tagPoList);
+			}
+			response.setData(questionPo);
+		}
+
+		return response;
 	}
 
 	@Override
@@ -133,6 +144,18 @@ public class QuestionServiceImpl implements QuestionService {
 		paramMap.put("startRow", PageUtil.getStartRow());
 		paramMap.put("offset", PageUtil.getPageSize());
 		List<QuestionPo> data = questionDao.qryQuestionPage(paramMap);
+
+		// 查询问题标签
+		if (!CollectionUtils.isEmpty(data)) {
+			data.forEach(questionPo -> {
+				List<String> ids = Arrays.asList(questionPo.getTag().split(","));
+				List<TagPo> tagPoList = tagDao.qryTagListByIds(ids);
+				if (!CollectionUtils.isEmpty(tagPoList)) {
+					questionPo.setTagList(tagPoList);
+				}
+			});
+		}
+
 		// 组装分页信息
 		QryQuestionPageResponseDto response = new QryQuestionPageResponseDto();
 		if (!CollectionUtils.isEmpty(data)) {

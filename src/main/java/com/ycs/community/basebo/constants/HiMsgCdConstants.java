@@ -129,4 +129,6 @@ public class HiMsgCdConstants {
     public static final String DEL_ANSWER_COMMENT_FAIL = "B0061";
     /*** 删除问题回答失败 ****/
     public static final String DEL_QUESTION_ANSWER_FAIL = "B0062";
+    /*** 查询问题失败 ****/
+    public static final String QRY_QUESTION_FAIL = "B0063";
 }
