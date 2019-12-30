@@ -131,4 +131,12 @@ public class HiMsgCdConstants {
     public static final String DEL_QUESTION_ANSWER_FAIL = "B0062";
     /*** 查询问题失败 ****/
     public static final String QRY_QUESTION_FAIL = "B0063";
+    /*** 添加标签失败 ****/
+    public static final String ADD_TAG_FAIL = "B0064";
+    /*** 更新标签失败 ****/
+    public static final String UPD_TAG_FAIL = "B0065";
+    /*** 存在子标签, 不能删除 ****/
+    public static final String HAS_CHILDREN_CAN_NOT_DEL_TAG = "B0066";
+    /*** 删除标签失败 ****/
+    public static final String DEL_TAG_FAIL = "B0067";
 }
