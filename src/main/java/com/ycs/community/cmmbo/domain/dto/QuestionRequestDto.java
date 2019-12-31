@@ -21,6 +21,9 @@ public class QuestionRequestDto extends BaseRequestDto {
      * @return
      */
     public boolean checkRequestDto() {
+        if (StringUtils.isEmpty(id)) {
+            return false;
+        }
         if (StringUtils.isEmpty(title)) {
             return false;
         }
