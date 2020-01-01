@@ -33,7 +33,7 @@ public class RedisServiceImpl implements RedisService {
         }
         for (Object item : redisTemplate.keys(key)) {
             String k = String.valueOf(item);
-            RedisPo redisPo = new RedisPo(k, redisTemplate.opsForValue().get(k).toString());
+            RedisPo redisPo = new RedisPo(k, redisTemplate.opsForValue().get(k) + "");
             data.add(redisPo);
         }
         // 查询总条数
