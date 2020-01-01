@@ -6,7 +6,7 @@
             <property name="LOG_PATH" value="${LOG_PATH:-D:/workspace/community/ver/trc}" />
         </then>
         <else>
-            <property name="LOG_PATH" value="${LOG_PATH:-/log}" />
+            <property name="LOG_PATH" value="${LOG_PATH:-/app/www/ver/trc}" />
         </else>
     </if>
 
