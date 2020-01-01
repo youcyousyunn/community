@@ -128,7 +128,9 @@ public class OnlineUserServiceImpl implements OnlineUserService {
     @Override
     public boolean logout(String token) {
         String key = onlineKey + token;
-        return redisTemplate.delete(key);
+        redisTemplate.delete(key);
+        redisTemplate.getConnectionFactory().getConnection().flushDb();
+        return true;
     }
 
     /**
