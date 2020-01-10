@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 
 @Component
 @EnableWebMvc
-@EnableWebSocket
+//@EnableWebSocket
 public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
     @Resource
     private IWebSocketHandler webSocketHandler;
