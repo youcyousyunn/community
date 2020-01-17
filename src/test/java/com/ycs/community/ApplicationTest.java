@@ -24,6 +24,6 @@ public class ApplicationTest {
 	public void testSend() {
 		String msg = "订单号： " + UUID.randomUUID().toString();
 		queueProducer.sendMsg(msg);
-		logger.info("恭喜，发送消息成功！！！");
+		logger.info("恭喜，发送消息成功！！！\n{}", msg);
 	}
 }

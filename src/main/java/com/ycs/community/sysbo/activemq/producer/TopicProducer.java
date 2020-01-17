@@ -30,7 +30,7 @@ public class TopicProducer {
     /**
      * 间隔时间发送订阅消息
      */
-    @Scheduled(fixedDelay = 5000)
+//    @Scheduled(fixedDelay = 5000)
     public void sendScheduledMsg() {
         String msg = "幸运大抽奖号:[" + UUID.randomUUID().toString().substring(0, 32) + "]";
         jmsMessagingTemplate.convertAndSend(topic, msg);
