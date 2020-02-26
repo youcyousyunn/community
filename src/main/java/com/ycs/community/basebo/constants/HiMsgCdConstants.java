@@ -139,4 +139,6 @@ public class HiMsgCdConstants {
     public static final String HAS_CHILDREN_CAN_NOT_DEL_TAG = "B0066";
     /*** 删除标签失败 ****/
     public static final String DEL_TAG_FAIL = "B0067";
+    /*** 更新问题失败 ****/
+    public static final String UPD_QUESTION_FAIL = "B0068";
 }

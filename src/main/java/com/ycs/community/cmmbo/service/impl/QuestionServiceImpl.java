@@ -17,17 +17,41 @@ import com.ycs.community.cmmbo.domain.po.TagPo;
 import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.security.utils.SecurityUtil;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
+	private Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 	@Autowired
 	private QuestionDao questionDao;
 	@Autowired
@@ -36,6 +60,8 @@ public class QuestionServiceImpl implements QuestionService {
 	private AnswerDao answerDao;
 	@Autowired
 	private TagDao tagDao;
+	@Value("${lucene.index.path}")
+	private String indexPath;
 
 	@Override
     @Transactional (rollbackFor = {CustomizeBusinessException.class})
@@ -82,14 +108,17 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+	@Transactional(rollbackFor = CustomizeBusinessException.class)
     public boolean updQuestion(QuestionRequestDto request) {
         QuestionPo questionPo = BeanUtil.trans2Entity(request, QuestionPo.class);
         questionPo.setUpdTm(new Date().getTime());
         int result = questionDao.updQuestion(questionPo);
         if (result == 1) {
-            return true;
-        }
-        return false;
+//			addIndex(questionPo);
+        }  else {
+        	throw new CustomizeBusinessException(HiMsgCdConstants.UPD_QUESTION_FAIL, "更新问题失败");
+		}
+		return true;
     }
 
     @Override
@@ -164,5 +193,72 @@ public class QuestionServiceImpl implements QuestionService {
             return response;
         }
 		return response;
+	}
+
+	/**
+	 * 添加索引
+	 * @param questionPo
+	 */
+	private void addIndex(QuestionPo questionPo) {
+		// 建立索引
+		IndexWriter indexWriter = null;
+		try {
+			Directory dir = null;
+			dir = FSDirectory.open(Paths.get(indexPath));
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(new StandardAnalyzer());
+			indexWriter = new IndexWriter(dir, indexWriterConfig);
+			Document doc = new Document();
+			doc.add(new StringField("id", questionPo.getId().toString(), Field.Store.YES));
+			doc.add(new TextField("description", questionPo.getDescription(), Field.Store.YES));
+			indexWriter.addDocument(doc);
+		} catch (IOException e) {
+			logger.error("给问题添加索引失败: {}", e.getMessage());
+		} finally {
+			try {
+				indexWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 根据索引获取数据
+	 * @param str
+	 * @return
+	 */
+	private List<QuestionPo> qryObjectByIndex(String str) {
+		List<QuestionPo> result = new ArrayList<>();
+		IndexReader indexReader = null;
+		Analyzer analyzer = new StandardAnalyzer();
+		analyzer.setVersion(Version.LUCENE_6_1_0);
+		try {
+			QueryParser queryParser = new QueryParser("id", analyzer);
+			Query query = queryParser.parse(str);
+			DirectoryReader directoryReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+			indexReader = directoryReader;
+			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+			TopDocs topDocs = indexSearcher.search(query, 10);
+			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+			for (int i = 0; i < scoreDocs.length; i++) {
+				ScoreDoc scoreDoc = scoreDocs[i];
+				Document doc = indexSearcher.doc(scoreDoc.doc);
+				QuestionPo questionPo = new QuestionPo();
+				questionPo.setId(Long.parseLong(doc.get("id")));
+				questionPo.setDescription(doc.get("description"));
+				result.add(questionPo);
+			}
+		} catch (Exception e) {
+			logger.error("根据索引获取数据失败: {}", e.getMessage());
+		} finally {
+			try {
+				indexReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			analyzer.close();
+		}
+
+		return result;
 	}
 }
