@@ -1,7 +1,6 @@
 package com.ycs.community.basebo.domain.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -11,5 +10,5 @@ public class BaseRequestDto implements Serializable {
     protected String urlWithOutContext;
     protected String userAgent;
     protected String remoteIp;
-    protected long requestTm;
+    protected Long requestTm;
 }
