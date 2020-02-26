@@ -50,9 +50,11 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("community 接口文档")
+                .title("community 项目接口文档")
+                .description("API接口描述")
+                .termsOfServiceUrl("http://localhost:8088/community/")
                 .version("2.9.2")
-                .contact(new Contact("项目地址","http://localhost:8090/","731781984@qq.com"))
+                .contact(new Contact("youcyousyunn","http://localhost/community/","731781984@qq.com"))
                 .build();
     }
 }
