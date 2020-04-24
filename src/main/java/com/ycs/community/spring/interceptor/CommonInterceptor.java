@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
 @Component
 public class CommonInterceptor implements HandlerInterceptor {
     @Autowired
-    @Qualifier("jwtUserDetailsService")
+    @Qualifier("jwtUserDetailsService") // @Qualifier注解的用处：1,当一个接口有多个实现的时候指定具体调用哪个类实现
     private UserDetailsService userDetailsService;
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
