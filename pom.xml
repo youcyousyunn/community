@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ycs</groupId>
 	<artifactId>community</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<name>community</name>
 	<description>Community project for Spring Boot</description>
 	<url>http://maven.apache.org</url>
@@ -88,6 +88,12 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${swagger.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>io.springfox</groupId>-->
@@ -108,6 +114,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-activemq</artifactId>
 			<version>2.1.5.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -173,6 +185,18 @@
 			<artifactId>lucene-queryparser</artifactId>
 			<version>${lucene.version}</version>
 		</dependency>
+
+		<!--elasticsearch高级检索-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
+<!--		</dependency>-->
+		<!--操作elasticsearch客户端-->
+<!--		<dependency>-->
+<!--			<groupId>io.searchbox</groupId>-->
+<!--			<artifactId>jest</artifactId>-->
+<!--			<version>6.3.1</version>-->
+<!--		</dependency>-->
 
 		<!--poi依赖包-->
 		<dependency>
