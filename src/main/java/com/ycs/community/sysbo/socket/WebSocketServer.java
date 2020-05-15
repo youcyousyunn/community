@@ -42,7 +42,8 @@ public class WebSocketServer {
         // 在线数加1
         addOnlineCount();
         log.info("新的用户上线了:" + accountId + ",当前在线人数为" + getOnlineCount());
-        sendMessage("连接成功");
+        this.session = session;
+        sendConnectMessage("连接成功");
     }
 
     /**
@@ -55,7 +56,7 @@ public class WebSocketServer {
         log.info("收到来自用户" + accountId + "的信息:" + msg);
         //群发消息
         for (WebSocketServer item : webSocketSet) {
-            item.sendMessage(msg);
+            sendMessage(item.getSession(), msg);
         }
     }
 
@@ -81,9 +82,23 @@ public class WebSocketServer {
      * 建立连接后服务器推动消息
      * @param msg
      */
-    public void sendMessage(String msg) {
+    public void sendConnectMessage(String msg) {
         try {
             this.session.getBasicRemote().sendText(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("websocket io异常");
+        }
+    }
+
+    /**
+     * 服务器推送消息
+     * @param session
+     * @param msg
+     */
+    public void sendMessage(Session session, String msg) {
+        try {
+            session.getBasicRemote().sendText(msg);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("websocket io异常");
@@ -97,7 +112,7 @@ public class WebSocketServer {
     public static void sendMsgToUser(ChatMessagePo chatMessagePo) {
         webSocketSet.forEach(webSocketServer -> {
             if (chatMessagePo.getTo().equals(webSocketServer.accountId)) {
-                webSocketServer.sendMessage(chatMessagePo.getContent());
+                webSocketServer.sendMessage(webSocketServer.getSession(), chatMessagePo.getContent());
             }
         });
     }
@@ -108,7 +123,7 @@ public class WebSocketServer {
      */
     public static void sendMsgToUsers(ChatMessagePo chatMessagePo) {
         webSocketSet.forEach(webSocketServer -> {
-            webSocketServer.sendMessage(chatMessagePo.getContent());
+            webSocketServer.sendMessage(webSocketServer.getSession(), chatMessagePo.getContent());
         });
     }
 
