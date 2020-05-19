@@ -11,13 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     /**
-     * 发送消息给指定用户
+     * 发送消息给指定客户
      * @param chatMessagePo
      */
     @AnonymousAccess
-    @PostMapping("/chat/user")
+    @PostMapping("/chat/client")
     public void sendMsgToUser(@RequestBody ChatMessagePo chatMessagePo) {
-        WebSocketServer.sendMsgToUser(chatMessagePo);
+        WebSocketServer.sendMsgToClient(chatMessagePo);
+    }
+
+    /**
+     * 发送消息给客服
+     * @param chatMessagePo
+     */
+    @AnonymousAccess
+    @PostMapping("/chat/service")
+    public void sendMsgToService(@RequestBody ChatMessagePo chatMessagePo) {
+        WebSocketServer.sendMsgToService(chatMessagePo);
     }
 
     /**
