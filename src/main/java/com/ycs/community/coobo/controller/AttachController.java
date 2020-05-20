@@ -8,7 +8,7 @@ import com.ycs.community.coobo.domain.dto.QryAttachPageResponseDto;
 import com.ycs.community.coobo.service.AttachService;
 import com.ycs.community.spring.annotation.LimitFlow;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class AttachController {
      * @return
      */
     @GetMapping("/attach/queryPage")
-    @OperationLog(title = "分页查询附件列表", action = OperationType.GET, isSave = false, channel = "web")
+    @OperationLog(title = "分页查询附件列表", action = OperationTypeEnum.GET, isSave = false, channel = "web")
     @LimitFlow(name = "分页查询附件列表", period = 60, count = 10)
     public QryAttachPageResponseDto qryAttachPage(QryAttachPageRequestDto request) {
         QryAttachPageResponseDto responsePageDto = new QryAttachPageResponseDto();
@@ -43,7 +43,7 @@ public class AttachController {
      * @return
      */
     @PostMapping("/attach")
-    @OperationLog(title = "上传附件", action = OperationType.POST, isSave = true, channel = "web")
+    @OperationLog(title = "上传附件", action = OperationTypeEnum.POST, isSave = true, channel = "web")
     public AttachResponseDto upload(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) {
         AttachResponseDto responseDto = new AttachResponseDto();
         attachService.upload(file, name);
@@ -57,7 +57,7 @@ public class AttachController {
      * @return
      */
     @DeleteMapping("/attach/{id}")
-    @OperationLog(title = "根据id删除附件", action = OperationType.DELETE, isSave = true, channel = "web")
+    @OperationLog(title = "根据id删除附件", action = OperationTypeEnum.DELETE, isSave = true, channel = "web")
     public AttachResponseDto delAttach(@PathVariable("id") Long id) {
         AttachResponseDto responseDto = new AttachResponseDto();
         if(attachService.delAttach(id)) {
@@ -72,7 +72,7 @@ public class AttachController {
      * @return
      */
     @DeleteMapping("/attach")
-    @OperationLog(title = "删除多个附件", action = OperationType.DELETE, isSave = true, channel = "web")
+    @OperationLog(title = "删除多个附件", action = OperationTypeEnum.DELETE, isSave = true, channel = "web")
     public AttachResponseDto delAllAttach(@RequestBody Long[] ids) {
         AttachResponseDto responseDto = new AttachResponseDto();
         if(attachService.delAllAttach(ids)) {

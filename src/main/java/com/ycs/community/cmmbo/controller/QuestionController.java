@@ -7,8 +7,6 @@ import com.ycs.community.cmmbo.domain.dto.QuestionRequestDto;
 import com.ycs.community.cmmbo.domain.dto.QuestionResponseDto;
 import com.ycs.community.cmmbo.service.QuestionService;
 import com.ycs.community.spring.annotation.AnonymousAccess;
-import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;

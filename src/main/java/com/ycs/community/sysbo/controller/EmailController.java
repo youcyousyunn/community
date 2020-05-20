@@ -2,7 +2,7 @@ package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
@@ -31,7 +31,7 @@ public class EmailController {
      * @return
      */
     @PutMapping("/email")
-    @OperationLog(title = "更新邮件配置", action = OperationType.PUT, isSave = true, channel = "web")
+    @OperationLog(title = "更新邮件配置", action = OperationTypeEnum.PUT, isSave = true, channel = "web")
     public EmailResponseDto updEmailConfig(@RequestBody EmailRequestDto request) {
         // 接口请求报文检查
         if (!request.checkMailConfigRequestDto()) {
@@ -52,7 +52,7 @@ public class EmailController {
      * @return
      */
     @GetMapping("/email")
-    @OperationLog(title = "发送邮件", action = OperationType.POST, isSave = false, channel = "web")
+    @OperationLog(title = "发送邮件", action = OperationTypeEnum.POST, isSave = false, channel = "web")
     public EmailResponseDto qryEmailConfig() {
         EmailResponseDto responseDto = new EmailResponseDto();
         responseDto = emailService.qryEmailConfig();
@@ -68,7 +68,7 @@ public class EmailController {
      * @return
      */
     @GetMapping("/email/receiver/{filter}")
-    @OperationLog(title = "匹配收件人", action = OperationType.POST, isSave = false, channel = "web")
+    @OperationLog(title = "匹配收件人", action = OperationTypeEnum.POST, isSave = false, channel = "web")
     public ResponseEntity qryEmailReceivers(@PathVariable(value = "filter", required = false) String filter) {
         List<EmailPo> data = emailService.qryEmailReceivers(filter);
         return new ResponseEntity(data, HttpStatus.OK);
@@ -80,7 +80,7 @@ public class EmailController {
      * @return
      */
     @PostMapping("/email")
-    @OperationLog(title = "发送邮件", action = OperationType.POST, isSave = true, channel = "web")
+    @OperationLog(title = "发送邮件", action = OperationTypeEnum.POST, isSave = true, channel = "web")
     public EmailResponseDto sendEmail(@RequestBody EmailRequestDto request) {
         // 接口请求报文检查
         if (!request.checkSendMailRequestDto()) {

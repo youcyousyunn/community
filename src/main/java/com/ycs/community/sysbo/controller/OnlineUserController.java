@@ -2,7 +2,7 @@ package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.security.service.OnlineUserService;
 import com.ycs.community.sysbo.domain.dto.QryOnlineUserPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryOnlineUserPageResponseDto;
@@ -28,7 +28,7 @@ public class OnlineUserController {
      * @return
      */
     @GetMapping("/online/queryPage")
-    @OperationLog(title = "分页查询在线用户列表", action = OperationType.GET, isSave = true, channel = "web")
+    @OperationLog(title = "分页查询在线用户列表", action = OperationTypeEnum.GET, isSave = true, channel = "web")
     public QryOnlineUserPageResponseDto qryOnlinePage(QryOnlineUserPageRequestDto request) {
         QryOnlineUserPageResponseDto responsePageDto = new QryOnlineUserPageResponseDto();
         responsePageDto = onlineUserService.qryOnlinePage(request);

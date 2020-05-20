@@ -3,7 +3,7 @@ package com.ycs.community.spring.aop;
 import com.google.common.collect.ImmutableList;
 import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.spring.annotation.LimitFlow;
-import com.ycs.community.spring.enums.LimitType;
+import com.ycs.community.spring.enums.LimitTypeEnum;
 import com.ycs.community.spring.exception.BadRequestException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -57,10 +57,10 @@ public class LimitFlowAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method signatureMethod = signature.getMethod();
         LimitFlow limitFlow = signatureMethod.getAnnotation(LimitFlow.class);
-        LimitType limitType = limitFlow.limitType();
+        LimitTypeEnum limitType = limitFlow.limitType();
         String key = limitFlow.key();
         if (StringUtils.isEmpty(key)) {
-            if (limitType == LimitType.IP) {
+            if (limitType == LimitTypeEnum.IP) {
                 key = getIP(request);
             } else {
                 key = signatureMethod.getName();

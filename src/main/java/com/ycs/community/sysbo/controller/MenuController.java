@@ -2,7 +2,7 @@ package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.sysbo.domain.dto.MenuRequestDto;
@@ -30,7 +30,7 @@ public class MenuController {
      * @return
      */
     @GetMapping("/menu")
-    @OperationLog(title = "查询用户对应系统菜单", action = OperationType.GET, isSave = true, channel = "web")
+    @OperationLog(title = "查询用户对应系统菜单", action = OperationTypeEnum.GET, isSave = true, channel = "web")
     public MenuResponseDto qryMenu(MenuRequestDto request) {
         MenuResponseDto responseDto = new MenuResponseDto();
         responseDto = menuService.qryMenu(request);
@@ -44,7 +44,7 @@ public class MenuController {
      * @return
      */
     @GetMapping("/menu/tree/{pid}")
-    @OperationLog(title = "查询全部菜单", action = OperationType.GET, isSave = false, channel = "web")
+    @OperationLog(title = "查询全部菜单", action = OperationTypeEnum.GET, isSave = false, channel = "web")
     public ResponseEntity qryAllMenu(@PathVariable("pid") Long pid) {
         // 接口请求报文检查
         if (null == pid || StringUtils.isEmpty(pid)) {
@@ -61,7 +61,7 @@ public class MenuController {
      * @return
      */
     @GetMapping("/menu/tree")
-    @OperationLog(title = "查询菜单树", action = OperationType.GET, isSave = false, channel = "web")
+    @OperationLog(title = "查询菜单树", action = OperationTypeEnum.GET, isSave = false, channel = "web")
     public MenuResponseDto qryMenuTree(MenuRequestDto request) {
         MenuResponseDto responseDto = new MenuResponseDto();
         responseDto = menuService.qryMenuTree(request);
@@ -93,7 +93,7 @@ public class MenuController {
      * @return
      */
     @DeleteMapping("/menu/{id}")
-    @OperationLog(title = "根据ID删除菜单", action = OperationType.GET, isSave = true, channel = "web")
+    @OperationLog(title = "根据ID删除菜单", action = OperationTypeEnum.GET, isSave = true, channel = "web")
     public MenuResponseDto delMenu(@PathVariable("id") Long id) {
         MenuResponseDto responseDto = new MenuResponseDto();
         menuService.delMenu(id);

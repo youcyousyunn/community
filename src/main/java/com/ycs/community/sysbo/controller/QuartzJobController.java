@@ -2,7 +2,7 @@ package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.sysbo.domain.dto.QryQuartzJobPageRequestDto;
 import com.ycs.community.sysbo.domain.dto.QryQuartzJobPageResponseDto;
 import com.ycs.community.sysbo.domain.dto.QuartzJobRequestDto;
@@ -24,7 +24,7 @@ public class QuartzJobController {
      * @return
      */
     @GetMapping("/quartz/job/queryPage")
-    @OperationLog(title = "分页查询定时任务列表", action = OperationType.GET, isSave = false, channel = "web")
+    @OperationLog(title = "分页查询定时任务列表", action = OperationTypeEnum.GET, isSave = false, channel = "web")
     public QryQuartzJobPageResponseDto qryQuartzPage(QryQuartzJobPageRequestDto request) {
         QryQuartzJobPageResponseDto responseDto = new QryQuartzJobPageResponseDto();
         responseDto = quartzJobService.qryQuartzPage(request);
@@ -38,7 +38,7 @@ public class QuartzJobController {
      * @return
      */
     @PostMapping("/quartz/job")
-    @OperationLog(title = "新增定时任务", action = OperationType.POST, isSave = true, channel = "web")
+    @OperationLog(title = "新增定时任务", action = OperationTypeEnum.POST, isSave = true, channel = "web")
     public QuartzJobResponseDto addJob(QuartzJobRequestDto request) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
         boolean result = quartzJobService.addJob(request);
@@ -54,7 +54,7 @@ public class QuartzJobController {
      * @return
      */
     @PutMapping("/quartz/job/execute/{id}")
-    @OperationLog(title = "执行定时任务", action = OperationType.PUT, isSave = true, channel = "web")
+    @OperationLog(title = "执行定时任务", action = OperationTypeEnum.PUT, isSave = true, channel = "web")
     public QuartzJobResponseDto executeJob(@PathVariable("id") Long id) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
         boolean result = quartzJobService.executeJob(id);
@@ -70,7 +70,7 @@ public class QuartzJobController {
      * @return
      */
     @PutMapping("/quartz/job/status/{id}")
-    @OperationLog(title = "更新定时任务状态", action = OperationType.PUT, isSave = true, channel = "web")
+    @OperationLog(title = "更新定时任务状态", action = OperationTypeEnum.PUT, isSave = true, channel = "web")
     public QuartzJobResponseDto updJobStatus(@PathVariable("id") Long id) {
         QuartzJobResponseDto responseDto = new QuartzJobResponseDto();
         boolean result = quartzJobService.updJobStatus(quartzJobService.qryJobById(id));

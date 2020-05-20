@@ -7,10 +7,9 @@ import com.ycs.community.cmmbo.domain.po.TagPo;
 import com.ycs.community.cmmbo.service.TagService;
 import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
-import com.ycs.community.sysbo.domain.dto.MenuResponseDto;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,7 +80,7 @@ public class TagController {
 	 * @return
 	 */
 	@DeleteMapping("/tag/{id}")
-	@OperationLog(title = "根据ID删除标签", action = OperationType.GET, isSave = true, channel = "web")
+	@OperationLog(title = "根据ID删除标签", action = OperationTypeEnum.GET, isSave = true, channel = "web")
 	public TagResponseDto delTag(@PathVariable("id") Long id) {
 		TagResponseDto responseDto = new TagResponseDto();
 		tagService.delTag(id);

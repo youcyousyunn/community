@@ -5,9 +5,11 @@ import com.ycs.community.sysbo.socket.WebSocketServer;
 import com.ycs.community.sysbo.socket.domain.po.ChatMessagePo;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/chat")
 public class ChatController {
 
     /**
@@ -15,7 +17,7 @@ public class ChatController {
      * @param chatMessagePo
      */
     @AnonymousAccess
-    @PostMapping("/chat/client")
+    @PostMapping("/client")
     public void sendMsgToUser(@RequestBody ChatMessagePo chatMessagePo) {
         WebSocketServer.sendMsgToClient(chatMessagePo);
     }
@@ -25,7 +27,7 @@ public class ChatController {
      * @param chatMessagePo
      */
     @AnonymousAccess
-    @PostMapping("/chat/service")
+    @PostMapping("/service")
     public void sendMsgToService(@RequestBody ChatMessagePo chatMessagePo) {
         WebSocketServer.sendMsgToService(chatMessagePo);
     }
@@ -35,7 +37,7 @@ public class ChatController {
      * @param chatMessagePo
      */
     @AnonymousAccess
-    @PostMapping("/chat/users")
+    @PostMapping("/users")
     public void sendMsgToUsers(@RequestBody ChatMessagePo chatMessagePo) {
         WebSocketServer.sendMsgToUsers(chatMessagePo);
     }

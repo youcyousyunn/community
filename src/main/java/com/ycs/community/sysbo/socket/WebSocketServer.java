@@ -3,7 +3,7 @@ package com.ycs.community.sysbo.socket;
 import cn.hutool.json.JSONUtil;
 import com.ycs.community.spring.config.SpringSocketConfigurator;
 import com.ycs.community.sysbo.socket.domain.po.ChatMessagePo;
-import com.ycs.community.sysbo.socket.enums.SocketStatus;
+import com.ycs.community.sysbo.socket.enums.SocketStatusEnum;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -59,7 +59,7 @@ public class WebSocketServer {
             message.setClientName("唐伯虎");
             message.setMsg("这是一则消息");
             message.setRole("client");
-            message.setStatus(SocketStatus.OPEN);
+            message.setStatus(SocketStatusEnum.OPEN);
             notifyMessage(message);
         }
     }

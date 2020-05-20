@@ -1,6 +1,6 @@
 package com.ycs.community.spring.enums;
 
-public enum LimitType {
+public enum LimitTypeEnum {
     CUSTOMER,
     IP
 }

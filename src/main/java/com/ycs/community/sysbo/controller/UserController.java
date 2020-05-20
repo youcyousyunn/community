@@ -2,7 +2,7 @@ package com.ycs.community.sysbo.controller;
 
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.annotation.OperationLog;
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
 import com.ycs.community.spring.security.utils.SecurityUtil;
@@ -38,7 +38,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/user/info")
-    @OperationLog(title = "获取用户信息", action = OperationType.GET, isSave = true, channel = "web")
+    @OperationLog(title = "获取用户信息", action = OperationTypeEnum.GET, isSave = true, channel = "web")
     @ApiOperation(value = "获取用户信息")
     public UserResponseDto qryUserInfo (HttpServletRequest request) {
         UserResponseDto responseDto = new UserResponseDto();
@@ -123,7 +123,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/user/avatar")
-    @OperationLog(title = "更新用户头像", action = OperationType.POST, isSave = true, channel = "web")
+    @OperationLog(title = "更新用户头像", action = OperationTypeEnum.POST, isSave = true, channel = "web")
     public ResponseEntity updAvatar(@RequestParam("file") MultipartFile file) {
         userService.updAvatar(file);
         return new ResponseEntity(HttpStatus.OK);

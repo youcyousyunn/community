@@ -1,6 +1,6 @@
 package com.ycs.community.spring.annotation;
 
-import com.ycs.community.spring.enums.LimitType;
+import com.ycs.community.spring.enums.LimitTypeEnum;
 
 import java.lang.annotation.*;
 
@@ -13,5 +13,5 @@ public @interface LimitFlow {
     String prefix() default "LIMIT_FLOW";
     int period();
     int count();
-    LimitType limitType() default LimitType.CUSTOMER;
+    LimitTypeEnum limitType() default LimitTypeEnum.CUSTOMER;
 }

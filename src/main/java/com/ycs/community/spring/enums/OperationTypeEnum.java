@@ -1,6 +1,6 @@
 package com.ycs.community.spring.enums;
 
-public enum OperationType {
+public enum OperationTypeEnum {
     POST("POST"),
     DELETE("DELETE"),
     PUT("PUT"),
@@ -17,7 +17,7 @@ public enum OperationType {
         this.type = type;
     }
 
-    OperationType(String type) {
+    OperationTypeEnum(String type) {
         this.type = type;
     }
 }

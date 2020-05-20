@@ -1,6 +1,6 @@
 package com.ycs.community.spring.annotation;
 
-import com.ycs.community.spring.enums.OperationType;
+import com.ycs.community.spring.enums.OperationTypeEnum;
 
 import java.lang.annotation.*;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface OperationLog {
     String title() default "";
-    OperationType action() default OperationType.UNKNOWN;
+    OperationTypeEnum action() default OperationTypeEnum.UNKNOWN;
     boolean isSave() default false;
     String channel() default "";
 }
