@@ -5,8 +5,10 @@ import com.ycs.community.sysbo.socket.enums.SocketRoleEnum;
 import com.ycs.community.sysbo.socket.enums.SocketStatusEnum;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ChatMessagePo extends BasePo {
+public class ChatMessagePo implements Serializable {
     private Long serviceId;
     private String serviceName;
     private String serviceAvatarUrl;
