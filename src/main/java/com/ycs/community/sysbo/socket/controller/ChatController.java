@@ -17,7 +17,7 @@ public class ChatController {
      * @param chatMessagePo
      */
     @AnonymousAccess
-    @PostMapping("/client")
+    @PostMapping("/server")
     public void sendMsgToUser(@RequestBody ChatMessagePo chatMessagePo) {
         WebSocketServer.sendMsgToClient(chatMessagePo);
     }
@@ -27,7 +27,7 @@ public class ChatController {
      * @param chatMessagePo
      */
     @AnonymousAccess
-    @PostMapping("/service")
+    @PostMapping("/client")
     public void sendMsgToService(@RequestBody ChatMessagePo chatMessagePo) {
         WebSocketServer.sendMsgToService(chatMessagePo);
     }

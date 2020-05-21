@@ -8,7 +8,6 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * 开启socket支持
  */
 @Configuration
-//@ConditionalOnWebApplication
 public class WebSocketConfig {
 
     /**

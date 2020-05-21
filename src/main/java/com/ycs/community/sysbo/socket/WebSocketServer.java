@@ -3,6 +3,7 @@ package com.ycs.community.sysbo.socket;
 import cn.hutool.json.JSONUtil;
 import com.ycs.community.spring.config.SpringSocketConfigurator;
 import com.ycs.community.sysbo.socket.domain.po.ChatMessagePo;
+import com.ycs.community.sysbo.socket.enums.SocketRoleEnum;
 import com.ycs.community.sysbo.socket.enums.SocketStatusEnum;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class WebSocketServer {
     private Session session;
     // 接收连接的用户ID
     private Long accountId = 0l;
+    private SocketRoleEnum role = SocketRoleEnum.CLIENT;
 
     /**
      * 建立连接
@@ -40,6 +42,9 @@ public class WebSocketServer {
         WebSocketServer socket = new WebSocketServer();
         socket.setSession(session);
         socket.setAccountId(accountId);
+        if(accountId == 9527l) {
+            socket.setRole(SocketRoleEnum.SERVER);
+        }
         // 添加连接
         if(concurrentHashMap.containsKey(accountId)) {
             concurrentHashMap.remove(accountId);
@@ -51,16 +56,21 @@ public class WebSocketServer {
         addOnlineCount();
         log.info("新的用户上线了:" + accountId + ",当前在线人数为" + getOnlineCount());
 //        this.session = session;
+        ChatMessagePo message = new ChatMessagePo();
+        message.setServiceId(9527l);
+        message.setServiceName("太阳晒屁股了");
         if(accountId != 9527l) {
-            ChatMessagePo message = new ChatMessagePo();
-            message.setServiceId(9527l);
-            message.setServiceName("太阳晒屁股了");
             message.setClientId(accountId);
             message.setClientName("唐伯虎");
-            message.setMsg("这是一则消息");
-            message.setRole("client");
+            message.setContent("客户上线啦");
+            message.setRole(SocketRoleEnum.CLIENT);
             message.setStatus(SocketStatusEnum.OPEN);
-            notifyMessage(message);
+            notifyUsers(message);
+        } else {
+            message.setContent("客服上线啦");
+            message.setRole(SocketRoleEnum.SERVER);
+            message.setStatus(SocketStatusEnum.OPEN);
+            notifyUser(message);
         }
     }
 
@@ -90,18 +100,34 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        // 移除连接
-        ///todo
+        // 在线数减1
+        subOnlineCount();
         log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
-     * 通知服务端消息
+     * 通知服务端
      * @param message
      */
-    public synchronized void notifyMessage(ChatMessagePo message) {
+    public synchronized void notifyUser(ChatMessagePo message) {
         concurrentHashMap.values().forEach(socket -> {
-            if(socket.getAccountId().equals(9527l)) {
+            if(socket.getRole().equals(SocketRoleEnum.SERVER)) {
+                try {
+                    socket.getSession().getBasicRemote().sendText(JSONUtil.toJsonStr(message));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 同时通知服务端&客户端
+     * @param message
+     */
+    public synchronized void notifyUsers(ChatMessagePo message) {
+        concurrentHashMap.values().forEach(socket -> {
+            if(socket.getAccountId().equals(message.getClientId()) || socket.getRole().equals(SocketRoleEnum.SERVER)) {
                 try {
                     socket.getSession().getBasicRemote().sendText(JSONUtil.toJsonStr(message));
                 } catch (IOException e) {
