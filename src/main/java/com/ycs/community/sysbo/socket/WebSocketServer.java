@@ -1,12 +1,17 @@
 package com.ycs.community.sysbo.socket;
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.ycs.community.spring.config.SpringSocketConfigurator;
+import com.ycs.community.spring.security.domain.po.OnlineUserPo;
 import com.ycs.community.sysbo.socket.domain.po.ChatMessagePo;
 import com.ycs.community.sysbo.socket.enums.SocketRoleEnum;
 import com.ycs.community.sysbo.socket.enums.SocketStatusEnum;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -17,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@ServerEndpoint(value = "/socket/{accountId}", configurator = SpringSocketConfigurator.class)
+@ServerEndpoint(value = "/socket/{token}", configurator = SpringSocketConfigurator.class)
 @Component
 @Slf4j
 @Data
@@ -31,18 +36,35 @@ public class WebSocketServer {
     // 接收连接的用户ID
     private Long accountId = 0l;
     private SocketRoleEnum role = SocketRoleEnum.CLIENT;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Value("${jwt.online.key}")
+    private String onlineKey;
+    /**
+     * 客服信息
+     */
+    private Long serviceId;
+    private String serviceName;
+    private String serviceAvatarUrl;
 
     /**
      * 建立连接
      * @param session
-     * @param accountId
+     * @param authToken
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("accountId") Long accountId) {
+    public synchronized void onOpen(Session session, @PathParam("token") String authToken) {
+        String jsonStr = (String) redisTemplate.opsForValue().get(onlineKey + authToken);
+        OnlineUserPo onlineUser = JSONObject.parseObject(jsonStr, OnlineUserPo.class);
+        log.info(onlineUser.toString());
+        // 判断是否为客服
+        boolean isService = onlineUser.getRoles().stream()
+                .anyMatch((rolePo -> "admin".equals(rolePo.getCode())));
+        this.accountId = onlineUser.getAccountId();
         WebSocketServer socket = new WebSocketServer();
         socket.setSession(session);
         socket.setAccountId(accountId);
-        if(accountId == 9527l) {
+        if(isService) {
             socket.setRole(SocketRoleEnum.SERVER);
         }
         // 添加连接
@@ -55,22 +77,29 @@ public class WebSocketServer {
         // 在线数加1
         addOnlineCount();
         log.info("新的用户上线了:" + accountId + ",当前在线人数为" + getOnlineCount());
-//        this.session = session;
         ChatMessagePo message = new ChatMessagePo();
-        message.setServiceId(9527l);
-        message.setServiceName("太阳晒屁股了");
-        if(accountId != 9527l) {
-            message.setClientId(accountId);
-            message.setClientName("唐伯虎");
-            message.setContent("客户上线啦");
-            message.setRole(SocketRoleEnum.CLIENT);
-            message.setStatus(SocketStatusEnum.OPEN);
-            notifyUsers(message);
-        } else {
+        if(isService) {
+            this.serviceId = onlineUser.getAccountId();
+            this.serviceName = onlineUser.getNickname();
+            this.serviceAvatarUrl = onlineUser.getAvatar();
+            message.setServiceId(onlineUser.getAccountId());
+            message.setServiceName(onlineUser.getNickname());
+            message.setServiceAvatarUrl(onlineUser.getAvatar());
             message.setContent("客服上线啦");
             message.setRole(SocketRoleEnum.SERVER);
             message.setStatus(SocketStatusEnum.OPEN);
             notifyUser(message);
+        } else {
+            message.setServiceId(this.serviceId);
+            message.setServiceName(this.serviceName);
+            message.setServiceAvatarUrl(this.serviceAvatarUrl);
+            message.setClientId(accountId);
+            message.setClientName(onlineUser.getNickname());
+            message.setClientAvatarUrl(onlineUser.getAvatar());
+            message.setContent("客户上线啦");
+            message.setRole(SocketRoleEnum.CLIENT);
+            message.setStatus(SocketStatusEnum.OPEN);
+            notifyUsers(message);
         }
     }
 

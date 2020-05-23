@@ -70,6 +70,12 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         onlineUserPo.setKey(EncryptUtil.desEncrypt(token));
         onlineUserPo.setAccountId(userPo.getAccountId());
         onlineUserPo.setName(userPo.getName());
+        onlineUserPo.setNickname(userPo.getNickname());
+        onlineUserPo.setSex(userPo.getSex());
+        onlineUserPo.setPhone(userPo.getPhone());
+        onlineUserPo.setEmail(userPo.getEmail());
+        onlineUserPo.setAvatar(userPo.getAvatar());
+        onlineUserPo.setRoles(userPo.getRoles());
         if (!StringUtils.isEmpty(dept) && !StringUtils.isEmpty(job)) {
             onlineUserPo.setJob(dept.getName() + "/" + job.getName());
         }
