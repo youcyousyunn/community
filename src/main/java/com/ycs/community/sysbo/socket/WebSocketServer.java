@@ -76,7 +76,7 @@ public class WebSocketServer {
         }
         // 在线数加1
         addOnlineCount();
-        log.info("新的用户上线了:" + accountId + ",当前在线人数为" + getOnlineCount());
+        log.info("新的用户上线了,用户账号: {}", accountId + ",当前在线人数" + getOnlineCount());
         ChatMessagePo message = new ChatMessagePo();
         if(isService) {
             this.serviceId = onlineUser.getAccountId();
@@ -118,7 +118,7 @@ public class WebSocketServer {
         for(WebSocketServer socket : concurrentHashMap.values()) {
             if(session.equals(socket.getSession())) {
                 concurrentHashMap.remove(socket.getAccountId());
-                log.error("连接发生错误");
+                log.error("连接发生错误: {}", throwable);
             }
         }
         throwable.printStackTrace();
@@ -128,10 +128,16 @@ public class WebSocketServer {
      * 关闭连接
      */
     @OnClose
-    public void onClose() {
-        // 在线数减1
-        subOnlineCount();
-        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
+    public void onClose(Session session, CloseReason closeReason) {
+        for(WebSocketServer socket : concurrentHashMap.values()) {
+            if(session.equals(socket.getSession())) {
+                concurrentHashMap.remove(socket.getAccountId());
+                log.error("连接关闭: {}", closeReason);
+                // 在线数减1
+                subOnlineCount();
+                log.info("有一连接关闭！当前在线人数为: {}", getOnlineCount());
+            }
+        }
     }
 
     /**
