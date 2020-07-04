@@ -31,6 +31,7 @@
 		<mail.version>1.4.7</mail.version>
 		<lucene.version>6.1.0</lucene.version>
 		<swagger.version>2.9.2</swagger.version>
+		<jna.version>5.5.0</jna.version>
         <start-class>com.ycs.community.StartupApplication</start-class>
 	</properties>
 
@@ -155,7 +156,7 @@
 			<version>${captcha.version}</version>
 		</dependency>
 
-		<!--工具包-->
+		<!--hutool工具包-->
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
@@ -258,6 +259,13 @@
 			<version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+		<!-- 获取系统信息 -->
+		<dependency>
+			<groupId>com.github.oshi</groupId>
+			<artifactId>oshi-core</artifactId>
+			<version>5.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
