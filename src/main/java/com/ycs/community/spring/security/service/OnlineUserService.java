@@ -11,4 +11,5 @@ public interface OnlineUserService {
     boolean logout(String token);
     QryOnlineUserPageResponseDto qryOnlinePage(QryOnlineUserPageRequestDto request);
     boolean kickOut(String key);
+    boolean delOnlineUserInfo(String token);
 }

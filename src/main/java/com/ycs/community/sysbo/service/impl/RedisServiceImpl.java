@@ -83,4 +83,35 @@ public class RedisServiceImpl implements RedisService {
         boolean result = redisTemplate.delete(key);
         return result;
     }
+
+    @Override
+    public String get(String key) {
+        Object value = redisTemplate.opsForValue().get(key);
+        if (!StringUtils.isEmpty(value)) {
+            return String.valueOf(value);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addTmpTicket(String key, String value, int expire) {
+        redisTemplate.opsForValue().set(key, value);
+        redisTemplate.expire(key, expire, TimeUnit.MINUTES);
+        return true;
+    }
+
+    @Override
+    public String qryTmpTicket(String key) {
+        Object tmpTicket = redisTemplate.opsForValue().get(key);
+        if (!StringUtils.isEmpty(tmpTicket)) {
+            return String.valueOf(tmpTicket);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean delTmpTicket(String key) {
+        boolean result = redisTemplate.delete(key);
+        return result;
+    }
 }

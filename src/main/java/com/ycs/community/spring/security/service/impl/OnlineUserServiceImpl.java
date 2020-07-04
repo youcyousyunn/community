@@ -127,6 +127,13 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         return redisTemplate.delete(onlineKey + EncryptUtil.desDecrypt(key));
     }
 
+    @Override
+    public boolean delOnlineUserInfo(String token) {
+        String key = onlineKey + token;
+        redisTemplate.delete(key);
+        return true;
+    }
+
     /**
      * 注销登录
      * @param token

@@ -8,4 +8,5 @@ import lombok.Data;
 public class UserResponseDto extends BaseResponseDto {
     private UserPo data;
     private String token;
+    private String redirectUrl;
 }
