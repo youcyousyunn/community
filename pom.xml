@@ -29,9 +29,9 @@
 		<lombok.version>1.18.6</lombok.version>
 		<hutool.version>4.6.10</hutool.version>
 		<mail.version>1.4.7</mail.version>
-		<lucene.version>6.1.0</lucene.version>
 		<swagger.version>2.9.2</swagger.version>
 		<jna.version>5.5.0</jna.version>
+		<elasticsearch.version>7.6.1</elasticsearch.version>
         <start-class>com.ycs.community.StartupApplication</start-class>
 	</properties>
 
@@ -76,6 +76,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
 
 		<dependency>
@@ -169,35 +174,6 @@
 			<artifactId>mail</artifactId>
 			<version>${mail.version}</version>
 		</dependency>
-
-		<!--lucene全文检索依赖包-->
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-			<version>${lucene.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers-common</artifactId>
-			<version>${lucene.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-queryparser</artifactId>
-			<version>${lucene.version}</version>
-		</dependency>
-
-		<!--elasticsearch高级检索-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
-<!--		</dependency>-->
-		<!--操作elasticsearch客户端-->
-<!--		<dependency>-->
-<!--			<groupId>io.searchbox</groupId>-->
-<!--			<artifactId>jest</artifactId>-->
-<!--			<version>6.3.1</version>-->
-<!--		</dependency>-->
 
 		<!--poi依赖包-->
 		<dependency>
