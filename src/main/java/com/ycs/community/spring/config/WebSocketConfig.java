@@ -15,10 +15,10 @@ public class WebSocketConfig {
      * 注意: 如果使用独立的servlet容器就不要注入ServerEndpointExporter,因为它将由容器自己提供和管理
      * @return
      */
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter() {
-        return new ServerEndpointExporter();
-    }
+//    @Bean
+//    public ServerEndpointExporter serverEndpointExporter() {
+//        return new ServerEndpointExporter();
+//    }
 
     @Bean
     public SpringSocketConfigurator springSocketConfigurator() {

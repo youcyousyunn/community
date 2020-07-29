@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JDContentPo {
+public class JDDocumentPo {
     private String img;
     private String name;
     private String price;
