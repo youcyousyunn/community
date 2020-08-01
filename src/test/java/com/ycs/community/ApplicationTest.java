@@ -180,7 +180,8 @@ public class ApplicationTest {
 
 		for (JDDocumentPo item : sources) {
 			bulkRequest.add(
-				new IndexRequest("JD")
+				new IndexRequest("jd")
+				.id(UUID.randomUUID().toString())
 				.source(JSONUtil.toJsonStr(item), XContentType.JSON)
 			);
 		}
