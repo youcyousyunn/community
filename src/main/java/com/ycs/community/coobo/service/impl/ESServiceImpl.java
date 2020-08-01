@@ -46,7 +46,9 @@ public class ESServiceImpl implements ESService {
         // 高亮
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.field("name");
-        highlightBuilder.requireFieldMatch(false); // 关闭除了第一个匹配词高亮
+        highlightBuilder.preTags("<span style='color:red;'>");
+        highlightBuilder.postTags("</span>");
+        //highlightBuilder.requireFieldMatch(false); // 关闭除了第一个匹配词高亮
         searchSourceBuilder.highlighter(highlightBuilder);
 
         // 执行搜索
@@ -73,7 +75,8 @@ public class ESServiceImpl implements ESService {
             list.add(resultMap);
         }
         responsePageDto.setData(list);
-        responsePageDto.setTotal(list.size());
+        int total = (int) response.getHits().getTotalHits().value;
+        responsePageDto.setTotal(total);
         return responsePageDto;
     }
 }

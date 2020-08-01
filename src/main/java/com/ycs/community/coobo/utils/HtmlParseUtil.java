@@ -24,7 +24,7 @@ public class HtmlParseUtil {
         Elements elements = element.getElementsByTag("li");
         List<JDDocumentPo> result = new ArrayList<>();
         for (Element item : elements) {
-            String img = item.getElementsByTag("img").eq(0).attr("data-lazy-img");
+            String img = item.getElementsByTag("img").eq(0).attr("src");
             String price = item.getElementsByClass("p-price").eq(0).text();
             String name = item.getElementsByClass("p-name").eq(0).text();
 
