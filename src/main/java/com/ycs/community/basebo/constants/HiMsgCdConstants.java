@@ -141,4 +141,12 @@ public class HiMsgCdConstants {
     public static final String DEL_TAG_FAIL = "B0067";
     /*** 更新问题失败 ****/
     public static final String UPD_QUESTION_FAIL = "B0068";
+    /*** 文档不存在 ****/
+    public static final String DOC_NOT_EXIST = "B0069";
+    /*** 删除文档失败 ****/
+    public static final String DEL_DOC_FAIL = "B0070";
+    /*** 添加文档失败 ****/
+    public static final String ADD_DOC_FAIL = "B0071";
+    /*** 更新文档失败 ****/
+    public static final String UPD_DOC_FAIL = "B0072";
 }
