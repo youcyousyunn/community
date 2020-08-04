@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JDDocumentPo {
-    private String img;
+    private String id;
     private String name;
     private String price;
+    private String desc;
+    private String img;
 }
