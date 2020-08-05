@@ -22,6 +22,8 @@ public class Constants {
     public static final int DEFAULT_TOTAL_PAGE = 0;
     /** 默认起始行数 */
     public static final int DEFAULT_START_ROW = 0;
-    /** 京东商品索引 */
+    /** 京东搜索索引 */
     public static final String JD_INDEX = "jd";
+    /** 京东搜索类型 */
+    public static final String JD_TYPE = "goods";
 }
