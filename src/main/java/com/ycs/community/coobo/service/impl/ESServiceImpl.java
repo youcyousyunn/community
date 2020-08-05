@@ -87,7 +87,7 @@ public class ESServiceImpl implements ESService {
                 for(Text text : texts) {
                     highLightName += text;
                 }
-                resultMap.put("name", highLightName);
+                resultMap.put("hlName", highLightName);
             }
 
             list.add(resultMap);
@@ -102,7 +102,7 @@ public class ESServiceImpl implements ESService {
     public boolean addDoc(ESRequestDto request) throws IOException {
         JDDocumentPo documentPo = BeanUtil.trans2Entity(request, JDDocumentPo.class);
         documentPo.setImg(new Date().getTime() + "");
-        IndexRequest indexRequest = new IndexRequest(Constants.JD_INDEX);
+        IndexRequest indexRequest = new IndexRequest(Constants.JD_INDEX, Constants.JD_TYPE);
         indexRequest.id(documentPo.getId());
         indexRequest.source(JSONUtil.toJsonStr(documentPo), XContentType.JSON);
         indexRequest.timeout(TimeValue.timeValueSeconds(10));
@@ -116,14 +116,14 @@ public class ESServiceImpl implements ESService {
 
     @Override
     public boolean delDocById(String id) throws IOException {
-        GetRequest request = new GetRequest(Constants.JD_INDEX, id);
+        GetRequest request = new GetRequest(Constants.JD_INDEX, Constants.JD_TYPE, id);
         GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
         // 判断文档是否存在
         if (!response.isExists()) {
             throw new CustomizeBusinessException(HiMsgCdConstants.DOC_NOT_EXIST, "文档不存在");
         }
         // 删除文档
-        DeleteRequest deleteRequest = new DeleteRequest(Constants.JD_INDEX, id);
+        DeleteRequest deleteRequest = new DeleteRequest(Constants.JD_INDEX, Constants.JD_TYPE, id);
         deleteRequest.timeout(TimeValue.timeValueSeconds(6));
         DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
         RestStatus status = deleteResponse.status();
@@ -135,7 +135,7 @@ public class ESServiceImpl implements ESService {
 
     @Override
     public boolean updDoc(ESRequestDto request) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(Constants.JD_INDEX, request.getId());
+        UpdateRequest updateRequest = new UpdateRequest(Constants.JD_INDEX, Constants.JD_TYPE, request.getId());
         JDDocumentPo documentPo = BeanUtil.trans2Entity(request, JDDocumentPo.class);
         updateRequest.doc(JSONUtil.toJsonStr(documentPo), XContentType.JSON);
         updateRequest.timeout(TimeValue.timeValueSeconds(10));
