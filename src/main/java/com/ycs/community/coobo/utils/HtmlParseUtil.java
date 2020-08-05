@@ -24,14 +24,17 @@ public class HtmlParseUtil {
         Elements elements = element.getElementsByTag("li");
         List<JDDocumentPo> result = new ArrayList<>();
         for (Element item : elements) {
-            String img = item.getElementsByTag("img").eq(0).attr("src");
-            String price = item.getElementsByClass("p-price").eq(0).text();
+            String id = IdGeneratorSnowflakeUtil.generateFlakeId() + "";
             String name = item.getElementsByClass("p-name").eq(0).text();
+            String price = item.getElementsByClass("p-price").eq(0).text();
+            String img = item.getElementsByTag("img").eq(0).attr("src");
 
             JDDocumentPo jdDocumentPo = new JDDocumentPo();
-            jdDocumentPo.setImg(img);
-            jdDocumentPo.setPrice(price);
+            jdDocumentPo.setId(id);
             jdDocumentPo.setName(name);
+            jdDocumentPo.setPrice(price);
+            jdDocumentPo.setImg(img);
+            jdDocumentPo.setDesc(name);
             result.add(jdDocumentPo);
         }
 
