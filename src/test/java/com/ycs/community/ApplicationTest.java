@@ -172,7 +172,7 @@ public class ApplicationTest {
 
 	@Test
 	public void addBulkJDDocument() throws IOException {
-		String uri = "https://search.jd.com/Search?keyword=java&enc=utf-8";
+		String uri = "https://search.jd.com/Search?keyword=vue&enc=utf-8";
 		List<JDDocumentPo> sources = HtmlParseUtil.parseHtml(uri);
 		// 批量插入请求
 		BulkRequest bulkRequest = new BulkRequest();
@@ -180,8 +180,7 @@ public class ApplicationTest {
 
 		for (JDDocumentPo item : sources) {
 			bulkRequest.add(
-				new IndexRequest("jd")
-				.id(UUID.randomUUID().toString())
+				new IndexRequest("jd", "goods", item.getId())
 				.source(JSONUtil.toJsonStr(item), XContentType.JSON)
 			);
 		}
