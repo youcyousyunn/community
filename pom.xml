@@ -89,7 +89,7 @@
 			<scope>test</scope>
 		</dependency>
 
-        <!--swagger-->
+        <!-- swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -108,14 +108,14 @@
 <!--		</dependency>-->
 
 
-		<!--swagger-ui-->
+		<!-- swagger-ui -->
 		<dependency>
 			<groupId>com.github.xiaoymin</groupId>
 			<artifactId>swagger-bootstrap-ui</artifactId>
 			<version>1.9.6</version>
 		</dependency>
 
-		<!--activemq-->
+		<!-- activemq消息队列 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-activemq</artifactId>
@@ -140,56 +140,62 @@
 			<version>${fastjson.version}</version>
 		</dependency>
 
-		<!--jwt-->
+		<!-- jwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jwt.version}</version>
 		</dependency>
 
-		<!--guava-->
+		<!-- guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
 
-		<!--captcha-->
+		<!-- captcha验证码工具包 -->
 		<dependency>
 			<groupId>com.github.whvcse</groupId>
 			<artifactId>easy-captcha</artifactId>
 			<version>${captcha.version}</version>
 		</dependency>
 
-		<!--hutool工具包-->
+		<!-- hutool工具包 -->
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
 		</dependency>
 
-		<!--邮件依赖包-->
+		<!-- 邮件依赖包 -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>${mail.version}</version>
 		</dependency>
 
-		<!--poi依赖包-->
+		<!-- poi依赖包 -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.17</version>
 		</dependency>
 
-		<!--logback日志配置-->
+		<!-- logback日志配置 -->
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
 			<artifactId>janino</artifactId>
 			<version>3.1.2</version>
 		</dependency>
+		<!-- 引入logback整合logstash第三方包 -->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>5.3</version>
+		</dependency>
 
-		<!--redis-->
+		<!-- redis -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -200,7 +206,7 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-		<!--quartz定时任务-->
+		<!-- quartz定时任务 -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -216,7 +222,7 @@
             <version>${mybatis.version}</version>
         </dependency>
 
-		<!--获取浏览器信息工具包-->
+		<!-- 获取浏览器信息工具包 -->
 		<dependency>
 			<groupId>eu.bitwalker</groupId>
 			<artifactId>UserAgentUtils</artifactId>
@@ -263,7 +269,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!--跳过单元测试-->
+			<!-- 跳过单元测试 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
