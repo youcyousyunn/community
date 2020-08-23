@@ -25,6 +25,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.rest.RestStatus;
@@ -53,12 +55,12 @@ public class ESServiceImpl implements ESService {
         // 构建查询条件
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         // 分页
-        searchSourceBuilder.from(request.getCurrentPage());
+        searchSourceBuilder.from((request.getCurrentPage()-1)*request.getPageSize());
         searchSourceBuilder.size(request.getPageSize());
 
-        // 精确匹配
-        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("name", request.getKeyword());
-        searchSourceBuilder.query(termQueryBuilder);
+        // 条件匹配
+        QueryBuilder queryBuilder = QueryBuilders.matchQuery("name", request.getKeyword()).minimumShouldMatch("50%");
+        searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.timeout(TimeValue.timeValueSeconds(20));
 
         // 高亮
