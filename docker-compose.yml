@@ -1,8 +1,69 @@
 version: '3.8'
-services: 
-  communityapp:
+services:
+  cmmapp:
     build:
+      context: .
       dockerfile: Dockerfile
-    image: communityapp
-    
-      
+    image: cmmapp
+    container_name: cmmapp
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8088:8088"
+    networks:
+      - appnet
+  mysql:
+    image: mysql:5.7
+    container_name: app_mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: community
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASS: root
+      MYSQL_ROOT_HOST: '%'
+    command: [
+      'mysqld',
+      '--innodb-buffer-pool-size=20M',
+      '--character-set-server=utf8',
+      '--collation-server=utf8_general_ci',
+      '--default-time-zone=+8:00'
+    ]
+    volumes:
+      - /etc/redis/redis.conf:/etc/redis/redis.conf:ro
+      - /var/lib/mysql:/var/lib/mysql
+    networks:
+      - appnet
+    restart: always
+  redis:
+    image: redis:alpine
+    container_name: app_redis
+    ports:
+      - 6379:6379
+    networks:
+      - appnet
+    restart: always
+  activemq:
+    image: webcenter/activemq
+    container_name: app_activemq
+    ports:
+      - 61616:61616
+      - 8161:8161
+    environment:
+      - ACTIVEMQ_ADMIN_LOGIN=admin
+      - ACTIVEMQ_ADMIN_PASSWORD=admin
+    volumes:
+      - /usr/local/activemq:/app/www/activemq
+    networks:
+      - appnet
+    restart: always
+#网络
+networks:
+  appnet:
+    driver: bridge
+
+
+
+
