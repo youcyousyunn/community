@@ -18,8 +18,12 @@ public class StartupApplication {
 		application.run(args);
 	}
 
+	/**
+	 * 在SpringBoot启动类中注册SpringContextHolder
+	 * @return
+	 */
 	@Bean
-	@Scope("singleton")
+	@Scope("singleton") // spring中默认注册bean均为单例
 	public SpringContextHolder springContextHolder () {
 		return new SpringContextHolder();
 	}
