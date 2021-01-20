@@ -3,6 +3,7 @@ package com.ycs.community.sysbo.socket.controller;
 import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.sysbo.socket.WebSocketServer;
 import com.ycs.community.sysbo.socket.domain.po.ChatMessagePo;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/chat")
+@Api(tags = "系统管理: 在线客服")
 public class ChatController {
 
     /**

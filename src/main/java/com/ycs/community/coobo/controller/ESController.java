@@ -9,6 +9,7 @@ import com.ycs.community.coobo.service.ESService;
 import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
+@Api(tags = "系统工具: 全文检索")
 public class ESController {
     @Autowired
     private ESService esService;

@@ -21,6 +21,7 @@ import com.ycs.community.sysbo.domain.po.VerifyCodePo;
 import com.ycs.community.sysbo.service.RedisService;
 import com.ycs.community.sysbo.service.UserService;
 import com.ycs.community.sysbo.utils.EncryptUtil;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +38,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = {"*"}, allowCredentials = "true")
+@Api(tags = "系统管理: 单点登录(废)")
 public class CasController {
     private static final String COOKIE_USER_TICKET = "cookie_user_ticket";
     private static final String REDIS_TMP_TICKET = "redis_tmp_ticket";

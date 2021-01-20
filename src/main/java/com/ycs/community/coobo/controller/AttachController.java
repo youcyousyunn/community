@@ -10,6 +10,7 @@ import com.ycs.community.spring.annotation.LimitFlow;
 import com.ycs.community.spring.annotation.OperationLog;
 import com.ycs.community.spring.enums.OperationTypeEnum;
 import com.ycs.community.spring.exception.CustomizeRequestException;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@Api(tags = "系统工具: 附件管理")
 public class AttachController {
     @Autowired
     private AttachService attachService;
