@@ -3,7 +3,7 @@
     <property name="OS_NAME" value="${os.name}"/>
     <if condition='property("OS_NAME").contains("Windows")'>
         <then>
-            <property name="LOG_PATH" value="${LOG_PATH:-D:/workspace/community/ver/trc}" />
+            <property name="LOG_PATH" value="${LOG_PATH:-D:/app/www/ver/trc}" />
         </then>
         <else>
             <property name="LOG_PATH" value="${LOG_PATH:-/app/www/ver/trc}" />
