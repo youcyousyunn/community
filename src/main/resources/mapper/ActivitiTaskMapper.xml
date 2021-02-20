@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.activiti.dao.ActivitiTaskDao">
+    <select id="qryMyTaskCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(t3.ID_)
+        FROM t_vacation_task t,
+        t_flow_main t2,
+        act_ru_task t3
+        <where>
+            <if test="userId != null">
+                t3.ASSIGNEE_ = #{userId}
+            </if>
+            <if test="name != null">
+                AND t3.NAME_ like <![CDATA['%${name}%']]>
+            </if>
+            AND t.state = 1
+            AND t.id = t2.task_id
+            AND t2.flow_id = t3.PROC_INST_ID_
+            <if test="startTime != null">
+                AND t3.CREATE_TIME_ &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t3.CREATE_TIME_ &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryMyTaskPage" parameterType="java.util.Map" resultType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+        SELECT
+        t.id id,
+        t.user_id userId,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.title title,
+        t.context context,
+        t2.flow_def_code flowDefCode,
+        t3.ID_ taskId,
+        t3.NAME_ taskName,
+        t3.PROC_INST_ID_ flowId,
+        t3.TASK_DEF_KEY_ taskDefKey,
+        t3.ASSIGNEE_ assign,
+        t3.CREATE_TIME_ createTime
+        FROM t_vacation_task t,
+        t_flow_main t2,
+        act_ru_task t3
+        <where>
+            <if test="userId != null">
+                t3.ASSIGNEE_ = #{userId}
+            </if>
+            <if test="name != null">
+                AND t3.NAME_ like <![CDATA['%${name}%']]>
+            </if>
+            AND t.state = 1
+            AND t.id = t2.task_id
+            AND t2.flow_id = t3.PROC_INST_ID_
+            <if test="startTime != null">
+                AND t3.CREATE_TIME_ &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t3.CREATE_TIME_ &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t3.CREATE_TIME_ DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+</mapper>

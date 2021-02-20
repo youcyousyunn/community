@@ -1,49 +1,11 @@
 package com.ycs.community.activiti.domain.po;
 
+import com.ycs.community.basebo.domain.po.BasePo;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
-
 @Data
-public class TaskPo implements Serializable {
+public class TaskPo extends BasePo {
     private static final long serialVersionUID = -8594680331408088031L;
-
-    /**
-     * 请假单ID
-     */
-    private String vacationId;
-
-    /**
-     * 请假人ID
-     */
-    private String userId;
-
-    /**
-     * 请假开始时间
-     */
-    private LocalDate startTime;
-
-    /**
-     * 请假结束时间
-     */
-    private LocalDate endTime;
-
-    /**
-     * 请假原因
-     */
-    private String vacationContext;
-
-    /**
-     * 流程定义ID
-     */
-    private String flowDefId;
-
-    /**
-     * 流程实例ID
-     */
-    private String flowId;
 
     /**
      * 任务ID
@@ -56,24 +18,20 @@ public class TaskPo implements Serializable {
     private String taskName;
 
     /**
-     * 流程定义KEY
+     * 流程定义CODE
      */
-    private String taskDefKey;
+    private String flowDefCode;
+
+    /**
+     * 流程实例ID
+     */
+    private String flowId;
 
     /**
      * 办理人
      */
-    private String assign;
+    private String assignee;
 
-    /**
-     * 任务创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 审批类型 0:同意 1:驳回
-     */
-    private String approvalType;
     /**
      * 备注
      */

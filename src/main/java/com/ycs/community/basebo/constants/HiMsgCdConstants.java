@@ -149,4 +149,19 @@ public class HiMsgCdConstants {
     public static final String ADD_DOC_FAIL = "B0071";
     /*** 更新文档失败 ****/
     public static final String UPD_DOC_FAIL = "B0072";
+
+    /*** 打开创建流程视图失败 ****/
+    public static final String OPEN_CREATE_FLOW_VIEW_FAIL = "F0001";
+    /*** 添加流程失败 ****/
+    public static final String ADD_FLOW_FAIL = "F0002";
+    /*** 流程已不存在 ****/
+    public static final String FLOW_NOT_EXIST = "F0003";
+    /*** 流程定义表中已存在 ****/
+    public static final String FLOW_HAS_EXIST = "F0004";
+    /*** 添加请假申请失败 ****/
+    public static final String ADD_VACATION_TASK_FAIL = "F0005";
+    /*** 更新请假申请失败 ****/
+    public static final String UPD_VACATION_TASK_FAIL = "F0006";
+    /*** 运行流程失败 ****/
+    public static final String RUN_FLOW_FAIL = "F0007";
 }

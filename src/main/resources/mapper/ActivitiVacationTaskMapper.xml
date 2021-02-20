@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.activiti.dao.ActivitiVacationTaskDao">
+    <select id="qryMyVacationTaskCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(t.id)
+        FROM t_vacation_task t
+        LEFT JOIN t_sys_userinfo t2 ON t.user_id = t2.id
+        <where>
+            <if test="userId != null">
+                t.user_id = #{userId}
+            </if>
+            <if test="title != null">
+                AND t.title like <![CDATA['%${title}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryMyVacationTaskPage" parameterType="java.util.Map" resultType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+        SELECT
+        t.id id,
+        t.user_id userId,
+        t.type type,
+        t.title title,
+        t.context context,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.state state,
+        t.create_time creTm,
+        t.update_time updTm,
+        t2.name userName
+        FROM t_vacation_task t
+        LEFT JOIN t_sys_userinfo t2 ON t.user_id = t2.id
+        <where>
+            <if test="userId != null">
+                t.user_id = #{userId}
+            </if>
+            <if test="title != null">
+                AND t.title like <![CDATA['%${title}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+
+    <update id="updVacationTaskStateById" parameterType="java.util.Map">
+        UPDATE t_vacation_task
+        <set>
+            <if test="state != null">
+                state = #{state}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <update id="updVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+        UPDATE t_vacation_task
+        <set>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="context != null">
+                context = #{context},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <insert id="addVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+        INSERT INTO t_vacation_task (user_id,
+            `type`,
+            title,
+            context,
+            `state`,
+            `start_time`,
+            `end_time`,
+            create_time
+        )
+        values (
+            #{userId,jdbcType=BIGINT},
+            #{type,jdbcType=INTEGER},
+            #{title,jdbcType=VARCHAR},
+            #{context,jdbcType=VARCHAR},
+            #{state,jdbcType=INTEGER},
+            #{startTime,jdbcType=BIGINT},
+            #{endTime,jdbcType=BIGINT},
+            #{creTm,jdbcType=BIGINT}
+       )
+    </insert>
+</mapper>

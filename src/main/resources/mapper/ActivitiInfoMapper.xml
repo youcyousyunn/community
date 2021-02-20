@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ycs.community.activiti.dao.ActivitiInfoDao">
+    <select id="qryFlowMainByTaskId" parameterType="java.lang.String" resultType="com.ycs.community.activiti.domain.po.FlowMain">
+        SELECT
+        t.id id,
+        t.task_id taskId,
+        t.flow_def_code flowDefCode,
+        t.flow_id flowId,
+        t.flow_state flowState,
+        t.create_time creTm,
+        t.update_time updTm
+        FROM t_flow_main t
+        <where>
+            <if test="_parameter != null">
+                t.task_id = #{taskId}
+            </if>
+        </where>
+    </select>
+
+    <update id="updFlowMain" parameterType="com.ycs.community.activiti.domain.po.FlowMain">
+        UPDATE t_flow_main
+        <set>
+            <if test="flowId != null">
+                flow_id = #{flowId},
+            </if>
+            <if test="updTm != null">
+                update_time = #{updTm}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <insert id="addFlowMain" parameterType="com.ycs.community.activiti.domain.po.FlowMain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_flow_main (task_id,
+            flow_def_code,
+            flow_id,
+            flow_state,
+            create_time
+        )
+        values (
+            #{taskId,jdbcType=BIGINT},
+            #{flowDefCode,jdbcType=VARCHAR},
+            #{flowId,jdbcType=BIGINT},
+            #{flowState,jdbcType=INTEGER},
+            #{creTm,jdbcType=BIGINT}
+       )
+    </insert>
+</mapper>

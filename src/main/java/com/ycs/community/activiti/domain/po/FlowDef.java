@@ -11,7 +11,7 @@ public class FlowDef extends BasePo {
     private Long id;
 
     /**
-     * 流程编码(流程图的编码)
+     * 流程编码（流程图的编码）
      */
     private String code;
 
@@ -21,7 +21,7 @@ public class FlowDef extends BasePo {
     private String name;
 
     /**
-     * 状态(0:启用 1:禁用)
+     * 状态（0:启用 1:禁用）
      */
     private Integer state;
 }

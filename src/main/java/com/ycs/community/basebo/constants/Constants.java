@@ -26,4 +26,13 @@ public class Constants {
     public static final String JD_INDEX = "jd";
     /** 京东搜索类型 */
     public static final String JD_TYPE = "goods";
+
+    /**待提交**/
+    public static final int SUBMITTED_STATE = 0;
+    /**审核中**/
+    public static final int REVIEW_STATE = 1;
+    /**已废弃**/
+    public static final int OBSOLETE_STATE = 2;
+    /**已完成**/
+    public static final int COMPLETED_STATE = 3;
 }
