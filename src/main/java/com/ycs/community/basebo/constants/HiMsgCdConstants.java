@@ -164,4 +164,10 @@ public class HiMsgCdConstants {
     public static final String UPD_VACATION_TASK_FAIL = "F0006";
     /*** 运行流程失败 ****/
     public static final String RUN_FLOW_FAIL = "F0007";
+    /*** 删除请假申请失败 ****/
+    public static final String DEL_VACATION_TASK_FAIL = "F0008";
+    /*** 添加流程定义失败 ****/
+    public static final String ADD_FLOW_DEF_FAIL = "F0009";
+    /*** 更新请假状态失败 ****/
+    public static final String UPD_VACATION_TASK_STATE_FAIL = "F0010";
 }

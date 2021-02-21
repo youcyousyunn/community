@@ -37,7 +37,14 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
 
 
     @Override
-    public QryActivitiVacationTaskPageResponseDto queryMyVacationTaskPage(QryActivitiVacationTaskPageRequestDto request) {
+    public boolean delVacationTaskById(Long id) {
+        // 更新请假审批单状态
+        this.updVacationTaskStateById(id, Constants.OBSOLETE_STATE);
+        return true;
+    }
+
+    @Override
+    public QryActivitiVacationTaskPageResponseDto qryMyVacationTaskPage(QryActivitiVacationTaskPageRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
         long userId = SecurityUtil.getUserId();
         paramMap.put("userId", userId);
@@ -73,6 +80,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     public boolean addVacationTask(ActivitiVacationTaskRequestDto request) {
         long userId = SecurityUtil.getUserId();
         VacationTaskPo vacationTaskPo = new VacationTaskPo();
+        vacationTaskPo.setFlowDefId(request.getFlowDefId());
         vacationTaskPo.setUserId(userId);
         vacationTaskPo.setType(request.getType());
         vacationTaskPo.setTitle(request.getTitle());
@@ -82,7 +90,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         vacationTaskPo.setState(Constants.SUBMITTED_STATE);
         vacationTaskPo.setCreTm(new Date().getTime());
         if(activitiVacationTaskDao.addVacationTask(vacationTaskPo) < 1) {
-            throw new CustomizeBusinessException(HiMsgCdConstants.ADD_VACATION_TASK_FAIL, "添加请假任务失败");
+            throw new CustomizeBusinessException(HiMsgCdConstants.ADD_VACATION_TASK_FAIL, "添加请假申请失败");
         }
         return true;
     }
@@ -91,6 +99,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean updVacationTask(ActivitiVacationTaskRequestDto request) {
         VacationTaskPo vacationTaskPo = new VacationTaskPo();
+        vacationTaskPo.setFlowDefId(request.getFlowDefId());
         vacationTaskPo.setType(request.getType());
         vacationTaskPo.setTitle(request.getTitle());
         vacationTaskPo.setContext(request.getContext());
@@ -105,6 +114,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     }
 
     @Override
+    @Transactional (rollbackFor = {CustomizeBusinessException.class})
     public boolean submitVacationTask(ActivitiVacationTaskRequestDto request) {
         // 设置流程审批人
         Map<String, Object> variables = new HashMap<>();
@@ -113,7 +123,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         FlowMain flowMain = activitiInfoService.qryFlowMainByTaskId(request.getId());
         if(StringUtils.isEmpty(flowMain)) {
             variables.put("applyuser",request.getAssignee());
-            flowId = activitiInfoService.resolve(request.getId(), variables);
+            flowId = activitiInfoService.resolve(request.getId(), request.getFlowDefId(), variables);
         } else {
             flowId = String.valueOf(flowMain.getFlowId());
         }
@@ -124,8 +134,9 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         // 提交工作流
         Task task =  activitiInfoService.qryTaskByInstId(flowId);
         if(StringUtils.isEmpty(task)) {
-            return false;
+            throw new CustomizeBusinessException(HiMsgCdConstants.FLOW_NOT_EXIST, "流程已不存在");
         }
+        variables.put("subState","success");
         taskService.complete(task.getId(), variables);
         // 更新审批单状态
         this.updVacationTaskStateById(request.getId(), Constants.REVIEW_STATE);
@@ -137,7 +148,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         paramMap.put("id", id);
         paramMap.put("state", state);
         if(activitiVacationTaskDao.updVacationTaskStateById(paramMap) < 1) {
-            return false;
+            throw new CustomizeBusinessException(HiMsgCdConstants.UPD_VACATION_TASK_STATE_FAIL, "更新请假状态失败");
         }
         return true;
     }

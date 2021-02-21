@@ -20,6 +20,7 @@ public class ActivitiVacationTaskRequestDto extends BaseRequestDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
     private int state;
+    private Long flowDefId;
 
     /**
      * 接口请求报文检查

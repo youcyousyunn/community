@@ -24,6 +24,7 @@
     <select id="qryMyVacationTaskPage" parameterType="java.util.Map" resultType="com.ycs.community.activiti.domain.po.VacationTaskPo">
         SELECT
         t.id id,
+        t.flow_def_id flowDefId,
         t.user_id userId,
         t.type type,
         t.title title,
@@ -71,8 +72,11 @@
     <update id="updVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
         UPDATE t_vacation_task
         <set>
+            <if test="flowDefId != null">
+                flow_def_id = #{flowDefId},
+            </if>
             <if test="type != null">
-                type = #{type},
+                `type` = #{type},
             </if>
             <if test="title != null">
                 title = #{title},
@@ -81,7 +85,7 @@
                 context = #{context},
             </if>
             <if test="state != null">
-                state = #{state},
+                `state` = #{state},
             </if>
             <if test="startTime != null">
                 start_time = #{startTime},
@@ -101,7 +105,8 @@
     </update>
 
     <insert id="addVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
-        INSERT INTO t_vacation_task (user_id,
+        INSERT INTO t_vacation_task (flow_def_id,
+            user_id,
             `type`,
             title,
             context,
@@ -111,6 +116,7 @@
             create_time
         )
         values (
+            #{flowDefId,jdbcType=BIGINT},
             #{userId,jdbcType=BIGINT},
             #{type,jdbcType=INTEGER},
             #{title,jdbcType=VARCHAR},

@@ -21,7 +21,7 @@ public class FlowDef extends BasePo {
     private String name;
 
     /**
-     * 状态（0:启用 1:禁用）
+     * 状态（0:禁用 1:启用）
      */
-    private Integer state;
+    private int state;
 }

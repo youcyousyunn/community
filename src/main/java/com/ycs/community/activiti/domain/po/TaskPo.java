@@ -18,6 +18,11 @@ public class TaskPo extends BasePo {
     private String taskName;
 
     /**
+     * 流程定义ID
+     */
+    private Long flowDefId;
+
+    /**
      * 流程定义CODE
      */
     private String flowDefCode;

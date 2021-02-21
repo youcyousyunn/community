@@ -25,7 +25,20 @@ public class ActivitiVacationTaskController {
     @GetMapping("/vacation/task/queryPage")
     public QryActivitiVacationTaskPageResponseDto queryMyTask(QryActivitiVacationTaskPageRequestDto request) {
         QryActivitiVacationTaskPageResponseDto responseDto = new QryActivitiVacationTaskPageResponseDto();
-        responseDto = activitiVacationTaskService.queryMyVacationTaskPage(request);
+        responseDto = activitiVacationTaskService.qryMyVacationTaskPage(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 删除请假申请
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/vacation/task/{id}")
+    public ActivitiVacationTaskResponseDto delVacationTask(@PathVariable(value = "id") Long id) {
+        ActivitiVacationTaskResponseDto responseDto = new ActivitiVacationTaskResponseDto();
+        activitiVacationTaskService.delVacationTaskById(id);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }
