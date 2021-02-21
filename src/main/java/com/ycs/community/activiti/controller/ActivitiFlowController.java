@@ -1,11 +1,11 @@
 package com.ycs.community.activiti.controller;
 
-import com.ycs.community.activiti.service.ActivitiInfoService;
+import com.ycs.community.activiti.service.ActivitiFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ActivitiInfoController {
+public class ActivitiFlowController {
     @Autowired
-    private ActivitiInfoService activitiInfoService;
+    private ActivitiFlowService activitiFlowService;
 }

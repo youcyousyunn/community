@@ -1,8 +1,8 @@
 package com.ycs.community.activiti.service.impl;
 
-import com.ycs.community.activiti.dao.ActivitiInfoDao;
+import com.ycs.community.activiti.dao.ActivitiFlowDao;
 import com.ycs.community.activiti.domain.po.FlowMain;
-import com.ycs.community.activiti.service.ActivitiInfoService;
+import com.ycs.community.activiti.service.ActivitiFlowService;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import org.activiti.engine.RuntimeService;
@@ -16,9 +16,9 @@ import java.util.Date;
 import java.util.Map;
 
 @Service
-public class ActivitiInfoServiceImpl implements ActivitiInfoService {
+public class ActivitiInfoServiceImpl implements ActivitiFlowService {
     @Autowired
-    private ActivitiInfoDao activitiInfoDao;
+    private ActivitiFlowDao activitiFlowDao;
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
@@ -32,7 +32,7 @@ public class ActivitiInfoServiceImpl implements ActivitiInfoService {
         flowMain.setFlowDefCode(null);
         flowMain.setFlowState(1);
         flowMain.setCreTm(new Date().getTime());
-        long id = activitiInfoDao.addFlowMain(flowMain);
+        long id = activitiFlowDao.addFlowMain(flowMain);
         flowMain.setId(id);
         // 运行流程
         String flowId = this.runFlow(flowMain, variables);
@@ -47,7 +47,7 @@ public class ActivitiInfoServiceImpl implements ActivitiInfoService {
             flowId = processInstance.getProcessInstanceId();
             flowMain.setFlowId(Long.valueOf(flowId));
             flowMain.setUpdTm(new Date().getTime());
-            activitiInfoDao.updFlowMain(flowMain);
+            activitiFlowDao.updFlowMain(flowMain);
         } catch (Exception e) {
             throw new CustomizeBusinessException(HiMsgCdConstants.RUN_FLOW_FAIL, "运行流程失败");
         }
@@ -56,7 +56,7 @@ public class ActivitiInfoServiceImpl implements ActivitiInfoService {
 
     @Override
     public FlowMain qryFlowMainByTaskId(Long taskId) {
-        return activitiInfoDao.qryFlowMainByTaskId(taskId);
+        return activitiFlowDao.qryFlowMainByTaskId(taskId);
     }
 
     @Override

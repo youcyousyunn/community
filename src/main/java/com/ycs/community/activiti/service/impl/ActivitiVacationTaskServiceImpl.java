@@ -6,7 +6,7 @@ import com.ycs.community.activiti.domain.dto.QryActivitiVacationTaskPageRequestD
 import com.ycs.community.activiti.domain.dto.QryActivitiVacationTaskPageResponseDto;
 import com.ycs.community.activiti.domain.po.FlowMain;
 import com.ycs.community.activiti.domain.po.VacationTaskPo;
-import com.ycs.community.activiti.service.ActivitiInfoService;
+import com.ycs.community.activiti.service.ActivitiFlowService;
 import com.ycs.community.activiti.service.ActivitiVacationTaskService;
 import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
@@ -31,7 +31,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     @Autowired
     private ActivitiVacationTaskDao activitiVacationTaskDao;
     @Autowired
-    private ActivitiInfoService activitiInfoService;
+    private ActivitiFlowService activitiInfoService;
     @Autowired
     private TaskService taskService;
 

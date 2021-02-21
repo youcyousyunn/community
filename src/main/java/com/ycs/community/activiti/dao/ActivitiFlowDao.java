@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface ActivitiInfoDao {
+public interface ActivitiFlowDao {
     long addFlowMain(FlowMain flowMain);
     int updFlowMain(FlowMain flowMain);
     FlowMain qryFlowMainByTaskId(Long taskId);

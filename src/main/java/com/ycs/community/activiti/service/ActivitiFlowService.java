@@ -5,7 +5,7 @@ import org.activiti.engine.task.Task;
 
 import java.util.Map;
 
-public interface ActivitiInfoService {
+public interface ActivitiFlowService {
     String resolve(Long taskId, Map<String, Object> variables);
     String runFlow(FlowMain flowMain, Map<String, Object> variables);
     FlowMain qryFlowMainByTaskId(Long taskId);
