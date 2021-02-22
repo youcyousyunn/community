@@ -13,8 +13,10 @@ public class ActivitiVacationTaskRequestDto extends BaseRequestDto {
     private int type;
     private String title;
     private String context;
-    private Long userId;
-    private Long assignee;
+    private Long applierId;
+    private Long assigneeId;
+    private String applierName;
+    private String assigneeName;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -4,10 +4,10 @@
     <select id="qryMyVacationTaskCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT COUNT(t.id)
         FROM t_vacation_task t
-        LEFT JOIN t_sys_userinfo t2 ON t.user_id = t2.id
+        LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
         <where>
-            <if test="userId != null">
-                t.user_id = #{userId}
+            <if test="applierId != null">
+                t.applier_id = #{applierId}
             </if>
             <if test="title != null">
                 AND t.title like <![CDATA['%${title}%']]>
@@ -25,7 +25,8 @@
         SELECT
         t.id id,
         t.flow_def_id flowDefId,
-        t.user_id userId,
+        t.applier_id applierId,
+        t.assignee_id assigneeId,
         t.type type,
         t.title title,
         t.context context,
@@ -34,12 +35,12 @@
         t.state state,
         t.create_time creTm,
         t.update_time updTm,
-        t2.name userName
+        t2.name applierName
         FROM t_vacation_task t
-        LEFT JOIN t_sys_userinfo t2 ON t.user_id = t2.id
+        LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
         <where>
-            <if test="userId != null">
-                t.user_id = #{userId}
+            <if test="applierId != null">
+                t.applier_id = #{applierId}
             </if>
             <if test="title != null">
                 AND t.title like <![CDATA['%${title}%']]>
@@ -75,8 +76,11 @@
             <if test="flowDefId != null">
                 flow_def_id = #{flowDefId},
             </if>
+            <if test="assigneeId != null">
+                assignee_id = #{assigneeId},
+            </if>
             <if test="type != null">
-                `type` = #{type},
+                type = #{type},
             </if>
             <if test="title != null">
                 title = #{title},
@@ -85,7 +89,7 @@
                 context = #{context},
             </if>
             <if test="state != null">
-                `state` = #{state},
+                state = #{state},
             </if>
             <if test="startTime != null">
                 start_time = #{startTime},
@@ -106,7 +110,8 @@
 
     <insert id="addVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
         INSERT INTO t_vacation_task (flow_def_id,
-            user_id,
+            applier_id,
+            assignee_id,
             `type`,
             title,
             context,
@@ -117,7 +122,8 @@
         )
         values (
             #{flowDefId,jdbcType=BIGINT},
-            #{userId,jdbcType=BIGINT},
+            #{applierId,jdbcType=BIGINT},
+            #{assigneeId,jdbcType=BIGINT},
             #{type,jdbcType=INTEGER},
             #{title,jdbcType=VARCHAR},
             #{context,jdbcType=VARCHAR},

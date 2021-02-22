@@ -5,6 +5,7 @@ import com.ycs.community.activiti.domain.dto.QryActivitiTaskPageRequestDto;
 import com.ycs.community.activiti.domain.dto.QryActivitiTaskPageResponseDto;
 import com.ycs.community.activiti.domain.po.TaskPo;
 import com.ycs.community.activiti.service.ActivitiTaskService;
+import com.ycs.community.basebo.constants.Constants;
 import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.spring.security.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class ActivitiTaskServiceImpl implements ActivitiTaskService {
         Map<String, Object> paramMap = new HashMap<>();
         long userId = SecurityUtil.getUserId();
         paramMap.put("userId", userId);
+        paramMap.put("state", Constants.REVIEW_STATE);
         if (!StringUtils.isEmpty(request.getName())) {
             paramMap.put("name", request.getName());
         }

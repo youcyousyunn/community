@@ -13,6 +13,8 @@ import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.spring.exception.CustomizeBusinessException;
 import com.ycs.community.spring.security.utils.SecurityUtil;
+import com.ycs.community.sysbo.domain.po.UserPo;
+import com.ycs.community.sysbo.service.UserService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     private ActivitiFlowService activitiInfoService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -47,7 +51,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     public QryActivitiVacationTaskPageResponseDto qryMyVacationTaskPage(QryActivitiVacationTaskPageRequestDto request) {
         Map<String, Object> paramMap = new HashMap<>();
         long userId = SecurityUtil.getUserId();
-        paramMap.put("userId", userId);
+        paramMap.put("applierId", userId);
         if (!StringUtils.isEmpty(request.getTitle())) {
             paramMap.put("title", request.getTitle());
         }
@@ -65,6 +69,11 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         paramMap.put("startRow", PageUtil.getStartRow());
         paramMap.put("offset", PageUtil.getPageSize());
         List<VacationTaskPo> data = activitiVacationTaskDao.qryMyVacationTaskPage(paramMap);
+        // 添加审批人
+        data.forEach(vacationTaskPo -> {
+            UserPo userPo = userService.qryUserById(vacationTaskPo.getAssigneeId());
+            vacationTaskPo.setAssigneeName(userPo.getName());
+        });
         // 组装分页信息
         QryActivitiVacationTaskPageResponseDto response = new QryActivitiVacationTaskPageResponseDto();
         if (!CollectionUtils.isEmpty(data)) {
@@ -81,7 +90,8 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         long userId = SecurityUtil.getUserId();
         VacationTaskPo vacationTaskPo = new VacationTaskPo();
         vacationTaskPo.setFlowDefId(request.getFlowDefId());
-        vacationTaskPo.setUserId(userId);
+        vacationTaskPo.setApplierId(userId);
+        vacationTaskPo.setAssigneeId(request.getAssigneeId());
         vacationTaskPo.setType(request.getType());
         vacationTaskPo.setTitle(request.getTitle());
         vacationTaskPo.setContext(request.getContext());
@@ -99,7 +109,9 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean updVacationTask(ActivitiVacationTaskRequestDto request) {
         VacationTaskPo vacationTaskPo = new VacationTaskPo();
+        vacationTaskPo.setId(request.getId());
         vacationTaskPo.setFlowDefId(request.getFlowDefId());
+        vacationTaskPo.setAssigneeId(request.getAssigneeId());
         vacationTaskPo.setType(request.getType());
         vacationTaskPo.setTitle(request.getTitle());
         vacationTaskPo.setContext(request.getContext());
@@ -122,7 +134,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         // 匹配流程之前查询是否已经匹配过
         FlowMain flowMain = activitiInfoService.qryFlowMainByTaskId(request.getId());
         if(StringUtils.isEmpty(flowMain)) {
-            variables.put("applyuser",request.getAssignee());
+            variables.put("applyuser",request.getAssigneeId());
             flowId = activitiInfoService.resolve(request.getId(), request.getFlowDefId(), variables);
         } else {
             flowId = String.valueOf(flowMain.getFlowId());

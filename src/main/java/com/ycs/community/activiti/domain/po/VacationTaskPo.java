@@ -8,17 +8,27 @@ public class VacationTaskPo extends TaskPo {
     /**
      * 请假单ID
      */
-    private String id;
+    private Long id;
 
     /**
-     * 请假人ID
+     * 申请人ID
      */
-    private Long userId;
+    private Long applierId;
 
     /**
-     * 请假人姓名
+     * 申请人姓名
      */
-    private String userName;
+    private String applierName;
+
+    /**
+     * 审批人ID
+     */
+    private Long assigneeId;
+
+    /**
+     * 审批人姓名
+     */
+    private String assigneeName;
 
     /**
      * 请假类型
