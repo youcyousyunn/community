@@ -1,9 +1,7 @@
 package com.ycs.community.activiti.controller;
 
-import com.ycs.community.activiti.domain.dto.ActivitiVacationTaskRequestDto;
-import com.ycs.community.activiti.domain.dto.ActivitiVacationTaskResponseDto;
-import com.ycs.community.activiti.domain.dto.QryActivitiVacationTaskPageRequestDto;
-import com.ycs.community.activiti.domain.dto.QryActivitiVacationTaskPageResponseDto;
+import com.ycs.community.activiti.domain.dto.*;
+import com.ycs.community.activiti.service.ActivitiProcessLogService;
 import com.ycs.community.activiti.service.ActivitiVacationTaskService;
 import com.ycs.community.basebo.constants.HiMsgCdConstants;
 import com.ycs.community.spring.exception.CustomizeRequestException;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class ActivitiVacationTaskController {
     @Autowired
     private ActivitiVacationTaskService activitiVacationTaskService;
+    @Autowired
+    private ActivitiProcessLogService activitiProcessLogService;
 
 
     /**
@@ -26,6 +26,24 @@ public class ActivitiVacationTaskController {
     public QryActivitiVacationTaskPageResponseDto queryMyTask(QryActivitiVacationTaskPageRequestDto request) {
         QryActivitiVacationTaskPageResponseDto responseDto = new QryActivitiVacationTaskPageResponseDto();
         responseDto = activitiVacationTaskService.qryMyVacationTaskPage(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 查询流程操作日志
+     * @param request
+     * @return
+     */
+    @GetMapping("/vacation/task/queryProcessLog")
+    public ActivitiProcessLogResponseDto queryProcessLog(ActivitiProcessLogRequestDto request) {
+        // 接口请求报文检查
+        if (!request.checkRequestDto()) {
+            BizLogger.info("接口请求报文异常" + request.toString());
+            throw new CustomizeRequestException(HiMsgCdConstants.TX_REQUESTBODY_FAIL, "接口请求报文异常");
+        }
+        ActivitiProcessLogResponseDto responseDto = new ActivitiProcessLogResponseDto();
+        responseDto = activitiProcessLogService.qryOperLog(request.getProcessId());
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }

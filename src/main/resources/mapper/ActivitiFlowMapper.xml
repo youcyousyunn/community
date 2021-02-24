@@ -32,7 +32,7 @@
     </select>
 
     <insert id="addFlowDef" parameterType="com.ycs.community.activiti.domain.po.FlowDef">
-        INSERT INTO t_flow_main (code,
+        INSERT INTO t_flow_def (code,
         `name`,
         `state`,
         create_time
@@ -48,15 +48,15 @@
     <select id="qryFlowMainByTaskId" parameterType="java.lang.String" resultType="com.ycs.community.activiti.domain.po.FlowMain">
         SELECT
         t.id id,
-        t.task_id taskId,
         t.flow_id flowId,
+        t.process_id processId,
         t.state state,
         t.create_time creTm,
         t.update_time updTm
         FROM t_flow_main t
         <where>
             <if test="_parameter != null">
-                t.task_id = #{taskId}
+                t.process_id = #{processId}
             </if>
         </where>
     </select>
@@ -79,14 +79,14 @@
     </update>
 
     <insert id="addFlowMain" parameterType="com.ycs.community.activiti.domain.po.FlowMain" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_flow_main (task_id,
-        flow_id,
+        INSERT INTO t_flow_main (flow_id,
+        process_id,
         `state`,
         create_time
         )
         values (
-        #{taskId,jdbcType=BIGINT},
         #{flowId,jdbcType=BIGINT},
+        #{processId,jdbcType=BIGINT},
         #{state,jdbcType=INTEGER},
         #{creTm,jdbcType=BIGINT}
        )

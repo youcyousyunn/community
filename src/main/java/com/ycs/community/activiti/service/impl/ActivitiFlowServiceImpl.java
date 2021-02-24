@@ -57,9 +57,9 @@ public class ActivitiFlowServiceImpl implements ActivitiFlowService {
 
     @Override
     @Transactional(rollbackFor = {CustomizeBusinessException.class})
-    public String resolve(Long taskId, Long flowDefId, Map<String, Object> variables) {
+    public String resolve(Long processId, Long flowDefId, Map<String, Object> variables) {
         FlowMain flowMain = new FlowMain();
-        flowMain.setTaskId(taskId);
+        flowMain.setProcessId(processId);
         flowMain.setState(1);
         flowMain.setCreTm(new Date().getTime());
         activitiFlowDao.addFlowMain(flowMain);

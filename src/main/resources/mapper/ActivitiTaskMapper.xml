@@ -3,11 +3,11 @@
 <mapper namespace="com.ycs.community.activiti.dao.ActivitiTaskDao">
     <select id="qryMyTaskCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT COUNT(t3.ID_)
-        FROM t_vacation_task t,
+        FROM t_vacation_process t,
         t_flow_main t2,
         act_ru_task t3
         <where>
-            t.id = t2.task_id
+            t.id = t2.process_id
             AND t2.flow_id = t3.PROC_INST_ID_
             <if test="userId != null">
                 AND t3.ASSIGNEE_ = #{userId}
@@ -43,11 +43,11 @@
         t3.PROC_INST_ID_ flowId,
         t3.TASK_DEF_KEY_ taskDefKey,
         t3.ASSIGNEE_ assign
-        FROM t_vacation_task t,
+        FROM t_vacation_process t,
         t_flow_main t2,
         act_ru_task t3
         <where>
-            t.id = t2.task_id
+            t.id = t2.process_id
             AND t2.flow_id = t3.PROC_INST_ID_
             <if test="userId != null">
                 AND t3.ASSIGNEE_ = #{userId}

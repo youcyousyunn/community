@@ -11,7 +11,7 @@ import java.util.Map;
 public interface ActivitiFlowService {
     QryActivitiFlowResponseDto qryFlowList(QryActivitiFlowRequestDto request);
     boolean addFlowDef(FlowDef flowDef);
-    String resolve(Long taskId, Long flowDefId, Map<String, Object> variables);
+    String resolve(Long processId, Long flowDefId, Map<String, Object> variables);
     FlowMain qryFlowMainByTaskId(Long taskId);
 
     Task qryTaskByInstId(String processInstanceId);

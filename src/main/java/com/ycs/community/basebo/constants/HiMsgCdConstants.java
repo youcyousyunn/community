@@ -150,10 +150,8 @@ public class HiMsgCdConstants {
     /*** 更新文档失败 ****/
     public static final String UPD_DOC_FAIL = "B0072";
 
-    /*** 打开创建流程视图失败 ****/
-    public static final String OPEN_CREATE_FLOW_VIEW_FAIL = "F0001";
-    /*** 添加流程失败 ****/
-    public static final String ADD_FLOW_FAIL = "F0002";
+    /*** 流程图不存在 ****/
+    public static final String FLOW_IMG_NOT_EXIST = "F0002";
     /*** 流程已不存在 ****/
     public static final String FLOW_NOT_EXIST = "F0003";
     /*** 流程定义表中已存在 ****/

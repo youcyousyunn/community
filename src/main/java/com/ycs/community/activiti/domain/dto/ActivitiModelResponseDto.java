@@ -5,4 +5,5 @@ import lombok.Data;
 
 @Data
 public class ActivitiModelResponseDto extends BaseResponseDto {
+    private String img;
 }

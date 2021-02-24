@@ -3,7 +3,7 @@
 <mapper namespace="com.ycs.community.activiti.dao.ActivitiVacationTaskDao">
     <select id="qryMyVacationTaskCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT COUNT(t.id)
-        FROM t_vacation_task t
+        FROM t_vacation_process t
         LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
         <where>
             <if test="applierId != null">
@@ -36,7 +36,7 @@
         t.create_time creTm,
         t.update_time updTm,
         t2.name applierName
-        FROM t_vacation_task t
+        FROM t_vacation_process t
         LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
         <where>
             <if test="applierId != null">
@@ -57,7 +57,7 @@
     </select>
 
     <update id="updVacationTaskStateById" parameterType="java.util.Map">
-        UPDATE t_vacation_task
+        UPDATE t_vacation_process
         <set>
             <if test="state != null">
                 state = #{state}
@@ -71,7 +71,7 @@
     </update>
 
     <update id="updVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
-        UPDATE t_vacation_task
+        UPDATE t_vacation_process
         <set>
             <if test="flowDefId != null">
                 flow_def_id = #{flowDefId},
@@ -109,7 +109,7 @@
     </update>
 
     <insert id="addVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
-        INSERT INTO t_vacation_task (flow_def_id,
+        INSERT INTO t_vacation_process (flow_def_id,
             applier_id,
             assignee_id,
             `type`,

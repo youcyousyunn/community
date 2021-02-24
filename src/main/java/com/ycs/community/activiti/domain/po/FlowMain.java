@@ -11,14 +11,14 @@ public class FlowMain extends BasePo {
     private Long id;
 
     /**
-     * 任务ID
-     */
-    private Long taskId;
-
-    /**
      * 流程ID(启动流程时生成的)
      */
     private Long flowId;
+
+    /**
+     * 过程ID
+     */
+    private Long processId;
 
     /**
      * 流程状态(1:正常,0:异常)
