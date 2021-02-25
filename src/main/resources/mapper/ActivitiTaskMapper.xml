@@ -15,8 +15,8 @@
             <if test="state != null">
                 AND t.state = #{state}
             </if>
-            <if test="name != null">
-                AND t3.NAME_ like <![CDATA['%${name}%']]>
+            <if test="title != null">
+                AND t.title like <![CDATA['%${title}%']]>
             </if>
             <if test="startTime != null">
                 AND t3.CREATE_TIME_ &gt;= #{startTime}
@@ -55,8 +55,8 @@
             <if test="state != null">
                 AND t.state = #{state}
             </if>
-            <if test="name != null">
-                AND t3.NAME_ like <![CDATA['%${name}%']]>
+            <if test="title != null">
+                AND t.title like <![CDATA['%${title}%']]>
             </if>
             <if test="startTime != null">
                 AND t3.CREATE_TIME_ &gt;= #{startTime}

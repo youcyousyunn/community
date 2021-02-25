@@ -29,8 +29,8 @@ public class ActivitiTaskServiceImpl implements ActivitiTaskService {
         long userId = SecurityUtil.getUserId();
         paramMap.put("userId", userId);
         paramMap.put("state", Constants.REVIEW_STATE);
-        if (!StringUtils.isEmpty(request.getName())) {
-            paramMap.put("name", request.getName());
+        if (!StringUtils.isEmpty(request.getTitle())) {
+            paramMap.put("title", request.getTitle());
         }
         if (!StringUtils.isEmpty(request.getStartTime())) {
             paramMap.put("startTime", request.getStartTime().getTime());
