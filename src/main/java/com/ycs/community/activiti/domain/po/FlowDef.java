@@ -13,7 +13,7 @@ public class FlowDef extends BasePo {
     /**
      * 流程编码（流程图的编码）
      */
-    private String code;
+    private String key;
 
     /**
      * 流程名称

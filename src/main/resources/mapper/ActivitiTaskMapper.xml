@@ -15,8 +15,8 @@
             <if test="state != null">
                 AND t.state = #{state}
             </if>
-            <if test="title != null">
-                AND t.title like <![CDATA['%${title}%']]>
+            <if test="name != null">
+                AND t3.NAME_ like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t3.CREATE_TIME_ &gt;= #{startTime}
@@ -27,22 +27,23 @@
         </where>
     </select>
 
-    <select id="qryMyTaskPage" parameterType="java.util.Map" resultType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+    <select id="qryMyTaskPage" parameterType="java.util.Map" resultType="com.ycs.community.activiti.domain.po.TaskPo">
         SELECT
         t.id id,
         t.flow_def_id flowDefId,
         t.applier_id applierId,
         t.assignee_id assigneeId,
+        t.type type,
         t.start_time startTime,
         t.end_time endTime,
         t.title title,
         t.context context,
-        t.create_time creTm,
         t3.ID_ taskId,
         t3.NAME_ taskName,
         t3.PROC_INST_ID_ flowId,
         t3.TASK_DEF_KEY_ taskDefKey,
-        t3.ASSIGNEE_ assign
+        t3.ASSIGNEE_ assign,
+        t3.CREATE_TIME_ createTime
         FROM t_vacation_process t,
         t_flow_main t2,
         act_ru_task t3
@@ -55,8 +56,8 @@
             <if test="state != null">
                 AND t.state = #{state}
             </if>
-            <if test="title != null">
-                AND t.title like <![CDATA['%${title}%']]>
+            <if test="name != null">
+                AND t3.NAME_ like <![CDATA['%${name}%']]>
             </if>
             <if test="startTime != null">
                 AND t3.CREATE_TIME_ &gt;= #{startTime}
@@ -67,5 +68,22 @@
         </where>
         ORDER BY t3.CREATE_TIME_ DESC
         LIMIT ${startRow}, ${offset}
+    </select>
+
+    <select id="qryTaskByProcessId" parameterType="java.lang.String" resultType="com.ycs.community.activiti.domain.po.BaseTaskPo">
+        SELECT
+        t.ID_ taskId,
+        t.NAME_ taskName,
+        t.PROC_INST_ID_ flowId,
+        t.TASK_DEF_KEY_ taskDefKey,
+        t.ASSIGNEE_ assign
+        FROM act_ru_task t,
+        t_flow_main t2
+        <where>
+            t.PROC_INST_ID_ = t2.flow_id
+            <if test="_parameter != null">
+                AND t2.process_id = #{id}
+            </if>
+        </where>
     </select>
 </mapper>

@@ -5,6 +5,7 @@
         SELECT COUNT(t.id)
         FROM t_vacation_process t
         LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
+        LEFT JOIN t_flow_main t3 ON t.id = t3.process_id
         <where>
             <if test="applierId != null">
                 t.applier_id = #{applierId}
@@ -35,9 +36,11 @@
         t.state state,
         t.create_time creTm,
         t.update_time updTm,
-        t2.name applierName
+        t2.name applierName,
+        t3.flow_id flowId
         FROM t_vacation_process t
         LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
+        LEFT JOIN t_flow_main t3 ON t.id = t3.process_id
         <where>
             <if test="applierId != null">
                 t.applier_id = #{applierId}
@@ -55,6 +58,72 @@
         ORDER BY t.create_time DESC
         LIMIT ${startRow}, ${offset}
     </select>
+
+    <select id="qryAllVacationTaskCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(t.id)
+        FROM t_vacation_process t
+        LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
+        LEFT JOIN t_flow_main t3 ON t.id = t3.process_id
+        <where>
+            <if test="title != null">
+                AND t.title like <![CDATA['%${title}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="qryAllVacationTaskPage" parameterType="java.util.Map" resultType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+        SELECT
+        t.id id,
+        t.flow_def_id flowDefId,
+        t.applier_id applierId,
+        t.assignee_id assigneeId,
+        t.type type,
+        t.title title,
+        t.context context,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.state state,
+        t.create_time creTm,
+        t.update_time updTm,
+        t2.name applierName,
+        t3.flow_id flowId
+        FROM t_vacation_process t
+        LEFT JOIN t_sys_userinfo t2 ON t.applier_id = t2.id
+        LEFT JOIN t_flow_main t3 ON t.id = t3.process_id
+        <where>
+            <if test="title != null">
+                AND t.title like <![CDATA['%${title}%']]>
+            </if>
+            <if test="startTime != null">
+                AND t.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND t.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+        LIMIT ${startRow}, ${offset}
+    </select>
+
+    <update id="updVacationTaskAssigneeById" parameterType="java.util.Map">
+        UPDATE t_vacation_process
+        <set>
+            <if test="assigneeId != null">
+                assignee_id = #{assigneeId}
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </update>
 
     <update id="updVacationTaskStateById" parameterType="java.util.Map">
         UPDATE t_vacation_process
@@ -108,7 +177,7 @@
         </where>
     </update>
 
-    <insert id="addVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo">
+    <insert id="addVacationTask" parameterType="com.ycs.community.activiti.domain.po.VacationTaskPo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_vacation_process (flow_def_id,
             applier_id,
             assignee_id,
@@ -116,8 +185,8 @@
             title,
             context,
             `state`,
-            `start_time`,
-            `end_time`,
+            start_time,
+            end_time,
             create_time
         )
         values (

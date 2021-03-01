@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ActivitiProcessLogDao {
     List<ProcessLog> qryOperLog(Long processId);
+    int addProcessLog(ProcessLog processLog);
 }

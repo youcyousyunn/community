@@ -35,4 +35,9 @@ public class Constants {
     public static final int OBSOLETE_STATE = 2;
     /**已完成**/
     public static final int COMPLETED_STATE = 3;
+
+    /**审批通过**/
+    public static final String APPROVAL_AGREE = "agree";
+    /**审批驳回**/
+    public static final String APPROVAL_REJECT = "reject";
 }

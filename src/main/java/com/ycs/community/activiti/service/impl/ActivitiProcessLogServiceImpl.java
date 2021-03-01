@@ -25,4 +25,12 @@ public class ActivitiProcessLogServiceImpl implements ActivitiProcessLogService 
         }
         return responseDto;
     }
+
+    @Override
+    public boolean addProcessLog(ProcessLog processLog) {
+        if(activitiProcessLogDao.addProcessLog(processLog) < 1) {
+            return false;
+        }
+        return true;
+    }
 }

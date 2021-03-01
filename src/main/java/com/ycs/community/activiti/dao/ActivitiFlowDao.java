@@ -12,9 +12,14 @@ import java.util.Map;
 @Repository
 public interface ActivitiFlowDao {
     List<FlowDef> qryFlowList(Map<String, Object> paramMap);
+    FlowDef qryFlowDefByDeploymentId(String deploymentId);
+    FlowDef qryFlowDefByCode(String code);
     int addFlowDef(FlowDef flowDef);
+    int updFlowDef(FlowDef flowDef);
     long addFlowMain(FlowMain flowMain);
     int updFlowMain(FlowMain flowMain);
     FlowMain qryFlowMainByTaskId(Long taskId);
     FlowDef qryFlowDefById(Long id);
+    FlowMain qryFlowMainById(Long id);
+    int delFlowDefByKey(String key);
 }

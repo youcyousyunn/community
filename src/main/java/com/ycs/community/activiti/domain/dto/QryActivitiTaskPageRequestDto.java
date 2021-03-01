@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 public class QryActivitiTaskPageRequestDto extends BaseRequestDto {
-    private String title;
+    private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

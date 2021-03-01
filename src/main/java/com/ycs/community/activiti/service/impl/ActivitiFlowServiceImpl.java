@@ -49,8 +49,18 @@ public class ActivitiFlowServiceImpl implements ActivitiFlowService {
 
     @Override
     public boolean addFlowDef(FlowDef flowDef) {
-        if(activitiFlowDao.addFlowDef(flowDef) < 1) {
-            throw new CustomizeBusinessException(HiMsgCdConstants.ADD_FLOW_DEF_FAIL, "添加流程定义失败");
+        //判断库中是否已存在
+        FlowDef data = activitiFlowDao.qryFlowDefByCode(flowDef.getKey());
+        if(StringUtils.isEmpty(data)) {
+            flowDef.setCreTm(new Date().getTime());
+            if(activitiFlowDao.addFlowDef(flowDef) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.ADD_FLOW_DEF_FAIL, "添加流程定义失败");
+            }
+        } else {
+            flowDef.setUpdTm(new Date().getTime());
+            if(activitiFlowDao.updFlowDef(flowDef) < 1) {
+                throw new CustomizeBusinessException(HiMsgCdConstants.UPD_FLOW_DEF_FAIL, "更新流程定义失败");
+            }
         }
         return true;
     }
@@ -62,7 +72,7 @@ public class ActivitiFlowServiceImpl implements ActivitiFlowService {
         flowMain.setProcessId(processId);
         flowMain.setState(1);
         flowMain.setCreTm(new Date().getTime());
-        activitiFlowDao.addFlowMain(flowMain);
+        this.activitiFlowDao.addFlowMain(flowMain);
         // 运行流程
         String flowId = this.runFlow(flowDefId, flowMain, variables);
         return flowId;
@@ -79,13 +89,13 @@ public class ActivitiFlowServiceImpl implements ActivitiFlowService {
         String flowId = "";
         FlowDef flowDef = activitiFlowDao.qryFlowDefById(flowDefId);
         try {
-            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(flowDef.getCode(), String.valueOf(flowMain.getId()), variables);
+            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(flowDef.getKey(), String.valueOf(flowMain.getId()), variables);
             flowId = processInstance.getProcessInstanceId();
             flowMain.setFlowId(Long.valueOf(flowId));
             flowMain.setUpdTm(new Date().getTime());
             activitiFlowDao.updFlowMain(flowMain);
         } catch (Exception e) {
-            throw new CustomizeBusinessException(HiMsgCdConstants.RUN_FLOW_FAIL, "运行流程失败");
+            throw new CustomizeBusinessException(HiMsgCdConstants.RUN_FLOW_FAIL, e.getMessage());
         }
         return flowId;
     }
@@ -99,5 +109,23 @@ public class ActivitiFlowServiceImpl implements ActivitiFlowService {
     public Task qryTaskByInstId(String processInstanceId) {
         Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).active().singleResult();
         return task;
+    }
+
+    @Override
+    public FlowMain qryFlowMainById(Long id) {
+        return activitiFlowDao.qryFlowMainById(id);
+    }
+
+    @Override
+    public FlowDef qryFlowDefByDeploymentId(String deploymentId) {
+        return activitiFlowDao.qryFlowDefByDeploymentId(deploymentId);
+    }
+
+    @Override
+    public boolean delFlowDefByKey(String key) {
+        if(activitiFlowDao.delFlowDefByKey(key) < 1) {
+            return false;
+        }
+        return true;
     }
 }

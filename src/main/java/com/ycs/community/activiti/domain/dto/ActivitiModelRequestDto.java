@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 public class ActivitiModelRequestDto extends BaseRequestDto {
     private String id;
     private String flowId;
+    private String key;
+    private String deploymentId;
 
     /**
      * 接口请求报文检查

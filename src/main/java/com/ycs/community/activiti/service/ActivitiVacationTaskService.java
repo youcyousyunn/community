@@ -7,7 +7,11 @@ import com.ycs.community.activiti.domain.dto.QryActivitiVacationTaskPageResponse
 public interface ActivitiVacationTaskService {
     boolean delVacationTaskById(Long id);
     QryActivitiVacationTaskPageResponseDto qryMyVacationTaskPage(QryActivitiVacationTaskPageRequestDto request);
+    QryActivitiVacationTaskPageResponseDto queryAllVacationTask(QryActivitiVacationTaskPageRequestDto request);
     boolean addVacationTask(ActivitiVacationTaskRequestDto request);
     boolean updVacationTask(ActivitiVacationTaskRequestDto request);
+    boolean updVacationTaskAssigneeById(Long id, Long assigneeId);
+    boolean updVacationTaskStateById(Long id, int state);
     boolean submitVacationTask(ActivitiVacationTaskRequestDto request);
+    boolean approveVacationTask(ActivitiVacationTaskRequestDto request);
 }

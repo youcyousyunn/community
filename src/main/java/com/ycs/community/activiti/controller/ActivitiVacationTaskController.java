@@ -31,6 +31,19 @@ public class ActivitiVacationTaskController {
     }
 
     /**
+     * 分页查询所有请假任务列表
+     * @param request
+     * @return
+     */
+    @GetMapping("/vacation/task/all/queryPage")
+    public QryActivitiVacationTaskPageResponseDto queryAllTask(QryActivitiVacationTaskPageRequestDto request) {
+        QryActivitiVacationTaskPageResponseDto responseDto = new QryActivitiVacationTaskPageResponseDto();
+        responseDto = activitiVacationTaskService.queryAllVacationTask(request);
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
      * 查询流程操作日志
      * @param request
      * @return
@@ -44,6 +57,19 @@ public class ActivitiVacationTaskController {
         }
         ActivitiProcessLogResponseDto responseDto = new ActivitiProcessLogResponseDto();
         responseDto = activitiProcessLogService.qryOperLog(request.getProcessId());
+        responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
+        return responseDto;
+    }
+
+    /**
+     * 请假审批
+     * @param request
+     * @return
+     */
+    @PostMapping("/vacation/task/approve")
+    public ActivitiVacationTaskResponseDto approveVacationTask(@RequestBody ActivitiVacationTaskRequestDto request) {
+        ActivitiVacationTaskResponseDto responseDto = new ActivitiVacationTaskResponseDto();
+        activitiVacationTaskService.approveVacationTask(request);
         responseDto.setRspCode(HiMsgCdConstants.SUCCESS);
         return responseDto;
     }

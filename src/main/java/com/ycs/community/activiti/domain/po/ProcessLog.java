@@ -13,8 +13,8 @@ public class ProcessLog extends BasePo {
     private String taskId;
     private String taskKey;
     private String taskName;
-    private String approvStatus;
-    private Long userId;
+    private String approveStatus;
+    private Long operUserId;
     private String operValue;
     private String remark;
     private String userName;

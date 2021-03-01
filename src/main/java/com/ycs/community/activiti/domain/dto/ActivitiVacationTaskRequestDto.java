@@ -25,6 +25,14 @@ public class ActivitiVacationTaskRequestDto extends BaseRequestDto {
     private Long flowDefId;
 
     /**
+     * 审批类型 agree：同意 reject：驳回
+     */
+    private String taskId;
+    private String taskName;
+    private String approvalType;
+    private String remark;
+
+    /**
      * 接口请求报文检查
      * @return
      */

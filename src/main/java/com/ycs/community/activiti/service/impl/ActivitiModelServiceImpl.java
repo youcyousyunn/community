@@ -20,6 +20,7 @@ import org.activiti.engine.repository.Model;
 import org.activiti.engine.repository.ModelQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -46,6 +47,13 @@ public class ActivitiModelServiceImpl implements ActivitiModelService {
             modelQuery.modelNameLike("%"+request.getName()+"%");
         }
         List<Model> data = modelQuery.orderByCreateTime().desc().listPage((currentPage-1)*pageSize, pageSize);
+        // 设置流程key
+        data.forEach(model -> {
+            if(!StringUtils.isEmpty(model.getDeploymentId())) {
+                FlowDef flowDef = activitiFlowService.qryFlowDefByDeploymentId(model.getDeploymentId());
+                model.setKey(flowDef != null ? flowDef.getKey() : "");
+            }
+        });
         // 组装分页信息
         QryActivitiModelPageResponseDto response = new QryActivitiModelPageResponseDto();
         if (!CollectionUtils.isEmpty(data)) {
@@ -57,6 +65,7 @@ public class ActivitiModelServiceImpl implements ActivitiModelService {
     }
 
     @Override
+    @Transactional(rollbackFor = {CustomizeBusinessException.class})
     public boolean deployModel(ActivitiModelRequestDto request) throws IOException {
         String modelId = request.getId();
         if (!StringUtils.isEmpty(modelId)) {
@@ -78,10 +87,10 @@ public class ActivitiModelServiceImpl implements ActivitiModelService {
             FlowDef flowDef = new FlowDef();
             List<Process> processes = bpmnModel.getProcesses();
             for (Process process : processes) {
-                flowDef.setCode(process.getId());
+                flowDef.setKey(process.getId());
                 flowDef.setName(process.getName());
             }
-            flowDef.setCreTm(new Date().getTime());
+            flowDef.setState(1);
             activitiFlowService.addFlowDef(flowDef);
         }
         return true;

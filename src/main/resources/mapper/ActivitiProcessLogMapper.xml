@@ -8,8 +8,8 @@
         t.task_id taskId,
         t.task_key taskKey,
         t.task_name taskName,
-        t.approv_status approvStatus,
-        t.user_id userId,
+        t.approve_status approveStatus,
+        t.oper_user_id operUserId,
         t.oper_value operValue,
         t.remark remark,
         t.create_time creTm,
@@ -17,11 +17,35 @@
         t2.nickname nickname,
         t2.avatar avatar
         FROM t_process_log t
-        LEFT JOIN t_sys_userinfo t2 ON t.user_id = t2.id
+        LEFT JOIN t_sys_userinfo t2 ON t.oper_user_id = t2.id
         <where>
             <if test="_parameter != null">
                 t.process_id = #{processId}
             </if>
         </where>
     </select>
+
+    <insert id="addProcessLog" parameterType="com.ycs.community.activiti.domain.po.ProcessLog">
+        INSERT INTO t_process_log (process_id,
+        task_id,
+        task_key,
+        task_name,
+        approve_status,
+        oper_user_id,
+        oper_value,
+        remark,
+        create_time
+        )
+        values (
+        #{processId,jdbcType=BIGINT},
+        #{taskId,jdbcType=BIGINT},
+        #{taskKey,jdbcType=VARCHAR},
+        #{taskName,jdbcType=VARCHAR},
+        #{approveStatus,jdbcType=VARCHAR},
+        #{operUserId,jdbcType=BIGINT},
+        #{operValue,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{creTm,jdbcType=BIGINT}
+       )
+    </insert>
 </mapper>

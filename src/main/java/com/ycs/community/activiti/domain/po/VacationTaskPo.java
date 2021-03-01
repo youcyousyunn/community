@@ -3,7 +3,7 @@ package com.ycs.community.activiti.domain.po;
 import lombok.Data;
 
 @Data
-public class VacationTaskPo extends TaskPo {
+public class VacationTaskPo extends BaseTaskPo {
 
     /**
      * 请假单ID

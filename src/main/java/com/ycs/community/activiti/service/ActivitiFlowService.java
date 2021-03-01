@@ -13,6 +13,8 @@ public interface ActivitiFlowService {
     boolean addFlowDef(FlowDef flowDef);
     String resolve(Long processId, Long flowDefId, Map<String, Object> variables);
     FlowMain qryFlowMainByTaskId(Long taskId);
-
     Task qryTaskByInstId(String processInstanceId);
+    FlowMain qryFlowMainById(Long id);
+    FlowDef qryFlowDefByDeploymentId(String deploymentId);
+    boolean delFlowDefByKey(String key);
 }
