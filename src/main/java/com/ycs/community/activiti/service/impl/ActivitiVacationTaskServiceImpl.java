@@ -23,6 +23,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -167,7 +168,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
     }
 
     @Override
-    @Transactional(rollbackFor = {CustomizeBusinessException.class})
+    @Transactional(propagation = Propagation.REQUIRED)
     public boolean updVacationTask(ActivitiVacationTaskRequestDto request) {
         VacationTaskPo vacationTaskPo = new VacationTaskPo();
         vacationTaskPo.setId(request.getId());
@@ -193,7 +194,7 @@ public class ActivitiVacationTaskServiceImpl implements ActivitiVacationTaskServ
         processLog.setRemark(vacationTaskPo.getContext());
         processLog.setOperUserId(SecurityUtil.getUserId());
         processLog.setCreTm(new Date().getTime());
-        this.addProcessLog(processLog);
+        activitiProcessLogService.addProcessLog(processLog);
         return true;
     }
 

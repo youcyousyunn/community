@@ -79,8 +79,8 @@ public class ActivitiFlowServiceImpl implements ActivitiFlowService {
     }
 
     /**待验证
-     * 注意：在同一个Service内部，事务方法之间的嵌套调用，普通方法和事务方法之间的嵌套调用，都不会开启新的事务.
-     * spring 在扫描bean的时候会扫描方法上是否包含@Transactional注解，如果包含spring会为这个bean动态地生成一个子类（即代理类，proxy），
+     * 注意：在同一个Service内部，事务与事务方法之间的调用，事务与普通方法之间的嵌套调用，都不会开启新的事务（即2个方法共用调用方的事务）。
+     * spring 在扫描bean的时候会扫描方法上是否包含@Transactional注解，如果包含 spring会为这个bean动态地生成一个子类（即代理类，proxy），
      * 代理类是继承原来那个bean的。此时，当这个有注解的方法被调用的时候，实际上是由代理类来调用的，代理类在调用之前就会启动transaction。
      * 然而，如果这个有注解的方法是被同一个类中的其他方法（不论是否有事务注解）调用的，那么该方法的调用并没有通过代理类，而是直接通过原来的那个bean，
      * 所以就不会启动transaction，我们看到的现象就是@Transactional注解无效。
