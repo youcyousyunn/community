@@ -4,6 +4,7 @@ import cn.hutool.core.io.resource.ClassPathResource;
 import com.alibaba.fastjson.JSONObject;
 import com.ycs.community.basebo.utils.PageUtil;
 import com.ycs.community.coobo.utils.FileUtil;
+import com.ycs.community.spring.property.SecurityProperties;
 import com.ycs.community.spring.security.domain.po.OnlineUserPo;
 import com.ycs.community.spring.security.service.OnlineUserService;
 import com.ycs.community.sysbo.dao.DeptDao;
@@ -39,10 +40,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class OnlineUserServiceImpl implements OnlineUserService {
-    @Value("${jwt.expiration}")
-    private Long expiration;
-    @Value("${jwt.online.key}")
-    private String onlineKey;
+    @Autowired
+    private SecurityProperties securityProperties;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -83,15 +82,14 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         onlineUserPo.setBrowser(browser);
         onlineUserPo.setAddress(address);
         onlineUserPo.setLoginTm(new Date());
-        redisTemplate.opsForValue().set(onlineKey + token, JSONObject.toJSONString(onlineUserPo));
-        redisTemplate.expire(onlineKey + token, expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(securityProperties.getOnlineKey() + token, JSONObject.toJSONString(onlineUserPo), securityProperties.getExpiration(), TimeUnit.MILLISECONDS);
         return true;
     }
 
     @Override
     public QryOnlineUserPageResponseDto qryOnlinePage(QryOnlineUserPageRequestDto request) {
         List<OnlineUserPo> data = new ArrayList<>();
-        List<String> keys = new ArrayList<>(redisTemplate.keys(onlineKey + "*"));
+        List<String> keys = new ArrayList<>(redisTemplate.keys(securityProperties.getOnlineKey() + "*"));
         keys.forEach(key -> {
             OnlineUserPo onlineUserPo = JSONObject.parseObject(redisTemplate.opsForValue().get(key).toString(), OnlineUserPo.class);
             if (!StringUtils.isEmpty(request.getName())) {
@@ -124,12 +122,12 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 
     @Override
     public boolean kickOut(String key) {
-        return redisTemplate.delete(onlineKey + EncryptUtil.desDecrypt(key));
+        return redisTemplate.delete(securityProperties.getOnlineKey() + EncryptUtil.desDecrypt(key));
     }
 
     @Override
     public boolean delOnlineUserInfo(String token) {
-        String key = onlineKey + token;
+        String key = securityProperties.getOnlineKey() + token;
         redisTemplate.delete(key);
         return true;
     }
@@ -140,7 +138,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      */
     @Override
     public boolean logout(String token) {
-        String key = onlineKey + token;
+        String key = securityProperties.getOnlineKey() + token;
         redisTemplate.delete(key);
         redisTemplate.getConnectionFactory().getConnection().flushDb();
         return true;

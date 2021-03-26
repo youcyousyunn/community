@@ -3,6 +3,7 @@ package com.ycs.community.sysbo.socket;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.ycs.community.spring.config.SpringSocketConfigurator;
+import com.ycs.community.spring.property.SecurityProperties;
 import com.ycs.community.spring.security.domain.po.OnlineUserPo;
 import com.ycs.community.sysbo.socket.domain.po.ChatMessagePo;
 import com.ycs.community.sysbo.socket.enums.SocketRoleEnum;
@@ -38,8 +39,8 @@ public class WebSocketServer {
     private SocketRoleEnum role = SocketRoleEnum.CLIENT;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Value("${jwt.online.key}")
-    private String onlineKey;
+    @Autowired
+    private SecurityProperties securityProperties;
     /**
      * 客服信息
      */
@@ -54,7 +55,7 @@ public class WebSocketServer {
      */
     @OnOpen
     public synchronized void onOpen(Session session, @PathParam("token") String authToken) {
-        String jsonStr = (String) redisTemplate.opsForValue().get(onlineKey + authToken);
+        String jsonStr = (String) redisTemplate.opsForValue().get(securityProperties.getOnlineKey() + authToken);
         OnlineUserPo onlineUser = JSONObject.parseObject(jsonStr, OnlineUserPo.class);
         log.info(onlineUser.toString());
         // 判断是否为客服

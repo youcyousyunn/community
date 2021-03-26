@@ -8,6 +8,7 @@ import com.ycs.community.spring.annotation.AnonymousAccess;
 import com.ycs.community.spring.exception.BadRequestException;
 import com.ycs.community.spring.exception.CustomizeRequestException;
 import com.ycs.community.spring.log4j.BizLogger;
+import com.ycs.community.spring.property.SecurityProperties;
 import com.ycs.community.spring.security.domain.po.OnlineUserPo;
 import com.ycs.community.spring.security.service.OnlineUserService;
 import com.ycs.community.spring.security.utils.JwtTokenUtil;
@@ -25,7 +26,6 @@ import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,8 +54,8 @@ public class CasController {
     private OnlineUserService onlineUserService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @Value("${jwt.online.key}")
-    private String onlineKey;
+    @Autowired
+    private SecurityProperties securityProperties;
 
     /**
      * 统一认证中心登录
@@ -163,7 +163,7 @@ public class CasController {
             throw new BadRequestException("CAS令牌异常");
         }
 
-        OnlineUserPo onlineUser = JSONObject.parseObject(redisService.get(onlineKey + ticket), OnlineUserPo.class);
+        OnlineUserPo onlineUser = JSONObject.parseObject(redisService.get(securityProperties.getOnlineKey() + ticket), OnlineUserPo.class);
         UserResponseDto responseDto = new UserResponseDto();
         UserPo userPo = new UserPo();
         userPo.setAccountId(onlineUser.getAccountId());
@@ -225,7 +225,7 @@ public class CasController {
         }
 
         // 验证全局令牌对应的用户信息是否存在
-        String userJsonStr = redisService.get(onlineKey + ticket);
+        String userJsonStr = redisService.get(securityProperties.getOnlineKey() + ticket);
         if(StringUtils.isBlank(userJsonStr)) {
             return false;
         }
