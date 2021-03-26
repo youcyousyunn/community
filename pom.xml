@@ -30,7 +30,8 @@
 		<hutool.version>4.6.10</hutool.version>
 		<mail.version>1.4.7</mail.version>
 		<swagger.version>2.9.2</swagger.version>
-		<jna.version>5.5.0</jna.version>
+		<!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
+		<jna.version>5.6.0</jna.version>
 		<elasticsearch.version>7.6.1</elasticsearch.version>
         <start-class>com.ycs.community.StartupApplication</start-class>
 	</properties>
@@ -246,13 +247,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>5.0.1</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jna-platform</artifactId>
-					<groupId>net.java.dev.jna</groupId>
-				</exclusion>
-			</exclusions>
+			<version>5.3.6</version>
 		</dependency>
 
 		<!-- 解析网页jsoup -->
